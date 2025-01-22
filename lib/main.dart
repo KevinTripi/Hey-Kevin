@@ -102,13 +102,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Container(
         color: Colors.orangeAccent,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment
-              .stretch, // Makes the column take up the whole x-axis
+        // Stack from https://stackoverflow.com/a/49839188
+        child: Stack(
           children: [
-            Expanded(
-                // Border from https://stackoverflow.com/a/47424036
-                child: Container(
+            Container(
               margin: EdgeInsets.all(1),
               padding: EdgeInsets.symmetric(vertical: 0, horizontal: 9),
               decoration: BoxDecoration(
@@ -118,15 +115,43 @@ class _MyHomePageState extends State<MyHomePage> {
                 'Camera',
                 style: TextStyle(fontSize: 100),
               )),
-            )),
+            ),
 
             // Shutter button, gallery button, etc.
-            Container(
-              margin: EdgeInsets.all(1),
-              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 9),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 5)),
-              child: Text('data'),
+            Positioned(
+              bottom: 50,
+              left: 0,
+              right: 0,
+              child: Container(
+                margin: EdgeInsets.all(1),
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.blue, width: 5)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FloatingActionButton(
+                        onPressed: null,
+                        child: Icon(
+                          Icons.image,
+                          size: 40,
+                        )),
+                    FloatingActionButton(
+                        onPressed: null,
+                        shape: CircleBorder(),
+                        child: Icon(
+                          Icons.circle_outlined,
+                          size: 50,
+                        )),
+                    FloatingActionButton(
+                        onPressed: null,
+                        child: Icon(
+                          Icons.multitrack_audio,
+                          size: 40,
+                        )),
+                  ],
+                ),
+              ),
             )
           ],
         ),
