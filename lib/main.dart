@@ -56,50 +56,31 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  double _bottomVal = 0;
+  bool _isListHidden = true;
   int _counter = 0;
 
-  void _incrementCounter() {
+  void _toggleList(BuildContext context) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  void _decrementCounter() {
-    setState(() {
-      _counter--;
-    });
-  }
-
-  void _clearCounter() {
-    setState(() {
-      _counter = 0;
+      if (_isListHidden) {
+        // From: https://medium.com/flutter-community/a-guide-to-using-screensize-in-flutter-a-more-readable-approach-901e82556195
+        // NOTE THAT THIS .size.height DOESN'T ACCOUNT FOR scaffold.appBar; i.e., if using with appBar, need to add appBar's height into equation.
+        _bottomVal = MediaQuery.of(context).size.height * (19 / 20);
+      } else {
+        _bottomVal = 0;
+      }
+      _isListHidden = !_isListHidden;
+      // print('_isListHidden: $_isListHidden -- _bottomVal: $_bottomVal');
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      //   title: Text(widget.title),
+      // ),
       body: Container(
         color: Colors.orangeAccent,
         // Stack from https://stackoverflow.com/a/49839188
@@ -152,7 +133,45 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
               ),
-            )
+            ),
+
+            Positioned(
+              top: _bottomVal,
+              left: 0,
+              right: 0,
+              child: Container(
+                color: Colors.white,
+                child: GestureDetector(
+                  // From https://stackoverflow.com/a/72678355
+                  // Enables onClickListening of entire ListView, rather than using the onTap in ListView.builder, which would activate per item.
+                  onTap: () {
+                    setState(() {
+                      // print(MediaQuery.of(context).size.height);
+                      _toggleList(context);
+                    });
+                  },
+                  child: ListView.builder(
+                    itemCount: 5,
+                    shrinkWrap:
+                        true, // From https://www.flutterbeads.com/listview-inside-column-in-flutter/
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title:
+                            Text(textAlign: TextAlign.center, "Text ${index}"),
+                        // https://api.flutter.dev/flutter/material/ListTile/selected.html
+                        // onTap: () {
+                        //   setState(() {
+                        //     // print(MediaQuery.of(context).size.height);
+                        //     _toggleList(context);
+                        //   });
+                        //   // print('object');
+                        // },
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
