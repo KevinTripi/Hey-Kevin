@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../pages/home_page.dart';
+import 'package:camera/camera.dart';
+import 'package:gal/gal.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HOmePage(),
+      home: MyHomePage(title: 'My first flutter'),
     );
   }
 }
@@ -41,9 +43,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List<CameraDescription> cameras = [];
+  CameraController? cameraController;
+
   double _bottomVal = 0;
   bool _isListHidden = true;
   int _counter = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _setupCameraController();
+  }
 
   void _toggleList(BuildContext context) {
     setState(() {
@@ -76,11 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.symmetric(vertical: 0, horizontal: 9),
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.black, width: 5)),
-              child: Center(
-                  child: Text(
-                'Camera',
-                style: TextStyle(fontSize: 100),
-              )),
+              child: Center(child: _buildCamera()),
             ),
 
             // Shutter button, gallery button, etc.
@@ -102,13 +109,17 @@ class _MyHomePageState extends State<MyHomePage> {
                           Icons.image,
                           size: 40,
                         )),
-                    FloatingActionButton(
-                        onPressed: null,
-                        shape: CircleBorder(),
-                        child: Icon(
-                          Icons.circle_outlined,
-                          size: 50,
-                        )),
+                    IconButton(
+                      onPressed: () async {
+                        XFile picture = await cameraController!.takePicture();
+                        Gal.putImage(picture.path);
+                      },
+                      iconSize: 100,
+                      icon: Icon(
+                        Icons.camera,
+                        color: Colors.red,
+                      ),
+                    ),
                     FloatingActionButton(
                         onPressed: null,
                         child: Icon(
@@ -161,5 +172,42 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  Widget _buildCamera() {
+    if (cameraController == null ||
+        cameraController?.value.isInitialized == false) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    return SafeArea(
+      child: SizedBox.expand(
+        child: SizedBox(
+          height: MediaQuery.sizeOf(context).height * 0.30,
+          width: MediaQuery.sizeOf(context).width * 0.80,
+          child: CameraPreview(
+            cameraController!,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _setupCameraController() async {
+    List<CameraDescription> _cameras = await availableCameras();
+    if (_cameras.isNotEmpty) {
+      setState(() {
+        cameras = _cameras;
+        cameraController = CameraController(
+          _cameras.last,
+          ResolutionPreset.high,
+        );
+      });
+      cameraController?.initialize().then((_) {
+        setState(() {});
+      });
+    }
   }
 }
