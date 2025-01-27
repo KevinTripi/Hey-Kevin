@@ -54,20 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _setupCameraController();
-  }
-
-  void _toggleList(BuildContext context) {
-    setState(() {
-      if (_isListHidden) {
-        // From: https://medium.com/flutter-community/a-guide-to-using-screensize-in-flutter-a-more-readable-approach-901e82556195
-        // NOTE THAT THIS .size.height DOESN'T ACCOUNT FOR scaffold.appBar; i.e., if using with appBar, need to add appBar's height into equation.
-        _bottomVal = MediaQuery.of(context).size.height * (19 / 20);
-      } else {
-        _bottomVal = 0;
-      }
-      _isListHidden = !_isListHidden;
-      // print('_isListHidden: $_isListHidden -- _bottomVal: $_bottomVal');
-    });
+    // _toggleList(context);
   }
 
   @override
@@ -172,6 +159,20 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  void _toggleList(BuildContext context) {
+    setState(() {
+      if (_isListHidden) {
+        // From: https://medium.com/flutter-community/a-guide-to-using-screensize-in-flutter-a-more-readable-approach-901e82556195
+        // NOTE THAT THIS .size.height DOESN'T ACCOUNT FOR scaffold.appBar; i.e., if using with appBar, need to add appBar's height into equation.
+        _bottomVal = MediaQuery.of(context).size.height * (19 / 20);
+      } else {
+        _bottomVal = 0;
+      }
+      _isListHidden = !_isListHidden;
+      // print('_isListHidden: $_isListHidden -- _bottomVal: $_bottomVal');
+    });
   }
 
   Widget _buildCamera() {
