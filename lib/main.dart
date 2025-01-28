@@ -79,6 +79,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           // From https://pub.dev/packages/sliding_drawer
           controller: _drawerController,
           axisDirection: AxisDirection.up,
+
+          // The drawer holds the ListView where our results will sit.
           drawer: ListView.builder(
             itemCount: 20,
             physics:
@@ -93,6 +95,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               );
             },
           ),
+
+          // The body holds the camera and it's buttons.
           body: Stack(
             // From https://stackoverflow.com/a/49839188
             children: [
