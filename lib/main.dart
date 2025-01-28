@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../pages/home_page.dart';
 import 'package:camera/camera.dart';
 import 'package:gal/gal.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:sliding_drawer/sliding_drawer.dart';
 
 /*
 UNRELATED:
@@ -48,15 +48,22 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   List<CameraDescription> cameras = [];
   CameraController? cameraController;
+
+  // Create a drawer controller.
+  // Also you can set up the drawer width and
+  // the initial state here (optional).
+  final SlidingDrawerController _drawerController = SlidingDrawerController(
+    isOpenOnInitial: false,
+    drawerFraction: 1,
+  );
 
   @override
   void initState() {
     super.initState();
     _setupCameraController();
-    // _toggleList(context);
   }
 
   @override
@@ -68,26 +75,25 @@ class _MyHomePageState extends State<MyHomePage> {
       // ),
       body: Container(
         color: Colors.orangeAccent,
-        child: Slidable(
-          // From: https://stackoverflow.com/a/51573340
-          direction: Axis.vertical,
-          endActionPane: ActionPane(motion: ScrollMotion(), children: [
-            ListView.builder(
-              itemCount: 5,
-              physics:
-                  NeverScrollableScrollPhysics(), // From https://stackoverflow.com/a/51367188
-              shrinkWrap:
-                  true, // From https://www.flutterbeads.com/listview-inside-column-in-flutter/
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(textAlign: TextAlign.center, "Text ${index}"),
-                  // https://api.flutter.dev/flutter/material/ListTile/selected.html
-                  // onTap: () {},
-                );
-              },
-            ),
-          ]),
-          child: Stack(
+        child: SlidingDrawer(
+          // From https://pub.dev/packages/sliding_drawer
+          controller: _drawerController,
+          axisDirection: AxisDirection.up,
+          drawer: ListView.builder(
+            itemCount: 20,
+            physics:
+                NeverScrollableScrollPhysics(), // From https://stackoverflow.com/a/51367188
+            shrinkWrap:
+                true, // From https://www.flutterbeads.com/listview-inside-column-in-flutter/
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(textAlign: TextAlign.center, "Text ${index}"),
+                // https://api.flutter.dev/flutter/material/ListTile/selected.html
+                // onTap: () {},
+              );
+            },
+          ),
+          body: Stack(
             // From https://stackoverflow.com/a/49839188
             children: [
               Container(
@@ -129,11 +135,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                       FloatingActionButton(
-                          onPressed: null,
-                          child: Icon(
-                            Icons.multitrack_audio,
-                            size: 40,
-                          )),
+                        onPressed: null,
+                        child: Icon(
+                          Icons.multitrack_audio,
+                          size: 40,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -143,6 +150,15 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed
+    // from the widget tree.
+    _drawerController.dispose();
+
+    super.dispose();
   }
 
   Widget _buildCamera() {

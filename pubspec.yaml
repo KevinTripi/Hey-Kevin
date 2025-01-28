@@ -39,7 +39,7 @@ dependencies:
   camera_avfoundation: ^0.9.18
   gal: ^2.3.1
 
-  flutter_slidable: 4.0.0
+  sliding_drawer: ^1.0.2
 
 dev_dependencies:
   flutter_test:
