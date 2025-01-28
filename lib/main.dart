@@ -3,6 +3,11 @@ import '../pages/home_page.dart';
 import 'package:camera/camera.dart';
 import 'package:gal/gal.dart';
 
+/*
+UNRELATED:
+https://docs.flutter.dev/cookbook/plugins/picture-using-camera#6-display-the-picture-with-an-image-widget
+Takes a picture but doesn't save it to photos, a possible direction if we want.
+*/
 void main() {
   runApp(const MyApp());
 }
@@ -184,15 +189,11 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     return SafeArea(
-      child: SizedBox.expand(
-        child: SizedBox(
-          height: MediaQuery.sizeOf(context).height * 0.30,
-          width: MediaQuery.sizeOf(context).width * 0.80,
-          child: CameraPreview(
-            cameraController!,
-          ),
-        ),
-      ),
+      child: SizedBox(
+          height: MediaQuery.sizeOf(context).height,
+          width: MediaQuery.sizeOf(context).width,
+          child: RotatedBox(
+              quarterTurns: 1, child: CameraPreview(cameraController!))),
     );
   }
 
