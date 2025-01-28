@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../pages/home_page.dart';
 import 'package:camera/camera.dart';
 import 'package:gal/gal.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 /*
 UNRELATED:
@@ -51,10 +52,6 @@ class _MyHomePageState extends State<MyHomePage> {
   List<CameraDescription> cameras = [];
   CameraController? cameraController;
 
-  double _bottomVal = 0;
-  bool _isListHidden = true;
-  int _counter = 0;
-
   @override
   void initState() {
     super.initState();
@@ -71,113 +68,81 @@ class _MyHomePageState extends State<MyHomePage> {
       // ),
       body: Container(
         color: Colors.orangeAccent,
-        // Stack from https://stackoverflow.com/a/49839188
-        child: Stack(
-          children: [
-            Container(
-              margin: EdgeInsets.all(1),
-              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 9),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 5)),
-              child: Center(child: _buildCamera()),
+        child: Slidable(
+          // From: https://stackoverflow.com/a/51573340
+          direction: Axis.vertical,
+          endActionPane: ActionPane(motion: ScrollMotion(), children: [
+            ListView.builder(
+              itemCount: 5,
+              physics:
+                  NeverScrollableScrollPhysics(), // From https://stackoverflow.com/a/51367188
+              shrinkWrap:
+                  true, // From https://www.flutterbeads.com/listview-inside-column-in-flutter/
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(textAlign: TextAlign.center, "Text ${index}"),
+                  // https://api.flutter.dev/flutter/material/ListTile/selected.html
+                  // onTap: () {},
+                );
+              },
             ),
-
-            // Shutter button, gallery button, etc.
-            Positioned(
-              bottom: 50,
-              left: 0,
-              right: 0,
-              child: Container(
+          ]),
+          child: Stack(
+            // From https://stackoverflow.com/a/49839188
+            children: [
+              Container(
                 margin: EdgeInsets.all(1),
-                padding: EdgeInsets.all(5),
+                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 9),
                 decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue, width: 5)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    FloatingActionButton(
-                        onPressed: null,
-                        child: Icon(
-                          Icons.image,
-                          size: 40,
-                        )),
-                    IconButton(
-                      onPressed: () async {
-                        XFile picture = await cameraController!.takePicture();
-                        Gal.putImage(picture.path);
-                      },
-                      iconSize: 100,
-                      icon: Icon(
-                        Icons.camera,
-                        color: Colors.red,
-                      ),
-                    ),
-                    FloatingActionButton(
-                        onPressed: null,
-                        child: Icon(
-                          Icons.multitrack_audio,
-                          size: 40,
-                        )),
-                  ],
-                ),
+                    border: Border.all(color: Colors.black, width: 5)),
+                child: Center(child: _buildCamera()),
               ),
-            ),
 
-            Positioned(
-              top: _bottomVal,
-              left: 0,
-              right: 0,
-              child: Container(
-                color: Colors.white,
-                child: GestureDetector(
-                  // From https://stackoverflow.com/a/72678355
-                  // Enables onClickListening of entire ListView, rather than using the onTap in ListView.builder, which would activate per item.
-                  onTap: () {
-                    setState(() {
-                      // print(MediaQuery.of(context).size.height);
-                      _toggleList(context);
-                    });
-                  },
-                  child: ListView.builder(
-                    itemCount: 5,
-                    shrinkWrap:
-                        true, // From https://www.flutterbeads.com/listview-inside-column-in-flutter/
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title:
-                            Text(textAlign: TextAlign.center, "Text ${index}"),
-                        // https://api.flutter.dev/flutter/material/ListTile/selected.html
-                        // onTap: () {
-                        //   setState(() {
-                        //     // print(MediaQuery.of(context).size.height);
-                        //     _toggleList(context);
-                        //   });
-                        //   // print('object');
-                        // },
-                      );
-                    },
+              // Shutter button, gallery button, etc.
+              Positioned(
+                bottom: 50,
+                left: 0,
+                right: 0,
+                child: Container(
+                  margin: EdgeInsets.all(1),
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.blue, width: 5)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      FloatingActionButton(
+                          onPressed: null,
+                          child: Icon(
+                            Icons.image,
+                            size: 40,
+                          )),
+                      IconButton(
+                        onPressed: () async {
+                          XFile picture = await cameraController!.takePicture();
+                          Gal.putImage(picture.path);
+                        },
+                        iconSize: 100,
+                        icon: Icon(
+                          Icons.camera,
+                          color: Colors.red,
+                        ),
+                      ),
+                      FloatingActionButton(
+                          onPressed: null,
+                          child: Icon(
+                            Icons.multitrack_audio,
+                            size: 40,
+                          )),
+                    ],
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
-  }
-
-  void _toggleList(BuildContext context) {
-    setState(() {
-      if (_isListHidden) {
-        // From: https://medium.com/flutter-community/a-guide-to-using-screensize-in-flutter-a-more-readable-approach-901e82556195
-        // NOTE THAT THIS .size.height DOESN'T ACCOUNT FOR scaffold.appBar; i.e., if using with appBar, need to add appBar's height into equation.
-        _bottomVal = MediaQuery.of(context).size.height * (19 / 20);
-      } else {
-        _bottomVal = 0;
-      }
-      _isListHidden = !_isListHidden;
-      // print('_isListHidden: $_isListHidden -- _bottomVal: $_bottomVal');
-    });
   }
 
   Widget _buildCamera() {
