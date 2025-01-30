@@ -1,0 +1,889 @@
+{
+  "_type": "SearchResponse",
+  "queryContext": {
+    "originalQuery": "Florence and the Machine"
+  },
+  "webPages": {
+    "webSearchUrl": "https://www.bing.com/search?q=Florence+and+the+Machine",
+    "totalEstimatedMatches": 47600000,
+    "value": [
+      {
+        "id": "https://api.bing.microsoft.com/api/v7/#WebPages.0",
+        "contractualRules": [
+          {
+            "_type": "ContractualRules/LicenseAttribution",
+            "targetPropertyName": "snippet",
+            "targetPropertyIndex": 0,
+            "mustBeCloseToContent": true,
+            "license": {
+              "name": "CC-BY-SA",
+              "url": "http://creativecommons.org/licenses/by-sa/3.0/"
+            },
+            "licenseNotice": "Text under CC-BY-SA license"
+          }
+        ],
+        "name": "Florence and the Machine - Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Florence_and_the_Machine",
+        "thumbnailUrl": "https://www.bing.com/th?id=OIP.jpfueBbLPf0fvYc8P9ltlQAAAA&w=80&h=80&c=1&pid=5.1",
+        "isFamilyFriendly": true,
+        "displayUrl": "https://en.wikipedia.org/wiki/Florence_and_the_Machine",
+        "snippet": "Florence and the Machine (stylised as Florence + the Machine) are an English indie rock band formed in London in 2007 by lead vocalist Florence Welch, keyboardist Isabella Summers, guitarist Rob Ackroyd, drummer Christopher Lloyd Hayden & harpist Tom Monger.The band has comprised a number of other musicians. The band's music has received acclaim across the media, especially from the BBC, which ...",
+        "dateLastCrawled": "2025-01-14T08:05:00.0000000Z",
+        "primaryImageOfPage": {
+          "thumbnailUrl": "https://www.bing.com/th?id=OIP.jpfueBbLPf0fvYc8P9ltlQAAAA&w=80&h=80&c=1&pid=5.1",
+          "width": 88,
+          "height": 88,
+          "sourceWidth": 255,
+          "sourceHeight": 382,
+          "imageId": "OIP.jpfueBbLPf0fvYc8P9ltlQAAAA"
+        },
+        "language": "en",
+        "isNavigational": false,
+        "noCache": false,
+        "siteName": "Wikipedia"
+      },
+      {
+        "id": "https://api.bing.microsoft.com/api/v7/#WebPages.1",
+        "name": "FLORENCE & THE MACHINE | OFFICIAL WEBSITE",
+        "url": "https://florenceandthemachine.net/",
+        "thumbnailUrl": "https://www.bing.com/th?id=OIP.H1Tbe-U0axsp3GSRbk7aPwHaD3&w=80&h=80&c=1&pid=5.1",
+        "isFamilyFriendly": true,
+        "displayUrl": "https://florenceandthemachine.net",
+        "snippet": "Receive SMS from Florence & the Machine. implied. Sign me up for updates about new music, competitions, exclusive promotions & events from artists similar to Florence & the Machine. Emails will be sent by or on behalf of Universal Music Operations Ltd, 4 Pancras Square, London. N1C 4AG, UK. +44 (0)20 3932 6000.",
+        "deepLinks": [
+          {
+            "name": "Enter Website",
+            "url": "https://florenceandthemachine.net/"
+          },
+          {
+            "name": "Official Store",
+            "url": "https://store.florenceandthemachine.net/"
+          },
+          {
+            "name": "Live",
+            "url": "https://florenceandthemachine.net/live/"
+          },
+          {
+            "name": "Get Tickets",
+            "url": "https://florenceandthemachine.net/north-america-tour-get-tickets/"
+          },
+          {
+            "name": "Coachella",
+            "url": "https://florenceandthemachine.net/coachella/"
+          },
+          {
+            "name": "Maroon Symphony Hoodie",
+            "url": "https://shop.florenceandthemachine.net/products/maroon-symphony-hoodie",
+            "snippet": "Printed Hoodie in Maroon. 80% cotton, 20% poly. If you are using a screen reader and are having problems using this website, please call 866-682-4413 for assistance."
+          }
+        ],
+        "dateLastCrawled": "2025-01-15T06:03:00.0000000Z",
+        "primaryImageOfPage": {
+          "thumbnailUrl": "https://www.bing.com/th?id=OIP.H1Tbe-U0axsp3GSRbk7aPwHaD3&w=80&h=80&c=1&pid=5.1",
+          "width": 88,
+          "height": 88,
+          "sourceWidth": 474,
+          "sourceHeight": 247,
+          "imageId": "OIP.H1Tbe-U0axsp3GSRbk7aPwHaD3"
+        },
+        "language": "en",
+        "isNavigational": false,
+        "noCache": false,
+        "siteName": "FLORENCE & THE MACHINE"
+      },
+      {
+        "id": "https://api.bing.microsoft.com/api/v7/#WebPages.2",
+        "name": "Florence and the Machine - IMDb",
+        "url": "https://www.imdb.com/name/nm3298657/",
+        "thumbnailUrl": "https://www.bing.com/th?id=OIP.fL8w9Z9EZWMfAEwmBaZPbQHaIn&w=80&h=80&c=1&pid=5.1",
+        "isFamilyFriendly": true,
+        "displayUrl": "https://www.imdb.com/name/nm3298657",
+        "snippet": "Florence and the Machine are an English indie rock band led by singer Florence Welch. IMDb provides their biography, awards, credits, photos, videos, and trivia.",
+        "dateLastCrawled": "2025-01-13T00:08:00.0000000Z",
+        "primaryImageOfPage": {
+          "thumbnailUrl": "https://www.bing.com/th?id=OIP.fL8w9Z9EZWMfAEwmBaZPbQHaIn&w=80&h=80&c=1&pid=5.1",
+          "width": 88,
+          "height": 88,
+          "sourceWidth": 474,
+          "sourceHeight": 551,
+          "imageId": "OIP.fL8w9Z9EZWMfAEwmBaZPbQHaIn"
+        },
+        "language": "en",
+        "isNavigational": false,
+        "richFacts": [
+          {
+            "label": {
+              "text": "Occupation"
+            },
+            "items": [
+              {
+                "text": "Music Artist, Actor, Composer"
+              }
+            ],
+            "hint": {
+              "text": "BASE:GENERICFACT"
+            }
+          },
+          {
+            "label": {
+              "text": "Author"
+            },
+            "items": [
+              {
+                "text": "Florence and the Machine"
+              }
+            ],
+            "hint": {
+              "text": "BASE:AUTHOR"
+            }
+          }
+        ],
+        "noCache": false,
+        "siteName": "IMDb"
+      },
+      {
+        "id": "https://api.bing.microsoft.com/api/v7/#WebPages.3",
+        "name": "Florence + The Machine - You've Got the Love - YouTube",
+        "url": "https://www.youtube.com/watch?v=PQZhN65vq9E",
+        "datePublished": "2009-12-24T00:00:00.0000000",
+        "datePublishedDisplayText": "Dec 24, 2009",
+        "isFamilyFriendly": true,
+        "displayUrl": "https://www.youtube.com/watch?v=PQZhN65vq9E",
+        "snippet": "We have created the Florence + The Machine official anthology Listen to \u2018Under Heaven Over Hell\u2019 now: https://Florence.lnk.to/uhohIDDance Fever \u2013 the new a...",
+        "dateLastCrawled": "2025-01-13T23:31:00.0000000Z",
+        "language": "en",
+        "isNavigational": false,
+        "richFacts": [
+          {
+            "label": {
+              "text": "Video Duration"
+            },
+            "items": [
+              {
+                "text": "3 min"
+              }
+            ],
+            "hint": {
+              "text": "MEDIA:DURATION"
+            }
+          },
+          {
+            "label": {
+              "text": "Author"
+            },
+            "items": [
+              {
+                "text": "FlorenceMachineVEVO"
+              }
+            ],
+            "hint": {
+              "text": "BASE:AUTHOR"
+            }
+          },
+          {
+            "label": {
+              "text": "Views"
+            },
+            "items": [
+              {
+                "text": "103027274"
+              }
+            ],
+            "hint": {
+              "text": "BASE:VIEWSCOUNT"
+            }
+          }
+        ],
+        "noCache": false,
+        "siteName": "YouTube"
+      },
+      {
+        "id": "https://api.bing.microsoft.com/api/v7/#WebPages.4",
+        "name": "Florence + the Machine Lyrics, Songs, and Albums - Genius",
+        "url": "https://genius.com/artists/Florence-the-machine",
+        "thumbnailUrl": "https://www.bing.com/th?id=OIP.xXzZG1dpWGGjZdFLOLBZ6AAAAA&w=80&h=80&c=1&pid=5.1",
+        "isFamilyFriendly": true,
+        "displayUrl": "https://genius.com/artists/Florence-the-machine",
+        "snippet": "Florence + the Machine is an English alternative band led by Florence Welch and Isabella Summers. Learn about their history, discography, awards, and latest album Dance Fever on Genius.",
+        "dateLastCrawled": "2025-01-11T09:18:00.0000000Z",
+        "primaryImageOfPage": {
+          "thumbnailUrl": "https://www.bing.com/th?id=OIP.xXzZG1dpWGGjZdFLOLBZ6AAAAA&w=80&h=80&c=1&pid=5.1",
+          "width": 88,
+          "height": 88,
+          "sourceWidth": 320,
+          "sourceHeight": 320,
+          "imageId": "OIP.xXzZG1dpWGGjZdFLOLBZ6AAAAA"
+        },
+        "language": "en",
+        "isNavigational": false,
+        "noCache": false,
+        "siteName": "Genius"
+      },
+      {
+        "id": "https://api.bing.microsoft.com/api/v7/#WebPages.5",
+        "name": "Florence and the Machine - Simple English Wikipedia, the free encyclopedia",
+        "url": "https://simple.wikipedia.org/wiki/Florence_and_the_Machine",
+        "isFamilyFriendly": true,
+        "displayUrl": "https://simple.wikipedia.org/wiki/Florence_and_the_Machine",
+        "snippet": "Florence and the Machine is an English rock band led by Florence Welch. Learn about their music, awards, touring, and history from this free encyclopedia article.",
+        "dateLastCrawled": "2025-01-13T10:27:00.0000000Z",
+        "language": "en",
+        "isNavigational": false,
+        "noCache": false,
+        "siteName": "Wikipedia"
+      },
+      {
+        "id": "https://api.bing.microsoft.com/api/v7/#WebPages.6",
+        "name": "Florence + the Machine - YouTube Music",
+        "url": "https://music.youtube.com/channel/UCkmCGbrGa7yNrRl_NHrOaTw",
+        "thumbnailUrl": "https://www.bing.com/th?id=OIP.Miqhh7tNkgs4z7ak0vRdIAHaHa&w=80&h=80&c=1&pid=5.1",
+        "isFamilyFriendly": true,
+        "displayUrl": "https://music.youtube.com/channel/UCkmCGbrGa7yNrRl_NHrOaTw",
+        "snippet": "Listen to the songs and videos of Florence + the Machine, a British indie rock band led by Florence Welch. Explore their albums, singles, playlists and more on YouTube Music.",
+        "dateLastCrawled": "2025-01-11T09:09:00.0000000Z",
+        "primaryImageOfPage": {
+          "thumbnailUrl": "https://www.bing.com/th?id=OIP.Miqhh7tNkgs4z7ak0vRdIAHaHa&w=80&h=80&c=1&pid=5.1",
+          "width": 88,
+          "height": 88,
+          "sourceWidth": 474,
+          "sourceHeight": 474,
+          "imageId": "OIP.Miqhh7tNkgs4z7ak0vRdIAHaHa"
+        },
+        "language": "en",
+        "isNavigational": false,
+        "noCache": true,
+        "siteName": "Youtube Music"
+      },
+      {
+        "id": "https://api.bing.microsoft.com/api/v7/#WebPages.7",
+        "name": "Florence Welch - Songs, Band & Facts - Biography",
+        "url": "https://www.biography.com/musicians/florence-welch",
+        "thumbnailUrl": "https://www.bing.com/th?id=OIP.lkIMHdVqzl6_pxqUd_8OKQHaDt&w=80&h=80&c=1&pid=5.1",
+        "datePublished": "2021-05-17T21:00:00.0000000",
+        "datePublishedDisplayText": "May 17, 2021",
+        "isFamilyFriendly": true,
+        "displayUrl": "https://www.biography.com/musicians/florence-welch",
+        "snippet": "Florence and the Machine initially consisted of Welch, her friend Isabella \"Machine\" Summers and a drum kit and ended up becoming a seven-piece band by 2009. In 2007, Welch recorded with the band ...",
+        "dateLastCrawled": "2025-01-09T23:09:00.0000000Z",
+        "primaryImageOfPage": {
+          "thumbnailUrl": "https://www.bing.com/th?id=OIP.lkIMHdVqzl6_pxqUd_8OKQHaDt&w=80&h=80&c=1&pid=5.1",
+          "width": 88,
+          "height": 88,
+          "sourceWidth": 474,
+          "sourceHeight": 237,
+          "imageId": "OIP.lkIMHdVqzl6_pxqUd_8OKQHaDt"
+        },
+        "language": "en",
+        "isNavigational": false,
+        "noCache": true,
+        "siteName": "Biography"
+      },
+      {
+        "id": "https://api.bing.microsoft.com/api/v7/#WebPages.8",
+        "contractualRules": [
+          {
+            "_type": "ContractualRules/LicenseAttribution",
+            "targetPropertyName": "snippet",
+            "targetPropertyIndex": 8,
+            "mustBeCloseToContent": true,
+            "license": {
+              "name": "CC-BY-SA",
+              "url": "http://creativecommons.org/licenses/by-sa/3.0/"
+            },
+            "licenseNotice": "Text under CC-BY-SA license"
+          }
+        ],
+        "name": "Florence Welch - Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Florence_Welch",
+        "thumbnailUrl": "https://www.bing.com/th?id=OIP.LXgt2GrZ-X35zDq0HMw0UgAAAA&w=80&h=80&c=1&pid=5.1",
+        "isFamilyFriendly": true,
+        "displayUrl": "https://en.wikipedia.org/wiki/Florence_Welch",
+        "snippet": "Florence Welch is an English singer and songwriter, and the lead vocalist of the indie rock band Florence and the Machine. Learn about her family, career, albums, awards, and personal life on this comprehensive biography page.",
+        "dateLastCrawled": "2025-01-14T17:57:00.0000000Z",
+        "primaryImageOfPage": {
+          "thumbnailUrl": "https://www.bing.com/th?id=OIP.LXgt2GrZ-X35zDq0HMw0UgAAAA&w=80&h=80&c=1&pid=5.1",
+          "width": 88,
+          "height": 88,
+          "sourceWidth": 330,
+          "sourceHeight": 228,
+          "imageId": "OIP.LXgt2GrZ-X35zDq0HMw0UgAAAA"
+        },
+        "language": "en",
+        "isNavigational": false,
+        "noCache": false,
+        "siteName": "Wikipedia"
+      },
+      {
+        "id": "https://api.bing.microsoft.com/api/v7/#WebPages.9",
+        "name": "FlorenceMachineVEVO - YouTube",
+        "url": "https://www.youtube.com/user/FlorenceMachineVEVO",
+        "thumbnailUrl": "https://www.bing.com/th?id=OIP.tYw6Pndu8dmYAkY61NUtegHaHa&w=80&h=80&c=1&pid=5.1",
+        "isFamilyFriendly": true,
+        "displayUrl": "https://www.youtube.com/user/FlorenceMachineVEVO",
+        "snippet": "Florence + The Machine on Vevo - Official Music Videos, Live Performances, Interviews and more...",
+        "dateLastCrawled": "2025-01-12T03:08:00.0000000Z",
+        "primaryImageOfPage": {
+          "thumbnailUrl": "https://www.bing.com/th?id=OIP.tYw6Pndu8dmYAkY61NUtegHaHa&w=80&h=80&c=1&pid=5.1",
+          "width": 88,
+          "height": 88,
+          "sourceWidth": 474,
+          "sourceHeight": 474,
+          "imageId": "OIP.tYw6Pndu8dmYAkY61NUtegHaHa"
+        },
+        "language": "en",
+        "isNavigational": false,
+        "noCache": false,
+        "siteName": "YouTube"
+      }
+    ],
+    "someResultsRemoved": true
+  },
+  "entities": {
+    "value": [
+      {
+        "id": "https://api.bing.microsoft.com/api/v7/#Entities.0",
+        "contractualRules": [
+          {
+            "_type": "ContractualRules/LicenseAttribution",
+            "targetPropertyName": "description",
+            "mustBeCloseToContent": true,
+            "license": {
+              "name": "CC-BY-SA",
+              "url": "http://creativecommons.org/licenses/by-sa/3.0/"
+            },
+            "licenseNotice": "Text under CC-BY-SA license"
+          },
+          {
+            "_type": "ContractualRules/LinkAttribution",
+            "targetPropertyName": "description",
+            "mustBeCloseToContent": true,
+            "text": "Wikipedia",
+            "url": "https://en.wikipedia.org/wiki/Florence_and_the_Machine"
+          },
+          {
+            "_type": "ContractualRules/MediaAttribution",
+            "targetPropertyName": "image",
+            "mustBeCloseToContent": true,
+            "url": "https://en.wikipedia.org/wiki/Florence_and_the_Machine"
+          }
+        ],
+        "webSearchUrl": "https://www.bing.com/entityexplore?q=Florence+and+the+Machine&filters=sid:%2290abe67a-26c8-d4a7-4d17-bb3fc12431d7%22&elv=AXXfrEiqqD9r3GuelwApulozEYFXzpL3Znig6RTKYsr3OE9fgPGQRGUa*OAM1KgcJzzxhozVYYPxEquhxbyoG1saCvjhteIYjsEbA!In3xU7",
+        "name": "Florence and the Machine",
+        "image": {
+          "name": "Florence and the Machine",
+          "thumbnailUrl": "http://www.bing.com/th?id=OSK.5765472aba9d033658b5643deae1bac2&w=110&h=75&c=7",
+          "provider": [
+            {
+              "_type": "Organization",
+              "url": "https://en.wikipedia.org/wiki/Florence_and_the_Machine"
+            }
+          ],
+          "hostPageUrl": "https://upload.wikimedia.org/wikipedia/commons/d/db/Florence_and_the_Machine_12_09_2018_-11_%2832834296408%29_%28cropped%29.jpg",
+          "width": 110,
+          "height": 75,
+          "sourceWidth": 2350,
+          "sourceHeight": 983
+        },
+        "description": "Florence and the Machine are an English indie rock band formed in London in 2007 by lead vocalist Florence Welch, keyboardist Isabella Summers, guitarist Rob Ackroyd, drummer Christopher Lloyd Hayden & harpist Tom Monger. The band has comprised a number of other musicians. The band's music has received acclaim across the media, especially from the BBC, which played a large part in their rise to prominence by promoting Florence and the Machine as part of BBC Music Introducing. At the 2009 Brit Awards, they received the Brit Awards \"Critics' Choice\" award. The band's music features dramatic, eccentric production and Welch's powerful vocals.",
+        "entityPresentationInfo": {
+          "entityScenario": "DominantEntity",
+          "entityTypeHints": [
+            "MusicGroup",
+            "Organization"
+          ],
+          "entityTypeDisplayHint": "British indie rock band"
+        },
+        "bingId": "90abe67a-26c8-d4a7-4d17-bb3fc12431d7"
+      }
+    ]
+  },
+  "relatedSearches": {
+    "id": "https://api.bing.microsoft.com/api/v7/#RelatedSearches",
+    "value": [
+      {
+        "text": "florence and the machine official website",
+        "displayText": "florence and the machine official website",
+        "webSearchUrl": "https://www.bing.com/search?q=florence+and+the+machine+official+website"
+      },
+      {
+        "text": "florence and the machine nederland",
+        "displayText": "florence and the machine nederland",
+        "webSearchUrl": "https://www.bing.com/search?q=florence+and+the+machine+nederland"
+      },
+      {
+        "text": "florence and the machine greatest hits",
+        "displayText": "florence and the machine greatest hits",
+        "webSearchUrl": "https://www.bing.com/search?q=florence+and+the+machine+greatest+hits"
+      },
+      {
+        "text": "florence and the machine official",
+        "displayText": "florence and the machine official",
+        "webSearchUrl": "https://www.bing.com/search?q=florence+and+the+machine+official"
+      },
+      {
+        "text": "florence and the machine best songs",
+        "displayText": "florence and the machine best songs",
+        "webSearchUrl": "https://www.bing.com/search?q=florence+and+the+machine+best+songs"
+      },
+      {
+        "text": "florence and the machine songs list",
+        "displayText": "florence and the machine songs list",
+        "webSearchUrl": "https://www.bing.com/search?q=florence+and+the+machine+songs+list"
+      },
+      {
+        "text": "florence and the machine songs",
+        "displayText": "florence and the machine songs",
+        "webSearchUrl": "https://www.bing.com/search?q=florence+and+the+machine+songs"
+      },
+      {
+        "text": "florence and the machine free",
+        "displayText": "florence and the machine free",
+        "webSearchUrl": "https://www.bing.com/search?q=florence+and+the+machine+free"
+      }
+    ]
+  },
+  "videos": {
+    "id": "https://api.bing.microsoft.com/api/v7/#Videos",
+    "readLink": "https://api.bing.microsoft.com/api/v7/videos/search?q=Florence+and+the+Machine",
+    "webSearchUrl": "https://www.bing.com/videos/search?q=Florence+and+the+Machine",
+    "isFamilyFriendly": true,
+    "value": [
+      {
+        "webSearchUrl": "https://www.bing.com/videos/search?q=Florence%20and%20the%20Machine&view=detail&mid=A188CE7CF3A7F0F7A078A188CE7CF3A7F0F7A078",
+        "name": "Florence + The Machine - Dog Days Are Over (2010 Version) (Official Music Video)",
+        "description": "We have created the Florence + The Machine official anthology Listen to \u2018Under Heaven Over Hell\u2019 now: https://Florence.lnk.to/uhohID Official Music Video for \"Dog Days Are Over\" performed by Florence + The Machine from their 2009 debut album, Lungs. Subscribe to Youtube: https://Florence.lnk.to/Youtube Join Florence online: Instagram: https ...",
+        "thumbnailUrl": "https://tse2.mm.bing.net/th?id=OVP.GDE8ktl6-7cBZomjzkDhaQHgFo&pid=Api",
+        "datePublished": "2010-03-12T16:37:21.0000000",
+        "publisher": [
+          {
+            "name": "YouTube"
+          }
+        ],
+        "creator": {
+          "name": "FlorenceMachineVEVO"
+        },
+        "isAccessibleForFree": true,
+        "contentUrl": "https://www.youtube.com/watch?v=iWOyfLBYtuU",
+        "hostPageUrl": "https://www.youtube.com/watch?v=iWOyfLBYtuU",
+        "encodingFormat": "mp4",
+        "hostPageDisplayUrl": "https://www.youtube.com/watch?v=iWOyfLBYtuU",
+        "width": 3840,
+        "height": 2160,
+        "duration": "PT3M40S",
+        "motionThumbnailUrl": "https://tse2.mm.bing.net/th?id=OM.eKD38KfzfM6IoQ_1728460269&pid=Api",
+        "embedHtml": "<iframe width=\"1280\" height=\"720\" src=\"http://www.youtube.com/embed/iWOyfLBYtuU?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>",
+        "allowHttpsEmbed": true,
+        "viewCount": 221327821,
+        "thumbnail": {
+          "width": 160,
+          "height": 120
+        },
+        "allowMobileEmbed": true,
+        "isSuperfresh": false
+      },
+      {
+        "webSearchUrl": "https://www.bing.com/videos/search?q=Florence%20and%20the%20Machine&view=detail&mid=073896201360089EF696073896201360089EF696",
+        "name": "Florence + The Machine - You've Got the Love",
+        "description": "We have created the Florence + The Machine official anthology Listen to \u2018Under Heaven Over Hell\u2019 now: https://Florence.lnk.to/uhohID Dance Fever \u2013 the new album \u2013 out now http://Florence.lnk.to/DanceFeverID Join Florence online: YouTube: https://Florence.lnk.to/Youtube Instagram: https://Florence.lnk.to/Instagram Twitter: https ...",
+        "thumbnailUrl": "https://tse2.mm.bing.net/th?id=OVP.msmz2ILbsy2NSBZBiFY7HgHgFo&pid=Api",
+        "datePublished": "2009-12-25T05:58:04.0000000",
+        "publisher": [
+          {
+            "name": "YouTube"
+          }
+        ],
+        "creator": {
+          "name": "FlorenceMachineVEVO"
+        },
+        "isAccessibleForFree": true,
+        "contentUrl": "https://www.youtube.com/watch?v=PQZhN65vq9E",
+        "hostPageUrl": "https://www.youtube.com/watch?v=PQZhN65vq9E",
+        "encodingFormat": "mp4",
+        "hostPageDisplayUrl": "https://www.youtube.com/watch?v=PQZhN65vq9E",
+        "width": 854,
+        "height": 480,
+        "duration": "PT2M43S",
+        "motionThumbnailUrl": "https://tse2.mm.bing.net/th?id=OM.lvaeCGATIJY4Bw_1732278505&pid=Api",
+        "embedHtml": "<iframe width=\"1280\" height=\"720\" src=\"http://www.youtube.com/embed/PQZhN65vq9E?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>",
+        "allowHttpsEmbed": true,
+        "viewCount": 103027274,
+        "thumbnail": {
+          "width": 160,
+          "height": 120
+        },
+        "allowMobileEmbed": true,
+        "isSuperfresh": false
+      },
+      {
+        "webSearchUrl": "https://www.bing.com/videos/search?q=Florence%20and%20the%20Machine&view=detail&mid=17F90B77C6DBCF0E73FA17F90B77C6DBCF0E73FA",
+        "name": "Florence + The Machine - Shake It Out",
+        "description": "We have created the Florence + The Machine official anthology Listen to \u2018Under Heaven Over Hell\u2019 now: https://Florence.lnk.to/uhohID Dance Fever \u2013 the new album \u2013 out now http://Florence.lnk.to/DanceFeverID Join Florence online: YouTube: https://Florence.lnk.to/Youtube Instagram: https://Florence.lnk.to/Instagram Twitter: https ...",
+        "thumbnailUrl": "https://tse2.mm.bing.net/th?id=OVP.myPtbtZwp41Dwk_MuuFtRAHgFo&pid=Api",
+        "datePublished": "2011-10-03T17:33:30.0000000",
+        "publisher": [
+          {
+            "name": "YouTube"
+          }
+        ],
+        "creator": {
+          "name": "FlorenceMachineVEVO"
+        },
+        "isAccessibleForFree": true,
+        "contentUrl": "https://www.youtube.com/watch?v=WbN0nX61rIs",
+        "hostPageUrl": "https://www.youtube.com/watch?v=WbN0nX61rIs",
+        "encodingFormat": "mp4",
+        "hostPageDisplayUrl": "https://www.youtube.com/watch?v=WbN0nX61rIs",
+        "width": 1920,
+        "height": 1080,
+        "duration": "PT4M42S",
+        "motionThumbnailUrl": "https://tse2.mm.bing.net/th?id=OM.-nMOz9vGdwv5Fw_1730678309&pid=Api",
+        "embedHtml": "<iframe width=\"1280\" height=\"720\" src=\"http://www.youtube.com/embed/WbN0nX61rIs?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>",
+        "allowHttpsEmbed": true,
+        "viewCount": 125952750,
+        "thumbnail": {
+          "width": 160,
+          "height": 120
+        },
+        "allowMobileEmbed": true,
+        "isSuperfresh": false
+      },
+      {
+        "webSearchUrl": "https://www.bing.com/videos/search?q=Florence%20and%20the%20Machine&view=detail&mid=E8A8A0B5C11C82F10644E8A8A0B5C11C82F10644",
+        "name": "Florence + The Machine - Cosmic Love",
+        "description": "We have created the Florence + The Machine official anthology Listen to \u2018Under Heaven Over Hell\u2019 now: https://Florence.lnk.to/uhohID Dance Fever \u2013 the new album \u2013 out now http://Florence.lnk.to/DanceFeverID Join Florence online: YouTube: https://Florence.lnk.to/Youtube Instagram: https://Florence.lnk.to/Instagram Twitter: https ...",
+        "thumbnailUrl": "https://tse3.mm.bing.net/th?id=OVP.72cAUcWfiVDc6TN771UYjwHgFo&pid=Api",
+        "datePublished": "2010-05-17T15:33:40.0000000",
+        "publisher": [
+          {
+            "name": "YouTube"
+          }
+        ],
+        "creator": {
+          "name": "FlorenceMachineVEVO"
+        },
+        "isAccessibleForFree": true,
+        "contentUrl": "https://www.youtube.com/watch?v=2EIeUlvHAiM",
+        "hostPageUrl": "https://www.youtube.com/watch?v=2EIeUlvHAiM",
+        "encodingFormat": "mp4",
+        "hostPageDisplayUrl": "https://www.youtube.com/watch?v=2EIeUlvHAiM",
+        "width": 640,
+        "height": 360,
+        "duration": "PT4M1S",
+        "motionThumbnailUrl": "https://tse3.mm.bing.net/th?id=OM.RAbxghzBtaCo6A_1735400640&pid=Api",
+        "embedHtml": "<iframe width=\"1280\" height=\"720\" src=\"http://www.youtube.com/embed/2EIeUlvHAiM?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>",
+        "allowHttpsEmbed": true,
+        "viewCount": 72952318,
+        "thumbnail": {
+          "width": 160,
+          "height": 120
+        },
+        "allowMobileEmbed": true,
+        "isSuperfresh": false
+      },
+      {
+        "webSearchUrl": "https://www.bing.com/videos/search?q=Florence%20and%20the%20Machine&view=detail&mid=BD225F976951B44A4D1ABD225F976951B44A4D1A",
+        "name": "Florence + The Machine - Free",
+        "description": "We have created the Florence + The Machine official anthology Listen to \u2018Under Heaven Over Hell\u2019 now: https://Florence.lnk.to/uhohID Subscribe to Youtube: https://Florence.lnk.to/Youtube Join Florence online: Instagram: https://Florence.lnk.to/Instagram Twitter: https://Florence.lnk.to/Twitter Tik Tok: https://Florence.lnk.to/Tiktok ...",
+        "thumbnailUrl": "https://tse4.mm.bing.net/th?id=OVP.O5iaZLoAc-a7GcxgA-g64gHgFo&pid=Api",
+        "datePublished": "2022-04-20T16:00:25.0000000",
+        "publisher": [
+          {
+            "name": "YouTube"
+          }
+        ],
+        "creator": {
+          "name": "FlorenceMachineVEVO"
+        },
+        "isAccessibleForFree": true,
+        "contentUrl": "https://www.youtube.com/watch?v=ui8kUKuLBaU",
+        "hostPageUrl": "https://www.youtube.com/watch?v=ui8kUKuLBaU",
+        "encodingFormat": "mp4",
+        "hostPageDisplayUrl": "https://www.youtube.com/watch?v=ui8kUKuLBaU",
+        "width": 1920,
+        "height": 1080,
+        "duration": "PT4M52S",
+        "motionThumbnailUrl": "https://tse4.mm.bing.net/th?id=OM.Gk1KtFFpl18ivQ_1731668765&pid=Api",
+        "embedHtml": "<iframe width=\"1280\" height=\"720\" src=\"http://www.youtube.com/embed/ui8kUKuLBaU?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>",
+        "allowHttpsEmbed": true,
+        "viewCount": 15415070,
+        "thumbnail": {
+          "width": 160,
+          "height": 120
+        },
+        "allowMobileEmbed": true,
+        "isSuperfresh": false
+      },
+      {
+        "webSearchUrl": "https://www.bing.com/videos/search?q=Florence%20and%20the%20Machine&view=detail&mid=6D05BF152256AF9F711A6D05BF152256AF9F711A",
+        "name": "Florence + The Machine - My Love",
+        "description": "We have created the Florence + The Machine official anthology Listen to \u2018Under Heaven Over Hell\u2019 now: https://Florence.lnk.to/uhohID Directed by Autumn de Wilde Director of Photography / Jamie Feliu-Torres Choreographed by Ryan Heffington Costume Design by Kate Mulleavy & Laura Mulleavy of Rodarte Additional Costume & Wardrobe Stylists ...",
+        "thumbnailUrl": "https://tse1.mm.bing.net/th?id=OVP.np7M1cIYgUvtgYaeiyDUZgHgFo&pid=Api",
+        "datePublished": "2022-03-10T08:00:12.0000000",
+        "publisher": [
+          {
+            "name": "YouTube"
+          }
+        ],
+        "creator": {
+          "name": "FlorenceMachineVEVO"
+        },
+        "isAccessibleForFree": true,
+        "contentUrl": "https://www.youtube.com/watch?v=h9CNGPy11Jc",
+        "hostPageUrl": "https://www.youtube.com/watch?v=h9CNGPy11Jc",
+        "encodingFormat": "mp4",
+        "hostPageDisplayUrl": "https://www.youtube.com/watch?v=h9CNGPy11Jc",
+        "width": 1920,
+        "height": 1080,
+        "duration": "PT4M25S",
+        "motionThumbnailUrl": "https://tse1.mm.bing.net/th?id=OM.GnGfr1YiFb8FbQ_1732748570&pid=Api",
+        "embedHtml": "<iframe width=\"1280\" height=\"720\" src=\"http://www.youtube.com/embed/h9CNGPy11Jc?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>",
+        "allowHttpsEmbed": true,
+        "viewCount": 9206434,
+        "thumbnail": {
+          "width": 160,
+          "height": 120
+        },
+        "allowMobileEmbed": true,
+        "isSuperfresh": false
+      },
+      {
+        "webSearchUrl": "https://www.bing.com/videos/search?q=Florence%20and%20the%20Machine&view=detail&mid=E91643BDD0DE51C7045CE91643BDD0DE51C7045C",
+        "name": "Florence + The Machine - No Light, No Light",
+        "description": "We have created the Florence + The Machine official anthology Listen to \u2018Under Heaven Over Hell\u2019 now: https://Florence.lnk.to/uhohID Florence + The Machine - No Light, No Light Directed by Arni & Kinski Join Florence online: YouTube: https://Florence.lnk.to/Youtube Instagram: https://Florence.lnk.to/Instagram Twitter: https://Florence.lnk ...",
+        "thumbnailUrl": "https://tse3.mm.bing.net/th?id=OVP.nIMijGIo6UvdMjG-zvX1jQHgFo&pid=Api",
+        "datePublished": "2011-11-18T11:43:13.0000000",
+        "publisher": [
+          {
+            "name": "YouTube"
+          }
+        ],
+        "creator": {
+          "name": "FlorenceMachineVEVO"
+        },
+        "isAccessibleForFree": true,
+        "contentUrl": "https://www.youtube.com/watch?v=HGH-4jQZRcc",
+        "hostPageUrl": "https://www.youtube.com/watch?v=HGH-4jQZRcc",
+        "encodingFormat": "mp4",
+        "hostPageDisplayUrl": "https://www.youtube.com/watch?v=HGH-4jQZRcc",
+        "width": 1920,
+        "height": 1080,
+        "duration": "PT4M15S",
+        "motionThumbnailUrl": "https://tse3.mm.bing.net/th?id=OM.XATHUd7QvUMW6Q_1732483390&pid=Api",
+        "embedHtml": "<iframe width=\"1280\" height=\"720\" src=\"http://www.youtube.com/embed/HGH-4jQZRcc?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>",
+        "allowHttpsEmbed": true,
+        "viewCount": 47138298,
+        "thumbnail": {
+          "width": 160,
+          "height": 120
+        },
+        "allowMobileEmbed": true,
+        "isSuperfresh": false
+      },
+      {
+        "webSearchUrl": "https://www.bing.com/videos/search?q=Florence%20and%20the%20Machine&view=detail&mid=4811F33CAFFB3FC7AF6A4811F33CAFFB3FC7AF6A",
+        "name": "Florence + The Machine - Dog Days Are Over (Live At Oxegen Festival, 2010)",
+        "description": "Dance Fever \u2013 the new album \u2013 out now http://Florence.lnk.to/DanceFeverID Join Florence online: YouTube: https://Florence.lnk.to/Youtube Instagram: https://Florence.lnk.to/Instagram Twitter: https://Florence.lnk.to/Twitter TikTok: https://Florence.lnk.to/Tiktok Facebook: https://Florence.lnk.to/Facebook Mailing list & more: https://Florence ...",
+        "thumbnailUrl": "https://tse1.mm.bing.net/th?id=OVP.zYm80tYUCgIx16pHoHk7qQHgFo&pid=Api",
+        "datePublished": "2010-09-09T18:28:34.0000000",
+        "publisher": [
+          {
+            "name": "YouTube"
+          }
+        ],
+        "creator": {
+          "name": "FlorenceMachineVEVO"
+        },
+        "isAccessibleForFree": true,
+        "contentUrl": "https://www.youtube.com/watch?v=wiDIObd8YaI",
+        "hostPageUrl": "https://www.youtube.com/watch?v=wiDIObd8YaI",
+        "encodingFormat": "mp4",
+        "hostPageDisplayUrl": "https://www.youtube.com/watch?v=wiDIObd8YaI",
+        "width": 640,
+        "height": 360,
+        "duration": "PT7M23S",
+        "motionThumbnailUrl": "https://tse1.mm.bing.net/th?id=OM.aq_HP_uvPPMRSA_1734922404&pid=Api",
+        "embedHtml": "<iframe width=\"1280\" height=\"720\" src=\"http://www.youtube.com/embed/wiDIObd8YaI?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>",
+        "allowHttpsEmbed": true,
+        "viewCount": 20636807,
+        "thumbnail": {
+          "width": 160,
+          "height": 120
+        },
+        "allowMobileEmbed": true,
+        "isSuperfresh": false
+      },
+      {
+        "webSearchUrl": "https://www.bing.com/videos/search?q=Florence%20and%20the%20Machine&view=detail&mid=668578EBCAEA2F52F5D7668578EBCAEA2F52F5D7",
+        "name": "Florence and the Machine - Cosmic Love (Live on KEXP)",
+        "description": "Florence and the Machine perform \"Cosmic Love\" live in the KEXP studio. Recorded 4/16/10. host: Kevin Cole engineer: Kevin Suggs cameras: Jim Beckmann & Patrick Richardson Wright edits: Jim Beckmann",
+        "thumbnailUrl": "https://tse4.mm.bing.net/th?id=OVP.QvPpa2rCOEzJuGUYq4KNrAHgFo&pid=Api",
+        "datePublished": "2010-05-11T07:17:22.0000000",
+        "publisher": [
+          {
+            "name": "YouTube"
+          }
+        ],
+        "creator": {
+          "name": "KEXP"
+        },
+        "isAccessibleForFree": true,
+        "contentUrl": "https://www.youtube.com/watch?v=_gMq3hRLDD0",
+        "hostPageUrl": "https://www.youtube.com/watch?v=_gMq3hRLDD0",
+        "encodingFormat": "mp4",
+        "hostPageDisplayUrl": "https://www.youtube.com/watch?v=_gMq3hRLDD0",
+        "width": 1920,
+        "height": 1080,
+        "duration": "PT5M13S",
+        "motionThumbnailUrl": "https://tse4.mm.bing.net/th?id=OM.1_VSL-rK63iFZg_1729511809&pid=Api",
+        "embedHtml": "<iframe width=\"1280\" height=\"720\" src=\"http://www.youtube.com/embed/_gMq3hRLDD0?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>",
+        "allowHttpsEmbed": true,
+        "viewCount": 43092991,
+        "thumbnail": {
+          "width": 160,
+          "height": 120
+        },
+        "allowMobileEmbed": true,
+        "isSuperfresh": false
+      },
+      {
+        "webSearchUrl": "https://www.bing.com/videos/search?q=Florence%20and%20the%20Machine&view=detail&mid=AA77C58B33549C058612AA77C58B33549C058612",
+        "name": "Florence + The Machine - What The Water Gave Me",
+        "description": "We have created the Florence + The Machine official anthology Listen to \u2018Under Heaven Over Hell\u2019 now: https://Florence.lnk.to/uhohID Join Florence online: YouTube: https://Florence.lnk.to/Youtube Instagram: https://Florence.lnk.to/Instagram Twitter: https://Florence.lnk.to/Twitter TikTok: https://Florence.lnk.to/Tiktok Facebook: https ...",
+        "thumbnailUrl": "https://tse2.mm.bing.net/th?id=OVP.Lg7rVpCAd6Hp_Yc28xHgbgHgFo&pid=Api",
+        "datePublished": "2011-08-23T15:00:00.0000000",
+        "publisher": [
+          {
+            "name": "YouTube"
+          }
+        ],
+        "creator": {
+          "name": "FlorenceMachineVEVO"
+        },
+        "isAccessibleForFree": true,
+        "contentUrl": "https://www.youtube.com/watch?v=am6rArVPip8",
+        "hostPageUrl": "https://www.youtube.com/watch?v=am6rArVPip8",
+        "encodingFormat": "mp4",
+        "hostPageDisplayUrl": "https://www.youtube.com/watch?v=am6rArVPip8",
+        "width": 1280,
+        "height": 720,
+        "duration": "PT5M33S",
+        "motionThumbnailUrl": "https://tse2.mm.bing.net/th?id=OM2.EoYFnFQzi8V3qg_1731031795&pid=Api",
+        "embedHtml": "<iframe width=\"1280\" height=\"720\" src=\"http://www.youtube.com/embed/am6rArVPip8?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>",
+        "allowHttpsEmbed": true,
+        "viewCount": 40867981,
+        "thumbnail": {
+          "width": 160,
+          "height": 120
+        },
+        "allowMobileEmbed": true,
+        "isSuperfresh": false
+      }
+    ],
+    "scenario": "List"
+  },
+  "rankingResponse": {
+    "mainline": {
+      "items": [
+        {
+          "answerType": "WebPages",
+          "resultIndex": 0,
+          "value": {
+            "id": "https://api.bing.microsoft.com/api/v7/#WebPages.0"
+          }
+        },
+        {
+          "answerType": "Videos",
+          "value": {
+            "id": "https://api.bing.microsoft.com/api/v7/#Videos"
+          }
+        },
+        {
+          "answerType": "Videos"
+        },
+        {
+          "answerType": "WebPages",
+          "resultIndex": 1,
+          "value": {
+            "id": "https://api.bing.microsoft.com/api/v7/#WebPages.1"
+          }
+        },
+        {
+          "answerType": "WebPages",
+          "resultIndex": 2,
+          "value": {
+            "id": "https://api.bing.microsoft.com/api/v7/#WebPages.2"
+          }
+        },
+        {
+          "answerType": "WebPages",
+          "resultIndex": 3,
+          "value": {
+            "id": "https://api.bing.microsoft.com/api/v7/#WebPages.3"
+          }
+        },
+        {
+          "answerType": "WebPages",
+          "resultIndex": 4,
+          "value": {
+            "id": "https://api.bing.microsoft.com/api/v7/#WebPages.4"
+          }
+        },
+        {
+          "answerType": "WebPages",
+          "resultIndex": 5,
+          "value": {
+            "id": "https://api.bing.microsoft.com/api/v7/#WebPages.5"
+          }
+        },
+        {
+          "answerType": "WebPages",
+          "resultIndex": 6,
+          "value": {
+            "id": "https://api.bing.microsoft.com/api/v7/#WebPages.6"
+          }
+        },
+        {
+          "answerType": "WebPages",
+          "resultIndex": 7,
+          "value": {
+            "id": "https://api.bing.microsoft.com/api/v7/#WebPages.7"
+          }
+        },
+        {
+          "answerType": "WebPages",
+          "resultIndex": 8,
+          "value": {
+            "id": "https://api.bing.microsoft.com/api/v7/#WebPages.8"
+          }
+        },
+        {
+          "answerType": "WebPages",
+          "resultIndex": 9,
+          "value": {
+            "id": "https://api.bing.microsoft.com/api/v7/#WebPages.9"
+          }
+        }
+      ]
+    },
+    "sidebar": {
+      "items": [
+        {
+          "answerType": "Entities",
+          "resultIndex": 0,
+          "value": {
+            "id": "https://api.bing.microsoft.com/api/v7/#Entities.0"
+          }
+        },
+        {
+          "answerType": "WebPages"
+        },
+        {
+          "answerType": "RelatedSearches",
+          "value": {
+            "id": "https://api.bing.microsoft.com/api/v7/#RelatedSearches"
+          }
+        }
+      ]
+    }
+  }
+}

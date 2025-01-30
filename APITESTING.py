@@ -1,5 +1,6 @@
 import requests
 import json
+import re
 
 BASE_URI = 'https://api.bing.microsoft.com/v7.0/images/visualsearch'
 
@@ -8,7 +9,7 @@ BASE_URI = 'https://api.bing.microsoft.com/v7.0/images/visualsearch'
     resource group at the same time (or just make sure the group is a
     visual search resource) """
 
-SUBSCRIPTION_KEY = 'c898877efe6e4226851556beef3a5050' 
+SUBSCRIPTION_KEY = '31013ec018f4420c82d63ae0d73066fe' 
 imagePath = "dasani-water-217886-64_600.jpg"
 
 HEADERS = {'Ocp-Apim-Subscription-Key': SUBSCRIPTION_KEY}
@@ -47,9 +48,7 @@ def get_title_names(file_path):
                 
                 for item in value_list:
                     name = item.get("name", "")
-                    entries.append({
-                            "name": name,
-                        })
+                    entries.append(name)
     
     return entries
             
@@ -70,9 +69,7 @@ def get_display_text(file_path):
                 
                 for item in value_list:
                     displayText = item.get("displayText", "")
-                    entries.append({
-                            "displayText": displayText,
-                        })
+                    entries.append(displayText)
     
     return entries
 
@@ -81,5 +78,22 @@ file_path = "result.json"
 entries1 = get_title_names(file_path)
 entries2 = get_display_text(file_path)
 
+def name_finder(names):
+    
+    find = names[0]
+    found = []
+    
+    for name in names:
+        if(re.search(find, name)):
+            found.append(name)
+                
+    return found
+
 print("start",entries1,"end please show that this is the end please")
 print("\n now this is the start of second entries", entries2, "this is where entries2 ends")
+
+print("\n\n")
+
+found1 = name_finder(entries1)
+
+print(len(entries1), " ", len(entries2), " ", len(found1))
