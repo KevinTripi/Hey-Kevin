@@ -9,7 +9,7 @@ BASE_URI = 'https://api.bing.microsoft.com/v7.0/images/visualsearch'
     resource group at the same time (or just make sure the group is a
     visual search resource) """
 
-SUBSCRIPTION_KEY = '31013ec018f4420c82d63ae0d73066fe' 
+SUBSCRIPTION_KEY = '' 
 imagePath = "dasani-water-217886-64_600.jpg"
 
 HEADERS = {'Ocp-Apim-Subscription-Key': SUBSCRIPTION_KEY}
