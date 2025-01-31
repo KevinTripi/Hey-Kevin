@@ -74,57 +74,96 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       // You must wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner until the
       // controller has finished initializing.
-      body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // If the Future is complete, display the preview.
-            return SizedBox(
-                child: SafeArea(
-                    child: SizedBox(
+      body: Stack(children: [
+        SizedBox(
+          child: SafeArea(
+            child: SizedBox(
               height: MediaQuery.sizeOf(context).height,
               width: MediaQuery.sizeOf(context).width,
-              child: RotatedBox(
-                  quarterTurns: 1, child: CameraPreview(_controller)),
-            )));
-          } else {
-            // Otherwise, display a loading indicator.
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        // Provide an onPressed callback.
-        onPressed: () async {
-          // Take the Picture in a try / catch block. If anything goes wrong,
-          // catch the error.
-          try {
-            // Ensure that the camera is initialized.
-            await _initializeControllerFuture;
-
-            // Attempt to take a picture and get the file `image`
-            // where it was saved.
-            final image = await _controller.takePicture();
-
-            if (!context.mounted) return;
-
-            // If the picture was taken, display it on a new screen.
-            await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DisplayPictureScreen(
-                  // Pass the automatically generated path to
-                  // the DisplayPictureScreen widget.
-                  imagePath: image.path,
-                ),
+              child: FutureBuilder<void>(
+                future: _initializeControllerFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return RotatedBox(
+                      quarterTurns: 1,
+                      child: CameraPreview(_controller),
+                    );
+                  } else {
+                    // Otherwise, display a loading indicator.
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                },
               ),
-            );
-          } catch (e) {
-            // If an error occurs, log the error to the console.
-            print(e);
-          }
-        },
-        child: const Icon(Icons.camera_alt),
-      ),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 50,
+          left: 0,
+          right: 0,
+          child: Container(
+            margin: EdgeInsets.all(1),
+            padding: EdgeInsets.all(5),
+            decoration:
+                BoxDecoration(border: Border.all(color: Colors.blue, width: 5)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FloatingActionButton(
+                    onPressed: null,
+                    heroTag: null,
+                    child: Icon(
+                      Icons.image,
+                      size: 40,
+                    )),
+                IconButton(
+                  onPressed: () async {
+                    // Take the Picture in a try / catch block. If anything goes wrong,
+                    // catch the error.
+                    try {
+                      // Ensure that the camera is initialized.
+                      await _initializeControllerFuture;
+
+                      // Attempt to take a picture and get the file `image`
+                      // where it was saved.
+                      final image = await _controller.takePicture();
+
+                      if (!context.mounted) return;
+
+                      // If the picture was taken, display it on a new screen.
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => DisplayPictureScreen(
+                            // Pass the automatically generated path to
+                            // the DisplayPictureScreen widget.
+                            imagePath: image.path,
+                          ),
+                        ),
+                      );
+                    } catch (e) {
+                      // If an error occurs, log the error to the console.
+                      print(e);
+                    }
+                  },
+                  iconSize: 100,
+                  icon: Icon(
+                    Icons.camera,
+                    color: Colors.red,
+                  ),
+                ),
+                FloatingActionButton(
+                  onPressed: null,
+                  heroTag: null,
+                  child: Icon(
+                    Icons.multitrack_audio,
+                    size: 40,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ]),
     );
   }
 }
