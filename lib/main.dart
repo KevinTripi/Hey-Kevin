@@ -1,218 +1,147 @@
-import 'package:flutter/material.dart';
-import '../pages/home_page.dart';
+import 'dart:async';
+import 'dart:io';
+
 import 'package:camera/camera.dart';
-import 'package:gal/gal.dart';
-import 'package:sliding_drawer/sliding_drawer.dart';
+import 'package:flutter/material.dart';
 
-/*
-UNRELATED:
-https://docs.flutter.dev/cookbook/plugins/picture-using-camera#6-display-the-picture-with-an-image-widget
-Takes a picture but doesn't save it to photos, a possible direction if we want.
-*/
-void main() {
-  runApp(const MyApp());
-}
+// Base project from https://docs.flutter.dev/cookbook/plugins/picture-using-camera#complete-example
+Future<void> main() async {
+  // Ensure that plugin services are initialized so that `availableCameras()`
+  // can be called before `runApp()`
+  WidgetsFlutterBinding.ensureInitialized();
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  // Obtain a list of the available cameras on the device.
+  final cameras = await availableCameras();
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+  // Get a specific camera from the list of available cameras.
+  // The emulator only has a working cameras.last. If you even try to use cameras.first, emulator crashes.
+  final firstCamera = cameras.last;
+
+  runApp(
+    MaterialApp(
+      theme: ThemeData.dark(),
+      home: TakePictureScreen(
+        // Pass the appropriate camera to the TakePictureScreen widget.
+        camera: firstCamera,
       ),
-      home: MyHomePage(title: 'My first flutter'),
-    );
-  }
+    ),
+  );
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+// A screen that allows users to take a picture using a given camera.
+class TakePictureScreen extends StatefulWidget {
+  const TakePictureScreen({
+    super.key,
+    required this.camera,
+  });
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  final CameraDescription camera;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  TakePictureScreenState createState() => TakePictureScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
-  List<CameraDescription> cameras = [];
-  CameraController? cameraController;
-
-  // Create a drawer controller.
-  // Also you can set up the drawer width and
-  // the initial state here (optional).
-  final SlidingDrawerController _drawerController = SlidingDrawerController(
-    isOpenOnInitial: false,
-    drawerFraction: 1,
-  );
+class TakePictureScreenState extends State<TakePictureScreen> {
+  late CameraController _controller;
+  late Future<void> _initializeControllerFuture;
 
   @override
   void initState() {
     super.initState();
-    _setupCameraController();
+    // To display the current output from the Camera,
+    // create a CameraController.
+    _controller = CameraController(
+      // Get a specific camera from the list of available cameras.
+      widget.camera,
+      // Define the resolution to use.
+      ResolutionPreset.high,
+    );
+
+    // Next, initialize the controller. This returns a Future.
+    _initializeControllerFuture = _controller.initialize();
+  }
+
+  @override
+  void dispose() {
+    // Dispose of the controller when the widget is disposed.
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      //   title: Text(widget.title),
-      // ),
-      body: Container(
-        color: Colors.orangeAccent,
-        child: SlidingDrawer(
-          // From https://pub.dev/packages/sliding_drawer
-          controller: _drawerController,
-          axisDirection: AxisDirection.up,
+      // You must wait until the controller is initialized before displaying the
+      // camera preview. Use a FutureBuilder to display a loading spinner until the
+      // controller has finished initializing.
+      body: FutureBuilder<void>(
+        future: _initializeControllerFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            // If the Future is complete, display the preview.
+            return SizedBox(
+                child: SafeArea(
+                    child: SizedBox(
+              height: MediaQuery.sizeOf(context).height,
+              width: MediaQuery.sizeOf(context).width,
+              child: RotatedBox(
+                  quarterTurns: 1, child: CameraPreview(_controller)),
+            )));
+          } else {
+            // Otherwise, display a loading indicator.
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        // Provide an onPressed callback.
+        onPressed: () async {
+          // Take the Picture in a try / catch block. If anything goes wrong,
+          // catch the error.
+          try {
+            // Ensure that the camera is initialized.
+            await _initializeControllerFuture;
 
-          // The drawer holds the ListView where our results will sit.
-          drawer: ListView(
-            physics:
-                NeverScrollableScrollPhysics(), // From https://stackoverflow.com/a/51367188
-            shrinkWrap:
-                true, // From https://www.flutterbeads.com/listview-inside-column-in-flutter/
-            children: [
-              // https://api.flutter.dev/flutter/material/ListTile/selected.html
+            // Attempt to take a picture and get the file `image`
+            // where it was saved.
+            final image = await _controller.takePicture();
 
-              // Title Tile
-              ListTile(
-                title: Text(textAlign: TextAlign.center, "Brownies"),
-                subtitle: Text('I hurt myself thank you'),
-                // onTap: () {},
-              ),
-              // Fact #1 Tile
-              ListTile(
-                title: Text(textAlign: TextAlign.center, "Fact 1"),
-                subtitle: Text('Something about the object\'s color.'),
-              ),
-              // Fact #2 Tile
-              ListTile(
-                title: Text(textAlign: TextAlign.center, "Fact 2"),
-                subtitle: Text('Fake Review'),
-              ),
-              // Fact #3 Tile
-              ListTile(
-                title: Text(textAlign: TextAlign.center, "Fact 3"),
-                subtitle: Text(
-                    'Whoop, whoop, whoop, whoopum gundam style (AI freestyle)'),
-              ),
-            ],
-          ),
+            if (!context.mounted) return;
 
-          // The body holds the camera and it's buttons.
-          body: Stack(
-            // From https://stackoverflow.com/a/49839188
-            children: [
-              Container(
-                margin: EdgeInsets.all(1),
-                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 9),
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 5)),
-                child: Center(child: _buildCamera()),
-              ),
-
-              // Shutter button, gallery button, etc.
-              Positioned(
-                bottom: 50,
-                left: 0,
-                right: 0,
-                child: Container(
-                  margin: EdgeInsets.all(1),
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blue, width: 5)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      FloatingActionButton(
-                          onPressed: null,
-                          child: Icon(
-                            Icons.image,
-                            size: 40,
-                          )),
-                      IconButton(
-                        onPressed: () async {
-                          XFile picture = await cameraController!.takePicture();
-                          Gal.putImage(picture.path);
-                        },
-                        iconSize: 100,
-                        icon: Icon(
-                          Icons.camera,
-                          color: Colors.red,
-                        ),
-                      ),
-                      FloatingActionButton(
-                        onPressed: null,
-                        child: Icon(
-                          Icons.multitrack_audio,
-                          size: 40,
-                        ),
-                      ),
-                    ],
-                  ),
+            // If the picture was taken, display it on a new screen.
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => DisplayPictureScreen(
+                  // Pass the automatically generated path to
+                  // the DisplayPictureScreen widget.
+                  imagePath: image.path,
                 ),
               ),
-            ],
-          ),
-        ),
+            );
+          } catch (e) {
+            // If an error occurs, log the error to the console.
+            print(e);
+          }
+        },
+        child: const Icon(Icons.camera_alt),
       ),
     );
   }
+}
+
+// A widget that displays the picture taken by the user.
+class DisplayPictureScreen extends StatelessWidget {
+  final String imagePath;
+
+  const DisplayPictureScreen({super.key, required this.imagePath});
 
   @override
-  void dispose() {
-    // Clean up the controller when the widget is removed
-    // from the widget tree.
-    _drawerController.dispose();
-
-    super.dispose();
-  }
-
-  Widget _buildCamera() {
-    if (cameraController == null ||
-        cameraController?.value.isInitialized == false) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-
-    return SafeArea(
-      child: SizedBox(
-          height: MediaQuery.sizeOf(context).height,
-          width: MediaQuery.sizeOf(context).width,
-          child: RotatedBox(
-              quarterTurns: 1, child: CameraPreview(cameraController!))),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Display the Picture')),
+      // The image is stored as a file on the device. Use the `Image.file`
+      // constructor with the given path to display the image.
+      body: Image.file(File(imagePath)),
     );
-  }
-
-  Future<void> _setupCameraController() async {
-    List<CameraDescription> _cameras = await availableCameras();
-    if (_cameras.isNotEmpty) {
-      setState(() {
-        cameras = _cameras;
-        cameraController = CameraController(
-          _cameras.last,
-          ResolutionPreset.high,
-        );
-      });
-      cameraController?.initialize().then((_) {
-        setState(() {});
-      });
-    }
   }
 }
