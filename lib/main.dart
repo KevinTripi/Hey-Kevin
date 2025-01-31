@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:hey_kevin/screens/display_screen.dart';
+import 'package:hey_kevin/widgets/full_screen.dart';
 
 // Base project from https://docs.flutter.dev/cookbook/plugins/picture-using-camera#complete-example
 Future<void> main() async {
@@ -76,26 +77,20 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       // camera preview. Use a FutureBuilder to display a loading spinner until the
       // controller has finished initializing.
       body: Stack(children: [
-        SizedBox(
-          child: SafeArea(
-            child: SizedBox(
-              height: MediaQuery.sizeOf(context).height,
-              width: MediaQuery.sizeOf(context).width,
-              child: FutureBuilder<void>(
-                future: _initializeControllerFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return RotatedBox(
-                      quarterTurns: 1,
-                      child: CameraPreview(_controller),
-                    );
-                  } else {
-                    // Otherwise, display a loading indicator.
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                },
-              ),
-            ),
+        FullScreen(
+          child: FutureBuilder<void>(
+            future: _initializeControllerFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return RotatedBox(
+                  quarterTurns: 1,
+                  child: CameraPreview(_controller),
+                );
+              } else {
+                // Otherwise, display a loading indicator.
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
           ),
         ),
         Positioned(
