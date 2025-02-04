@@ -1,24 +1,17 @@
+from ntpath import join
 import requests
+import string
 import json
 import re
 
 BASE_URI = 'https://api.bing.microsoft.com/v7.0/images/visualsearch'
 
-""" sign up for a free student azure account or use the S1 plan to 
-    search for things. make a bing search resource, and make it's
-    resource group at the same time (or just make sure the group is a
-    visual search resource) """
-
-SUBSCRIPTION_KEY = '' 
-imagePath = "dasani-water-217886-64_600.jpg"
+SUBSCRIPTION_KEY = '31013ec018f4420c82d63ae0d73066fe' 
+imagePath = "alice.jpg"
 
 HEADERS = {'Ocp-Apim-Subscription-Key': SUBSCRIPTION_KEY}
 
 file = {'image': ('myfile', open(imagePath, 'rb'))}
-
-def print_json(obj):
-    #Print the object as JSON
-    print(json.dumps(obj, sort_keys=True, indent=2, separators=(',', ': ')))
 
 try:
     response = requests.post(BASE_URI, headers=HEADERS, files=file)
@@ -27,9 +20,9 @@ try:
     with open("result.json", "w") as f:
         json.dump(response.json(), f, indent=2)
 except Exception as ex:
-    raise ex 
+    raise AttributeError 
 
-# Function 
+# gets the names for the image
 def get_title_names(file_path):
     entries = []
 
@@ -37,8 +30,7 @@ def get_title_names(file_path):
     with open(file_path, "r") as f:
         data = json.load(f)
     
-    # tags -> actions -> data -> value
-    
+    # navigate through the json, tags -> actions -> data -> value
     tags = data.get("tags", [])
     for tag in tags:
         actions = tag.get("actions", [])
@@ -52,6 +44,7 @@ def get_title_names(file_path):
     
     return entries
             
+#get the display text of the image
 def get_display_text(file_path):
     entries = []
     
@@ -59,7 +52,7 @@ def get_display_text(file_path):
     with open(file_path, "r") as f:
         data = json.load(f)
     
-    # tags -> actions -> data -> value    
+    # navigate through the json, tags -> actions -> data -> value    
     tags = data.get("tags", [])
     for tag in tags:
         actions = tag.get("actions", [])
@@ -75,25 +68,29 @@ def get_display_text(file_path):
 
 file_path = "result.json"
 
-entries1 = get_title_names(file_path)
-entries2 = get_display_text(file_path)
+unfilteredNames = get_title_names(file_path)
+unfilteredDisText = get_display_text(file_path)
 
+def contains_whitespace(titles):
+    return True in [c in titles for c in string.whitespace]
+
+#finds the first value in the unfiltered lists, then filters based on the first word ONLY
 def name_finder(names):
     
     find = names[0]
     found = []
     
     for name in names:
-        if(re.search(find, name)):
+        if(re.search(find.split()[0], name)):
             found.append(name)
                 
     return found
 
-print("start",entries1,"end please show that this is the end please")
-print("\n now this is the start of second entries", entries2, "this is where entries2 ends")
+filteredNames = name_finder(unfilteredNames)
+filteredDisText = name_finder(unfilteredDisText)
 
+print(len(unfilteredNames), " ", len(unfilteredDisText), " ", len(filteredNames), len(filteredDisText))
 print("\n\n")
-
-found1 = name_finder(entries1)
-
-print(len(entries1), " ", len(entries2), " ", len(found1))
+print(unfilteredNames, "\n\n", filteredNames)
+print("\n\n")
+print(unfilteredDisText, "\n\n", filteredDisText)
