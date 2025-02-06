@@ -11,7 +11,14 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
+
+
+#ignores SPECIFIC to my system- will be fixing these soon
+android/gradlew
 .gradle/
+android/gradlew.bat
+android/local.properties
+
 
 # IntelliJ related
 *.iml
