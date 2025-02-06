@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 //BING API VARIABLES + IMAGE
 //will need to update imagePath and filepath according to app structure
 const String BASE_URI = 'https://api.bing.microsoft.com/v7.0/images/visualsearch';
-const String SUBSCRIPTION_KEY = '31013ec018f4420c82d63ae0d73066fe';
+const String SUBSCRIPTION_KEY = '5ccbad85b8b348e7ba57f53f5e31f4be';
 const String imagePath = "lib/api_resources/dasani-water-217886-64_600.jpg";  // Provide the correct path to the image
 const String filePath = "lib/api_resources/result.json";
 
@@ -34,6 +34,9 @@ Future<void> main() async  {
     print(filteredNames);
     print(unfilteredDisText);
     print(filteredDisText);
+
+    exportData(filteredNames, filteredDisText);
+
   } catch (APIERROR) {
     print('Error getting data: $APIERROR');
   }
@@ -107,4 +110,17 @@ List<String> nameFinder(List<String> names) {
     }
   }
   return found;
+}
+
+void exportData(List<String> names, List<String> displayText) {
+
+  List<Map<String, String>> data = [];
+  for (int i = 0; i < names.length; i++) {
+    data.add({"name": names[i], "displayText": displayText[i]});
+  }
+
+  String jsonString = jsonEncode(data);
+  File file = File("lib/api_resources/exported_data.json");
+  file.writeAsStringSync(jsonString);
+  print("Data exported successfully to exported_data.json");
 }
