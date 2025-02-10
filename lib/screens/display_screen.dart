@@ -58,7 +58,24 @@ class DisplayPictureScreen extends StatelessWidget {
             ],
           ),
 
-          body: FullScreen(child: Image.file(File(imagePath))),
+          body: FullScreen(
+              child: Column(
+            children: [
+              Image.file(File(imagePath)),
+              FractionallySizedBox(
+                widthFactor: .7,
+                child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(width: 3, color: Colors.orange)),
+                    child: Transform.scale(
+                      scaleX: 4,
+                      child: Icon(
+                        Icons.keyboard_arrow_up,
+                      ),
+                    )),
+              ),
+            ],
+          )),
         ));
   }
 }
