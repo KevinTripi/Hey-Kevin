@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:hey_kevin/widgets/kev_info_card.dart';
 import 'package:hey_kevin/widgets/full_screen.dart';
 import 'package:sliding_drawer/sliding_drawer.dart';
 
@@ -38,26 +39,21 @@ class DisplayPictureScreen extends StatelessWidget {
               // https://api.flutter.dev/flutter/material/ListTile/selected.html
 
               // Title Tile
-              ListTile(
-                title: Text(textAlign: TextAlign.center, "Brownies"),
-                subtitle: Text('I hurt myself thank you'),
-                // onTap: () {},
-              ),
+              KevInfoCard(
+                  title: 'Obj Name', body: 'One-liner about the object'),
               // Fact #1 Tile
-              ListTile(
-                title: Text(textAlign: TextAlign.center, "Fact 1"),
-                subtitle: Text('Something about the object\'s color.'),
-              ),
+              KevInfoCard(
+                  title: 'Fact 1',
+                  body: 'Something about the object\'s color.'),
               // Fact #2 Tile
-              ListTile(
-                title: Text(textAlign: TextAlign.center, "Fact 2"),
-                subtitle: Text('Fake Review'),
+              KevInfoCard(
+                title: 'Fact 2',
+                body: 'Fake Review',
               ),
               // Fact #3 Tile
-              ListTile(
-                title: Text(textAlign: TextAlign.center, "Fact 3"),
-                subtitle: Text(
-                    'Whoop, whoop, whoop, whoopum gundam style (AI freestyle)'),
+              KevInfoCard(
+                title: 'Fact 3',
+                body: 'Freestyle',
               ),
             ],
           ),
