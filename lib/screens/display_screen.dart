@@ -1,4 +1,6 @@
+import 'dart:ffi';
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hey_kevin/widgets/kev_info_card.dart';
 import 'package:hey_kevin/widgets/full_screen.dart';
@@ -19,6 +21,19 @@ class DisplayPictureScreen extends StatelessWidget {
       drawerFraction: 1,
     );
 
+    final testJson = jsonEncode({
+      "name": "Rubik's Cube",
+      "description":
+          "A multicolored 3D puzzle where players must align all six faces by rotating different sections.",
+      "gpt_color": "Rubik's Cube—six colors, infinite regret.",
+      "gpt_review":
+          "Twist, turn, repeat!—because nothing screams fun like scrambling a puzzle you already couldn't solve.",
+      "gpt_free":
+          "A cube designed to make you question both your intelligence and your eyesight as you swear that yellow and white are the same color."
+    });
+
+    final gptJson = jsonDecode(testJson);
+
     return Scaffold(
         appBar: AppBar(title: const Text('Display the Picture')),
         // The image is stored as a file on the device. Use the `Image.file`
@@ -36,25 +51,15 @@ class DisplayPictureScreen extends StatelessWidget {
             shrinkWrap:
                 true, // From https://www.flutterbeads.com/listview-inside-column-in-flutter/
             children: [
-              // https://api.flutter.dev/flutter/material/ListTile/selected.html
-
               // Title Tile
-              KevInfoCard(
-                  title: 'Obj Name', body: 'One-liner about the object'),
+              KevInfoCard(title: gptJson['name'], body: gptJson['description']),
               // Fact #1 Tile
               KevInfoCard(
-                  title: 'Fact 1',
-                  body: 'Something about the object\'s color.'),
+                  title: 'Colorful Insult:', body: gptJson['gpt_color']),
               // Fact #2 Tile
-              KevInfoCard(
-                title: 'Fact 2',
-                body: 'Fake Review',
-              ),
+              KevInfoCard(title: 'Real Review:', body: gptJson['gpt_review']),
               // Fact #3 Tile
-              KevInfoCard(
-                title: 'Fact 3',
-                body: 'Freestyle',
-              ),
+              KevInfoCard(title: 'Miscellaneous:', body: gptJson['gpt_free']),
             ],
           ),
 
