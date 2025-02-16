@@ -6,6 +6,8 @@ import 'package:hey_kevin/widgets/kev_info_card.dart';
 import 'package:hey_kevin/widgets/full_screen.dart';
 import 'package:sliding_drawer/sliding_drawer.dart';
 
+import '../widgets/custom_painter.dart';
+
 class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
 
@@ -62,25 +64,21 @@ class DisplayPictureScreen extends StatelessWidget {
               KevInfoCard(title: 'Miscellaneous:', body: gptJson['gpt_free']),
             ],
           ),
-
-          body: FullScreen(
-              child: Column(
-            children: [
-              Image.file(File(imagePath)),
-              FractionallySizedBox(
-                widthFactor: .7,
-                child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 3, color: Colors.orange)),
-                    child: Transform.scale(
-                      scaleX: 4,
-                      child: Icon(
-                        Icons.keyboard_arrow_up,
-                      ),
-                    )),
-              ),
-            ],
-          )),
+          body: Center(
+            child: Container(
+              color: Colors.red,
+              child: Stack(children: [
+                Center(child: Image.file(File(imagePath))),
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: CustomPaint(
+                    painter: ObjOutliner(),
+                  ),
+                )
+              ]),
+            ),
+          ),
         ));
   }
 }
