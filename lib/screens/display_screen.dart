@@ -68,8 +68,15 @@ class DisplayPictureScreen extends StatelessWidget {
             child: Container(
               color: Colors.red,
               child: Stack(children: [
-                Center(child: Image.file(File(imagePath))),
-                Container(
+                Center(
+                    // Can't figure out how to keep the full image on screen and have the CustomPaint match it's dimensions.
+                    child: Image.file(
+                  width: double.infinity,
+                  height: double.infinity,
+                  File(imagePath),
+                  fit: BoxFit.cover,
+                )),
+                SizedBox(
                   width: double.infinity,
                   height: double.infinity,
                   child: CustomPaint(

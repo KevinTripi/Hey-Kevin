@@ -8,9 +8,12 @@ class ObjOutliner extends CustomPainter {
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0
-      ..color = Colors.cyan;
+      ..color = Colors.yellow;
 
-    canvas.drawCircle(Offset(size.width / 2, size.height / 2), 10, paint);
+    // canvas.drawCircle(Offset(size.width / 2, size.height / 2), 20, paint);
+
+    canvas.drawLine(Offset.zero, Offset(size.width, size.height), paint);
+    canvas.drawLine(Offset(size.width, 0), Offset(0, size.height), paint);
   }
 
   // For if was stateless
