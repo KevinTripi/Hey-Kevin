@@ -40,10 +40,12 @@ dependencies:
   gal: ^2.3.1
 
   sliding_drawer: ^1.0.2
+  google_mlkit_object_detection: ^0.14.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  http: ^0.13.6
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

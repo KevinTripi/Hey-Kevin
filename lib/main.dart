@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:hey_kevin/screens/display_screen.dart';
+import 'package:hey_kevin/screens/object_detection_screen.dart';
 import 'package:hey_kevin/widgets/full_screen.dart';
 
 // Base project from https://docs.flutter.dev/cookbook/plugins/picture-using-camera#complete-example
@@ -17,7 +16,7 @@ Future<void> main() async {
 
   // Get a specific camera from the list of available cameras.
   // The emulator only has a working cameras.last. If you even try to use cameras.first, emulator crashes.
-  final firstCamera = cameras.last;
+  final firstCamera = cameras.first;
 
   runApp(
     MaterialApp(
@@ -56,7 +55,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       // Get a specific camera from the list of available cameras.
       widget.camera,
       // Define the resolution to use.
-      ResolutionPreset.high,
+      ResolutionPreset.ultraHigh,
     );
 
     // Next, initialize the controller. This returns a Future.
@@ -83,7 +82,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 return RotatedBox(
-                  quarterTurns: 1,
+                  quarterTurns: 0,
                   child: CameraPreview(_controller),
                 );
               } else {
@@ -114,31 +113,22 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                     )),
                 IconButton(
                   onPressed: () async {
-                    // Take the Picture in a try / catch block. If anything goes wrong,
-                    // catch the error.
                     try {
-                      // Ensure that the camera is initialized.
                       await _initializeControllerFuture;
 
-                      // Attempt to take a picture and get the file `image`
-                      // where it was saved.
+                      // Take the picture
                       final image = await _controller.takePicture();
-
                       if (!context.mounted) return;
 
-                      // If the picture was taken, display it on a new screen.
+                      // Navigate to ObjectDetectionScreen, which now sends image to YOLO API
                       await Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => DisplayPictureScreen(
-                            // Pass the automatically generated path to
-                            // the DisplayPictureScreen widget.
-                            imagePath: image.path,
-                          ),
+                          builder: (context) =>
+                              ObjectDetectionScreen(imagePath: image.path),
                         ),
                       );
                     } catch (e) {
-                      // If an error occurs, log the error to the console.
-                      print(e);
+                      print("Camera Error: $e");
                     }
                   },
                   iconSize: 100,
