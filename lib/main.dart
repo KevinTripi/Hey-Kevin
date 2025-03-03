@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:hey_kevin/screens/display_screen.dart';
 import 'package:hey_kevin/screens/object_detection_screen.dart';
 import 'package:hey_kevin/widgets/full_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 // Base project from https://docs.flutter.dev/cookbook/plugins/picture-using-camera#complete-example
 Future<void> main() async {
+  await dotenv.load(fileName: ".env");
   // Ensure that plugin services are initialized so that `availableCameras()`
   // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
@@ -120,7 +123,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                       final image = await _controller.takePicture();
                       if (!context.mounted) return;
 
-                      // Navigate to ObjectDetectionScreen, which now sends image to YOLO API
+                      print("Captured Image Path: ${image.path}");
+
+                      // Navigate to ObjectDetectionScreen
                       await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) =>
