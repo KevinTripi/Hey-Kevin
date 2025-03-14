@@ -10,12 +10,19 @@ class ObjOutliner extends CustomPainter {
   */
   // In the format of (xVal, yVal)
   var point1, point2;
+  late Canvas myCanvas;
+  late Size myCanvasSize;
 
   ObjOutliner(this.point1, this.point2);
 
   // Where all the paint stuff goes
   @override
   void paint(Canvas canvas, Size size) {
+    print("Paint size: x: ${size.width} y: ${size.height}");
+
+    myCanvas = canvas;
+    myCanvasSize = size;
+
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0
@@ -24,25 +31,48 @@ class ObjOutliner extends CustomPainter {
     // Draws cross to show dimensions of painter
     // canvas.drawLine(Offset.zero, Offset(size.width, size.height), paint);
     // canvas.drawLine(Offset(size.width, 0), Offset(0, size.height), paint);
-    print("Paint size: x: ${size.width} y: ${size.height}");
 
-    var offset1 = Offset(point1[0] % size.width, point1[1] % size.height);
-    var offset2 = Offset(point2[0] % size.width, point2[1] % size.height);
-
-    canvas.drawCircle(offset1, 10, paint);
-
-    canvas.drawLine(
-        offset1, customTextPaint(canvas, size, offset2, "test", paint), paint);
-
-    // for (int i = 0; i < outlineArr.length - 1; i++) {
-    //   var p1 = Offset(outlineArr[0])
-    //   if (outlineArr[i] < )
-    //   canvas.drawLine(p1, p2, paint)
-    // }
+    paintPoint(Offset(point1[0].toDouble(), point1[1].toDouble()),
+        Offset(point2[0].toDouble(), point2[1].toDouble()), "Hi", paint);
   }
 
-  Offset customTextPaint(
-      Canvas canvas, Size size, Offset offset, String text, Paint paint) {
+  // Paints a circle at circOffset, a textbox at textOffset, and line connecting the two.
+  void paintPoint(
+      Offset circOffset, Offset textOffset, String text, Paint paint) {
+    double textboxWidth;
+    double textboxHeight;
+
+    // Ensures that the points actually appear on the screen.
+    circOffset = Offset(circOffset.dx % myCanvasSize.width,
+        circOffset.dy % myCanvasSize.height);
+    textOffset = Offset(textOffset.dx % myCanvasSize.width,
+        textOffset.dy % myCanvasSize.height);
+
+    myCanvas.drawCircle(circOffset, 10, paint); // Draws circle
+    // Draws textbox, updates textOffset (incase it was moved within the method), instantiates textboxSize.
+    (textOffset, (textboxWidth, textboxHeight)) =
+        customTextPaint(textOffset, text, paint);
+
+    print("textbox drawn");
+
+    Offset textLineOffset = textOffset;
+
+    // If the circle sits to the right of the text box, draw the line from the right side of the textbox.
+    if (circOffset.dx > textLineOffset.dx) {
+      textLineOffset =
+          Offset(textLineOffset.dx + textboxWidth, textLineOffset.dy);
+    }
+    // If the circle sits to the below of the text box, draw the line from the bottom side of the textbox.
+    if (circOffset.dy > textLineOffset.dy) {
+      textLineOffset =
+          Offset(textLineOffset.dx, textLineOffset.dy + textboxHeight);
+    }
+    myCanvas.drawLine(circOffset, textLineOffset, paint); // Draws line
+  }
+
+  // Draws the text arg then a border around it. Returns the Offset it started painting at and the size of the box.
+  (Offset, (double, double)) customTextPaint(
+      Offset offset, String text, Paint paint) {
     var painter = TextPainter(
         text: TextSpan(
             text: text,
@@ -53,10 +83,10 @@ class ObjOutliner extends CustomPainter {
         textDirection: TextDirection.ltr);
     painter.layout();
 
-    Offset newOffset = offsetOnscreen(
-        offset, Size(painter.width + 10, painter.height + 10), size);
+    Offset newOffset =
+        offsetOnscreen(offset, Size(painter.width + 10, painter.height + 10));
 
-    canvas.drawRect(
+    myCanvas.drawRect(
         Rect.fromLTWH(
           newOffset.dx - 5,
           newOffset.dy - 5,
@@ -64,20 +94,20 @@ class ObjOutliner extends CustomPainter {
           painter.size.height + 10,
         ),
         paint);
-    painter.paint(canvas, newOffset);
+    painter.paint(myCanvas, newOffset);
 
-    return newOffset;
+    return (newOffset, (painter.width, painter.height));
   }
 
-  Offset offsetOnscreen(Offset offset, Size objSize, Size canvasSize) {
+  Offset offsetOnscreen(Offset offset, Size objSize) {
     Offset retOffset = offset;
 
-    if (offset.dx + objSize.width >= canvasSize.width) {
-      retOffset = Offset(canvasSize.width - objSize.width, offset.dy);
+    if (offset.dx + objSize.width >= myCanvasSize.width) {
+      retOffset = Offset(myCanvasSize.width - objSize.width, offset.dy);
     }
 
-    if (offset.dy + objSize.height >= canvasSize.height) {
-      retOffset = Offset(retOffset.dx, canvasSize.height - objSize.height);
+    if (offset.dy + objSize.height >= myCanvasSize.height) {
+      retOffset = Offset(retOffset.dx, myCanvasSize.height - objSize.height);
     }
 
     return retOffset;
