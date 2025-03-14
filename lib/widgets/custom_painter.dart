@@ -24,9 +24,10 @@ class ObjOutliner extends CustomPainter {
     // Draws cross to show dimensions of painter
     // canvas.drawLine(Offset.zero, Offset(size.width, size.height), paint);
     // canvas.drawLine(Offset(size.width, 0), Offset(0, size.height), paint);
+    print("Paint size: x: ${size.width} y: ${size.height}");
 
-    var offset1 = Offset(point1[0] % size.width, point1[1] % size.height / 2);
-    var offset2 = Offset(point2[0] % size.width, point2[1] % size.height / 2);
+    var offset1 = Offset(point1[0] % size.width, point1[1] % size.height);
+    var offset2 = Offset(point2[0] % size.width, point2[1] % size.height);
 
     canvas.drawCircle(offset1, 10, paint);
 
@@ -69,11 +70,17 @@ class ObjOutliner extends CustomPainter {
   }
 
   Offset offsetOnscreen(Offset offset, Size objSize, Size canvasSize) {
-    if (offset.dx + objSize.width < canvasSize.width) {
-      return offset;
-    } else {
-      return Offset(canvasSize.width - objSize.width, offset.dy);
+    Offset retOffset = offset;
+
+    if (offset.dx + objSize.width >= canvasSize.width) {
+      retOffset = Offset(canvasSize.width - objSize.width, offset.dy);
     }
+
+    if (offset.dy + objSize.height >= canvasSize.height) {
+      retOffset = Offset(retOffset.dx, canvasSize.height - objSize.height);
+    }
+
+    return retOffset;
   }
 
   // For if was stateless
