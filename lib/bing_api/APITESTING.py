@@ -6,8 +6,8 @@ import re
 
 BASE_URI = 'https://api.bing.microsoft.com/v7.0/images/visualsearch'
 
-SUBSCRIPTION_KEY = '31013ec018f4420c82d63ae0d73066fe' 
-imagePath = "alice.jpg"
+SUBSCRIPTION_KEY = '01ee72049d30418ca29e2256faa752e5' 
+imagePath = "lib/bing_api_util/dasani-water-217886-64_600.jpg"
 
 HEADERS = {'Ocp-Apim-Subscription-Key': SUBSCRIPTION_KEY}
 
@@ -17,7 +17,7 @@ try:
     response = requests.post(BASE_URI, headers=HEADERS, files=file)
     response.raise_for_status()
     # Saving response JSON to result.json file
-    with open("result.json", "w") as f:
+    with open("lib/bing_api_util/result_testing.json", "w") as f:
         json.dump(response.json(), f, indent=2)
 except Exception as ex:
     raise AttributeError 
@@ -66,7 +66,7 @@ def get_display_text(file_path):
     
     return entries
 
-file_path = "result.json"
+file_path = "lib/bing_api_util/result_testing.json"
 
 unfilteredNames = get_title_names(file_path)
 unfilteredDisText = get_display_text(file_path)
