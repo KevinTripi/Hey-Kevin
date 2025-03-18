@@ -34,6 +34,27 @@ class DisplayPictureScreen extends StatelessWidget {
           "A cube designed to make you question both your intelligence and your eyesight as you swear that yellow and white are the same color."
     });
 
+    // in the form of numpy json array. if any pixel is [0, 0, 0], the mask isn't there.
+    final imgMaskJson = jsonEncode({
+      "image": [
+        [
+          [255, 0, 0],
+          [0, 255, 0],
+          [0, 0, 255]
+        ],
+        [
+          [255, 255, 0],
+          [0, 255, 255],
+          [255, 0, 255]
+        ],
+        [
+          [128, 128, 128],
+          [64, 64, 64],
+          [0, 0, 0]
+        ]
+      ]
+    });
+
     final gptJson = jsonDecode(testJson);
 
     return Scaffold(
@@ -80,7 +101,7 @@ class DisplayPictureScreen extends StatelessWidget {
                   width: double.infinity,
                   height: double.infinity,
                   child: CustomPaint(
-                    painter: ObjOutliner(),
+                    painter: ObjOutliner([200, 400], [0100, 200]),
                   ),
                 )
               ]),
