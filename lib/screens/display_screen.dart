@@ -1,7 +1,12 @@
+import 'dart:ffi';
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:hey_kevin/widgets/kev_info_card.dart';
 import 'package:hey_kevin/widgets/full_screen.dart';
 import 'package:sliding_drawer/sliding_drawer.dart';
+
+import '../widgets/custom_painter.dart';
 
 class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
@@ -17,6 +22,40 @@ class DisplayPictureScreen extends StatelessWidget {
       isOpenOnInitial: false,
       drawerFraction: 1,
     );
+
+    final testJson = jsonEncode({
+      "name": "Rubik's Cube",
+      "description":
+          "A multicolored 3D puzzle where players must align all six faces by rotating different sections.",
+      "gpt_color": "Rubik's Cube—six colors, infinite regret.",
+      "gpt_review":
+          "Twist, turn, repeat!—because nothing screams fun like scrambling a puzzle you already couldn't solve.",
+      "gpt_free":
+          "A cube designed to make you question both your intelligence and your eyesight as you swear that yellow and white are the same color."
+    });
+
+    // in the form of numpy json array. if any pixel is [0, 0, 0], the mask isn't there.
+    final imgMaskJson = jsonEncode({
+      "image": [
+        [
+          [255, 0, 0],
+          [0, 255, 0],
+          [0, 0, 255]
+        ],
+        [
+          [255, 255, 0],
+          [0, 255, 255],
+          [255, 0, 255]
+        ],
+        [
+          [128, 128, 128],
+          [64, 64, 64],
+          [0, 0, 0]
+        ]
+      ]
+    });
+
+    final gptJson = jsonDecode(testJson);
 
     return Scaffold(
         appBar: AppBar(title: const Text('Display the Picture')),
@@ -35,34 +74,39 @@ class DisplayPictureScreen extends StatelessWidget {
             shrinkWrap:
                 true, // From https://www.flutterbeads.com/listview-inside-column-in-flutter/
             children: [
-              // https://api.flutter.dev/flutter/material/ListTile/selected.html
-
               // Title Tile
-              ListTile(
-                title: Text(textAlign: TextAlign.center, "Brownies"),
-                subtitle: Text('I hurt myself thank you'),
-                // onTap: () {},
-              ),
+              KevInfoCard(title: gptJson['name'], body: gptJson['description']),
               // Fact #1 Tile
-              ListTile(
-                title: Text(textAlign: TextAlign.center, "Fact 1"),
-                subtitle: Text('Something about the object\'s color.'),
-              ),
+              KevInfoCard(
+                  title: 'Colorful Insult:', body: gptJson['gpt_color']),
               // Fact #2 Tile
-              ListTile(
-                title: Text(textAlign: TextAlign.center, "Fact 2"),
-                subtitle: Text('Fake Review'),
-              ),
+              KevInfoCard(title: 'Real Review:', body: gptJson['gpt_review']),
               // Fact #3 Tile
-              ListTile(
-                title: Text(textAlign: TextAlign.center, "Fact 3"),
-                subtitle: Text(
-                    'Whoop, whoop, whoop, whoopum gundam style (AI freestyle)'),
-              ),
+              KevInfoCard(title: 'Miscellaneous:', body: gptJson['gpt_free']),
             ],
           ),
-
-          body: FullScreen(child: Image.file(File(imagePath))),
+          body: Center(
+            child: Container(
+              color: Colors.red,
+              child: Stack(children: [
+                Center(
+                    // Can't figure out how to keep the full image on screen and have the CustomPaint match it's dimensions.
+                    child: Image.file(
+                  width: double.infinity,
+                  height: double.infinity,
+                  File(imagePath),
+                  fit: BoxFit.cover,
+                )),
+                SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: CustomPaint(
+                    painter: ObjOutliner([200, 400], [0100, 200]),
+                  ),
+                )
+              ]),
+            ),
+          ),
         ));
   }
 }
