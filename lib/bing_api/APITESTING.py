@@ -6,8 +6,8 @@ import re
 
 BASE_URI = 'https://api.bing.microsoft.com/v7.0/images/visualsearch'
 
-SUBSCRIPTION_KEY = '01ee72049d30418ca29e2256faa752e5' 
-imagePath = "lib/bing_api_util/dasani-water-217886-64_600.jpg"
+SUBSCRIPTION_KEY = '01ee72049d30418ca29e2256faa752e5'
+imagePath = "lib/bing_api/dasani-water-217886-64_600.jpg"
 
 HEADERS = {'Ocp-Apim-Subscription-Key': SUBSCRIPTION_KEY}
 
@@ -20,8 +20,7 @@ try:
     with open("lib/bing_api_util/result_testing.json", "w") as f:
         json.dump(response.json(), f, indent=2)
 except Exception as ex:
-    raise AttributeError 
-
+    raise AttributeError
 # gets the names for the image
 def get_title_names(file_path):
     entries = []
@@ -66,10 +65,27 @@ def get_display_text(file_path):
     
     return entries
 
-file_path = "lib/bing_api_util/result_testing.json"
+def bestRepQ(file_path):
+    queries = []
+    
+     # Read the JSON file
+    with open(file_path, "r") as f:
+        data = json.load(f)
+    
+
+    for tag in data.get("tags", []):
+        for action in tag.get("actions", []):
+            if action.get("actionType") == "BestRepresentativeQuery":
+                queries.append(action.get("displayName"))
+
+    return queries
+
+file_path = "lib/bing_api/result.json"
 
 unfilteredNames = get_title_names(file_path)
 unfilteredDisText = get_display_text(file_path)
+best_queries = bestRepQ(file_path)
+print(best_queries)
 
 def contains_whitespace(titles):
     return True in [c in titles for c in string.whitespace]
@@ -90,7 +106,3 @@ filteredNames = name_finder(unfilteredNames)
 filteredDisText = name_finder(unfilteredDisText)
 
 print(len(unfilteredNames), " ", len(unfilteredDisText), " ", len(filteredNames), len(filteredDisText))
-print("\n\n")
-print(unfilteredNames, "\n\n", filteredNames)
-print("\n\n")
-print(unfilteredDisText, "\n\n", filteredDisText)
