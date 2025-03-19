@@ -30,14 +30,14 @@ class YoloService {
       if (response.statusCode == 200) {
         final data = json.decode(responseBody);
         
-        if (data.containsKey('cropped_image_path') && data['cropped_image_path'] != null) {
-          String apiImagePath = data['cropped_image_path'];
+        if (data.containsKey('segmented_image_path') && data['segmented_image_path'] != null) {
+          String apiImagePath = data['segmented_image_path'];
           print("Image URL received: $apiImagePath");
 
           // Return image URL with timestamp to prevent caching
           return "$apiImagePath?t=${DateTime.now().millisecondsSinceEpoch}";
         } else {
-          print("No 'cropped_image_path' in API response.");
+          print("No 'segmented_image_path' in API response.");
         }
       } else {
         print("Request failed with status: ${response.statusCode}");
