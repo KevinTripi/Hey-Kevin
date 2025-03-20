@@ -101,7 +101,7 @@ class DisplayPictureScreen extends StatelessWidget {
                   width: double.infinity,
                   height: double.infinity,
                   child: CustomPaint(
-                    painter: TextboxPointer([200, 400], [0100, 200]),
+                    painter: TextboxPointer([200, 400], [200, 200], "Testing"),
                   ),
                 )
               ]),

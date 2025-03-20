@@ -10,10 +10,11 @@ class TextboxPointer extends CustomPainter {
   */
   // In the format of (xVal, yVal)
   var pointerPoint, textboxPointer;
+  String displayText;
   late Canvas myCanvas;
   late Size myCanvasSize;
 
-  TextboxPointer(this.pointerPoint, this.textboxPointer);
+  TextboxPointer(this.pointerPoint, this.textboxPointer, this.displayText);
 
   // Where all the paint stuff goes
   @override
@@ -35,7 +36,7 @@ class TextboxPointer extends CustomPainter {
     paintPoint(
         Offset(pointerPoint[0].toDouble(), pointerPoint[1].toDouble()),
         Offset(textboxPointer[0].toDouble(), textboxPointer[1].toDouble()),
-        "Hi",
+        displayText,
         paint);
   }
 
