@@ -10,10 +10,35 @@ import '../widgets/custom_painter.dart';
 import '../openAI/testingAI.dart';
 import '../bing_api/bing_api.dart';
 
-class DisplayPictureScreen extends StatelessWidget {
+class DisplayPictureScreen extends StatefulWidget {
   final String imagePath;
 
   const DisplayPictureScreen({super.key, required this.imagePath});
+
+  @override
+  State<DisplayPictureScreen> createState() => _DisplayPictureScreenState();
+}
+
+class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
+  List<List<String>> gptResults = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    // This is where Ammar/Alex's GPT comments come from.
+    List<List<String>> result = await singleRunGetGptComments('Car');
+
+    // Ensures all async calls are finished before trying to display the data.
+    setState(() {
+      gptResults = result;
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,35 +82,26 @@ class DisplayPictureScreen extends StatelessWidget {
           axisDirection: AxisDirection.up,
 
           // The drawer holds the ListView where our results will sit.
-          drawer: FutureBuilder(
-              future: singleRunGetGptComments('Car'),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                      child: CircularProgressIndicator()); // Loading state
-                } else if (snapshot.hasError) {
-                  return Center(
-                      child: Text("Error: ${snapshot.error}")); // Error state
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(
-                      child: Text("No data available")); // Empty state
-                }
-
-                return ListView.builder(
+          // The populated data comes from GPT.
+          drawer: isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : ListView.builder(
                   physics:
                       NeverScrollableScrollPhysics(), // From https://stackoverflow.com/a/51367188
                   shrinkWrap:
                       true, // From https://www.flutterbeads.com/listview-inside-column-in-flutter/
                   itemBuilder: (context, index) {
+                    // This format of List<List<String>> may be changed in the future.
                     // print("build index: $index");
-                    if (index < snapshot.data!.length) {
+                    if (index < gptResults.length) {
                       return KevInfoCard(
-                          title: snapshot.data![index][0],
-                          body: snapshot.data![index][1]);
+                          title: gptResults[index][0],
+                          body: gptResults[index][1]);
                     }
                   },
-                );
-              }),
+                ),
           body: Center(
             child: Container(
               color: Colors.red,
@@ -95,7 +111,7 @@ class DisplayPictureScreen extends StatelessWidget {
                     child: Image.file(
                   width: double.infinity,
                   height: double.infinity,
-                  File(imagePath),
+                  File(widget.imagePath),
                   fit: BoxFit.cover,
                 )),
                 SizedBox(
