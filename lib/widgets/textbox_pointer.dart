@@ -82,7 +82,7 @@ class TextboxPointer extends CustomPainter {
             text: text,
             style: TextStyle(
               color: paint.color,
-              fontSize: 50,
+              fontSize: 35,
             )),
         textDirection: TextDirection.ltr);
     painter.layout();
