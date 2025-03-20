@@ -6,7 +6,7 @@ import 'package:hey_kevin/widgets/kev_info_card.dart';
 import 'package:hey_kevin/widgets/full_screen.dart';
 import 'package:sliding_drawer/sliding_drawer.dart';
 
-import '../widgets/custom_painter.dart';
+import '../widgets/textbox_pointer.dart';
 
 class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
@@ -101,7 +101,7 @@ class DisplayPictureScreen extends StatelessWidget {
                   width: double.infinity,
                   height: double.infinity,
                   child: CustomPaint(
-                    painter: ObjOutliner([200, 400], [0100, 200]),
+                    painter: TextboxPointer([200, 400], [0100, 200]),
                   ),
                 )
               ]),
