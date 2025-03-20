@@ -103,26 +103,31 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   },
                 ),
           body: Center(
-            child: Container(
-              color: Colors.red,
-              child: Stack(children: [
-                Center(
-                    // Can't figure out how to keep the full image on screen and have the CustomPaint match it's dimensions.
-                    child: Image.file(
-                  width: double.infinity,
-                  height: double.infinity,
-                  File(widget.imagePath),
-                  fit: BoxFit.cover,
-                )),
-                SizedBox(
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: CustomPaint(
-                    painter: TextboxPointer([200, 400], [200, 200], "Testing"),
-                  ),
-                )
-              ]),
-            ),
+            child: Stack(children: [
+              Center(
+                  // Can't figure out how to keep the full image on screen and have the CustomPaint match it's dimensions.
+                  child: Image.file(
+                width: double.infinity,
+                height: double.infinity,
+                File(widget.imagePath),
+                fit: BoxFit.cover,
+              )),
+              SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: isLoading
+                    ? Spacer() // Display no paint if gpt hasn't returned yet
+                    : CustomPaint(
+                        painter: TextboxPointer([
+                          200,
+                          400
+                        ], [
+                          200,
+                          200
+                        ], "${gptResults[1][1].split(' ').sublist(0, 3).join(' ')}..."),
+                      ),
+              )
+            ]),
           ),
         ));
   }
