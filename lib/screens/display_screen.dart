@@ -6,9 +6,9 @@ import 'package:sliding_drawer/sliding_drawer.dart';
 
 import 'package:hey_kevin/widgets/kev_info_card.dart';
 import 'package:hey_kevin/widgets/full_screen.dart';
-import '../widgets/custom_painter.dart';
 import '../openAI/testingAI.dart';
 import '../bing_api/bing_api.dart';
+import '../widgets/textbox_pointer.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
   final String imagePath;
@@ -118,7 +118,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   width: double.infinity,
                   height: double.infinity,
                   child: CustomPaint(
-                    painter: ObjOutliner([200, 400], [0100, 200]),
+                    painter: TextboxPointer([200, 400], [200, 200], "Testing"),
                   ),
                 )
               ]),

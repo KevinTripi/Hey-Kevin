@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // From https://codewithandrea.com/videos/flutter-custom-painting-do-not-fear-canvas/
-class ObjOutliner extends CustomPainter {
+class TextboxPointer extends CustomPainter {
   /* 
   I believe that images (in openCV) are represented in a 2D numpy array.
   Each index is an int[3] with an index for this pixel's red, blue, and green values.
@@ -9,11 +9,12 @@ class ObjOutliner extends CustomPainter {
   Also note it wouldn't be an int[][][], but a uint8[][][].
   */
   // In the format of (xVal, yVal)
-  var point1, point2;
+  var pointerPoint, textboxPointer;
+  String displayText;
   late Canvas myCanvas;
   late Size myCanvasSize;
 
-  ObjOutliner(this.point1, this.point2);
+  TextboxPointer(this.pointerPoint, this.textboxPointer, this.displayText);
 
   // Where all the paint stuff goes
   @override
@@ -32,8 +33,11 @@ class ObjOutliner extends CustomPainter {
     // canvas.drawLine(Offset.zero, Offset(size.width, size.height), paint);
     // canvas.drawLine(Offset(size.width, 0), Offset(0, size.height), paint);
 
-    paintPoint(Offset(point1[0].toDouble(), point1[1].toDouble()),
-        Offset(point2[0].toDouble(), point2[1].toDouble()), "Hi", paint);
+    paintPoint(
+        Offset(pointerPoint[0].toDouble(), pointerPoint[1].toDouble()),
+        Offset(textboxPointer[0].toDouble(), textboxPointer[1].toDouble()),
+        displayText,
+        paint);
   }
 
   // Paints a circle at circOffset, a textbox at textOffset, and line connecting the two.
@@ -78,7 +82,7 @@ class ObjOutliner extends CustomPainter {
             text: text,
             style: TextStyle(
               color: paint.color,
-              fontSize: 50,
+              fontSize: 35,
             )),
         textDirection: TextDirection.ltr);
     painter.layout();
