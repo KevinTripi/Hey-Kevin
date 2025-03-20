@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'key.dart';
+// import 'key.dart';
 
 const String apiKey = API_KEY;
 
@@ -33,7 +33,8 @@ Future<void> getGptComments() async {
     try {
       final startTime = DateTime.now(); // for testing API response times
       final response = await fetchGptResponse(userInput);
-      final elapsedTime = DateTime.now().difference(startTime).inMilliseconds / 1000;
+      final elapsedTime =
+          DateTime.now().difference(startTime).inMilliseconds / 1000;
 
       if (response != null) {
         // Print them out individually, Sarcastic, Witty, Funny, from the JSON that is provided by the API
@@ -47,13 +48,15 @@ Future<void> getGptComments() async {
     } catch (e) {
       // If there is an exception, we display a fixed prompt
       print("\nError: $e");
-      print("\nGenerated sarcastic comment: Error 404: Sarcasm not found. Try again later.");
-      print("Generated witty comment: Critical failure: Wit module has crashed. Rebooting… never.");
-      print("Generated funny comment: System malfunction: Humor drive corrupted. Attempting emergency joke recovery… failed.\n");
+      print(
+          "\nGenerated sarcastic comment: Error 404: Sarcasm not found. Try again later.");
+      print(
+          "Generated witty comment: Critical failure: Wit module has crashed. Rebooting… never.");
+      print(
+          "Generated funny comment: System malfunction: Humor drive corrupted. Attempting emergency joke recovery… failed.\n");
     }
   }
 }
-
 
 // This function sends API request and returns JSON object that contains the comments
 Future<String?> fetchGptResponse(String objectTitle) async {
@@ -67,8 +70,14 @@ Future<String?> fetchGptResponse(String objectTitle) async {
   final body = jsonEncode({
     "model": "gpt-4o-mini",
     "messages": [
-      {"role": "user", "content": commentsGenerateMessage}, // Setting up input message
-      {"role": "user", "content": objectTitle} // Attach object title to input message
+      {
+        "role": "user",
+        "content": commentsGenerateMessage
+      }, // Setting up input message
+      {
+        "role": "user",
+        "content": objectTitle
+      } // Attach object title to input message
     ],
     "temperature": 1.5,
     "max_tokens": 100
@@ -79,12 +88,12 @@ Future<String?> fetchGptResponse(String objectTitle) async {
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
-    return data["choices"][0]["message"]["content"]; // JSON is located in data["choices"][0]["message"]["content"]
+    return data["choices"][0]["message"][
+        "content"]; // JSON is located in data["choices"][0]["message"]["content"]
   } else {
     throw Exception("Failed to fetch response: ${response.body}");
   }
 }
-
 
 Future<void> printParsedResult(Map parsedResult) async {
   parsedResult.forEach((key, value) {
@@ -92,40 +101,50 @@ Future<void> printParsedResult(Map parsedResult) async {
   });
 }
 
-
-
 // This function takes a STRING object_title and generates 3 comments about it from chatgpt
-Future<void> singleRunGetGptComments(String objectTitle) async {
+Future<List<List<String>>> singleRunGetGptComments(String objectTitle) async {
+  final List<List<String>> retList = [
+    [objectTitle, ""],
+  ];
   // To catch errors
   try {
-    final startTime = DateTime.now();  // for testing API response times
+    final startTime = DateTime.now(); // for testing API response times
     final response = await fetchGptResponse(objectTitle);
-    final elapsedTime = DateTime.now().difference(startTime).inMilliseconds / 1000;
+    final elapsedTime =
+        DateTime.now().difference(startTime).inMilliseconds / 1000;
 
     if (response != null) {
       // Print them out individually, Sarcastic, Witty, Funny, from the JSON that is provided by the API
       final parsedResult = jsonDecode(response);
       parsedResult.forEach((key, value) {
         print("\nGenerated $key comment: $value");
+        retList.add([key, value]);
       });
       print("\nAPI responded in ${elapsedTime.toStringAsFixed(2)} seconds\n");
     }
   } catch (e) {
     // If there is an exception, we display a fixed prompt
     print("\nError: $e");
-    print("\nGenerated sarcastic comment: Error 404: Sarcasm not found. Try again later.");
-    print("Generated witty comment: Critical failure: Wit module has crashed. Rebooting… never.");
-    print("Generated funny comment: System malfunction: Humor drive corrupted. Attempting emergency joke recovery… failed.\n");
+    print(
+        "\nGenerated sarcastic comment: Error 404: Sarcasm not found. Try again later.");
+    print(
+        "Generated witty comment: Critical failure: Wit module has crashed. Rebooting… never.");
+    print(
+        "Generated funny comment: System malfunction: Humor drive corrupted. Attempting emergency joke recovery… failed.\n");
+    retList.addAll([
+      ["Error", "Error"],
+      ["Error", "Error"],
+      ["Error", "Error"]
+    ]);
   }
+  return retList;
 }
-
-
 
 // main
-void main() async {
-  // await getGptComments();
-  await singleRunGetGptComments("apple");
-}
+// void main() async {
+//   // await getGptComments();
+//   await singleRunGetGptComments("apple");
+// }
 
 /* Working on this error detected while running dart file - not detected by py file (root of our issue: API response delays)
 

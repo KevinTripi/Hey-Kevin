@@ -2,11 +2,13 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:hey_kevin/widgets/kev_info_card.dart';
-import 'package:hey_kevin/widgets/full_screen.dart';
 import 'package:sliding_drawer/sliding_drawer.dart';
 
+import 'package:hey_kevin/widgets/kev_info_card.dart';
+import 'package:hey_kevin/widgets/full_screen.dart';
 import '../widgets/custom_painter.dart';
+import '../openAI/testingAI.dart';
+import '../bing_api/bing_api.dart';
 
 class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
@@ -22,17 +24,6 @@ class DisplayPictureScreen extends StatelessWidget {
       isOpenOnInitial: false,
       drawerFraction: 1,
     );
-
-    final testJson = jsonEncode({
-      "name": "Rubik's Cube",
-      "description":
-          "A multicolored 3D puzzle where players must align all six faces by rotating different sections.",
-      "gpt_color": "Rubik's Cube—six colors, infinite regret.",
-      "gpt_review":
-          "Twist, turn, repeat!—because nothing screams fun like scrambling a puzzle you already couldn't solve.",
-      "gpt_free":
-          "A cube designed to make you question both your intelligence and your eyesight as you swear that yellow and white are the same color."
-    });
 
     // in the form of numpy json array. if any pixel is [0, 0, 0], the mask isn't there.
     final imgMaskJson = jsonEncode({
@@ -55,8 +46,6 @@ class DisplayPictureScreen extends StatelessWidget {
       ]
     });
 
-    final gptJson = jsonDecode(testJson);
-
     return Scaffold(
         appBar: AppBar(title: const Text('Display the Picture')),
         // The image is stored as a file on the device. Use the `Image.file`
@@ -68,23 +57,35 @@ class DisplayPictureScreen extends StatelessWidget {
           axisDirection: AxisDirection.up,
 
           // The drawer holds the ListView where our results will sit.
-          drawer: ListView(
-            physics:
-                NeverScrollableScrollPhysics(), // From https://stackoverflow.com/a/51367188
-            shrinkWrap:
-                true, // From https://www.flutterbeads.com/listview-inside-column-in-flutter/
-            children: [
-              // Title Tile
-              KevInfoCard(title: gptJson['name'], body: gptJson['description']),
-              // Fact #1 Tile
-              KevInfoCard(
-                  title: 'Colorful Insult:', body: gptJson['gpt_color']),
-              // Fact #2 Tile
-              KevInfoCard(title: 'Real Review:', body: gptJson['gpt_review']),
-              // Fact #3 Tile
-              KevInfoCard(title: 'Miscellaneous:', body: gptJson['gpt_free']),
-            ],
-          ),
+          drawer: FutureBuilder(
+              future: singleRunGetGptComments('Car'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                      child: CircularProgressIndicator()); // Loading state
+                } else if (snapshot.hasError) {
+                  return Center(
+                      child: Text("Error: ${snapshot.error}")); // Error state
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(
+                      child: Text("No data available")); // Empty state
+                }
+
+                return ListView.builder(
+                  physics:
+                      NeverScrollableScrollPhysics(), // From https://stackoverflow.com/a/51367188
+                  shrinkWrap:
+                      true, // From https://www.flutterbeads.com/listview-inside-column-in-flutter/
+                  itemBuilder: (context, index) {
+                    // print("build index: $index");
+                    if (index < snapshot.data!.length) {
+                      return KevInfoCard(
+                          title: snapshot.data![index][0],
+                          body: snapshot.data![index][1]);
+                    }
+                  },
+                );
+              }),
           body: Center(
             child: Container(
               color: Colors.red,
