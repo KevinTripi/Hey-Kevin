@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sliding_drawer/sliding_drawer.dart';
 
 import 'package:hey_kevin/widgets/kev_info_card.dart';
@@ -21,6 +22,7 @@ class DisplayPictureScreen extends StatefulWidget {
 
 class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   List<List<String>> gptResults = [];
+  var bingResults;
   bool isLoading = true;
 
   @override
@@ -30,12 +32,20 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   Future<void> fetchData() async {
-    // This is where Ammar/Alex's GPT comments come from.
-    List<List<String>> result = await singleRunGetGptComments('Car');
+    // Mara Bing results
+    var bingJson = jsonDecode(await bingApiPipeline(imagePath));
+    print(
+        "**** bingJson: --- Type: ${bingJson.runtimeType} --- Value: $bingJson");
+
+    // Ammar/Alex's GPT comments
+    // uses bingJson["query"][0] since the json is of type {String: List<dynamic>}
+    List<List<String>> gptArr =
+        await singleRunGetGptComments(bingJson["query"][0]);
 
     // Ensures all async calls are finished before trying to display the data.
     setState(() {
-      gptResults = result;
+      gptResults = gptArr;
+      bingResults = bingJson;
       isLoading = false;
     });
   }
@@ -116,7 +126,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 width: double.infinity,
                 height: double.infinity,
                 child: isLoading
-                    ? Spacer() // Display no paint if gpt hasn't returned yet
+                    ? Text("") // Display no paint if gpt hasn't returned yet
                     : CustomPaint(
                         painter: TextboxPointer([
                           200,
