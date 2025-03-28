@@ -114,7 +114,7 @@ def single_run_get_gpt_comments(object_title):
         for i in parsed_result:
             print("\nGenerated", i, "comment", ":", parsed_result[i])
         print("\n")
-        return
+    return parsed_result
 
 # Working on this error detected while running dart file - not detected by py file (root of our issue: API response delays)
 #
@@ -127,4 +127,9 @@ def single_run_get_gpt_comments(object_title):
 #     }
 # }
 
-single_run_get_gpt_comments("apple")
+# __main__
+# How I am expecting JSON to show on GUI:
+# The key is what the user will click on
+# The value is what will show when its respective key is clicked
+my_json = single_run_get_gpt_comments("apple")
+print(my_json)
