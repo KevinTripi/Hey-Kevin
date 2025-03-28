@@ -5,9 +5,11 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:hey_kevin/screens/display_screen.dart';
 import 'package:hey_kevin/widgets/full_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // Base project from https://docs.flutter.dev/cookbook/plugins/picture-using-camera#complete-example
 Future<void> main() async {
+  await dotenv.load(fileName: ".env");
   // Ensure that plugin services are initialized so that `availableCameras()`
   // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();

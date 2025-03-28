@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hey_kevin/widgets/kev_info_card.dart';
 import 'package:hey_kevin/widgets/full_screen.dart';
 import 'package:sliding_drawer/sliding_drawer.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../widgets/textbox_pointer.dart';
 
@@ -22,6 +23,9 @@ class DisplayPictureScreen extends StatelessWidget {
       isOpenOnInitial: false,
       drawerFraction: 1,
     );
+
+    String apiKey = dotenv.env['x-api-key'] ?? 'failed to load api key';
+    print("Get key!!!!!!!!!!! $apiKey");
 
     final testJson = jsonEncode({
       "name": "Rubik's Cube",
