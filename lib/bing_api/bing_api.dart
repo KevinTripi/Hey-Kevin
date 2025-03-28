@@ -5,22 +5,21 @@ import 'package:http/http.dart' as http;
 //BING API VARIABLES + IMAGE
 //will need to update imagePath and filepath according to app structure
 const String BASE_URI = 'https://api.bing.microsoft.com/v7.0/images/visualsearch';
-const String SUBSCRIPTION_KEY = '';
+const String SUBSCRIPTION_KEY = 'a9227348a29242a7bdeeb5c32d068252';
 const String imagePath = "lib/bing_api/dasani-water-217886-64_600.jpg";
 const String filePath = "lib/bing_api/result.json";
 
 
-Future<void> main() async {
+Future<String> main() async {
   try {
-
     // Send POST request
     final response = await getData();
 
-    //Will udpate handlers once more complete
+    // Will update handlers once more complete
     if (response.statusCode != 200) {
       throw Exception('API request failed with status: ${response.statusCode}');
     }
-    
+
     final file = File(filePath);
 
     // Write the response
@@ -30,23 +29,25 @@ Future<void> main() async {
     final unfilteredNames = getTitleNames(filePath);
     final unfilteredDisText = getDisplayText(filePath);
     final repQ = bestRepQ(filePath);
-    //print(repQ); //TESTING
+    // print(repQ); // TESTING
 
-
-    // Filter based on the best rep query
+    // Filter based on the best representative query
     final filteredNames = nameFinder(unfilteredNames, repQ);
     final filteredDisText = nameFinder(unfilteredDisText, repQ);
 
-    //Testing
-    //print("${unfilteredNames.length} ${unfilteredDisText.length} ${filteredNames.length} ${filteredDisText.length}");
+    // Testing
+    // print("${unfilteredNames.length} ${unfilteredDisText.length} ${filteredNames.length} ${filteredDisText.length}");
 
-
-    //write export JSON
-    exportData(filteredNames, filteredDisText, repQ);
+    // Write export JSON and return the data
+    final exportedJson = exportData(filteredNames, filteredDisText, repQ);
+    print(exportedJson);
+    return exportedJson;
   } catch (error) {
     print('Error getting data: $error');
+    return '{"error": "An error occurred during the process."}'; // Return a default error message as JSON
   }
 }
+
 
 // Sends the request to API and returns response
 Future<http.Response> getData() async {
@@ -131,23 +132,24 @@ List<String> nameFinder(List<String> names, List<String> query) {
   return names.where((name) => RegExp(r'\b' + RegExp.escape(find) + r'\b').hasMatch(name)).toList();
 }
 
-void exportData(List<String> names, List<String> displayText, List<String> query) {
+String exportData(List<String> names, List<String> displayText, List<String> query) {
   try {
     int minLength = [names.length, displayText.length].reduce((a, b) => a < b ? a : b);
 
     Map<String, dynamic> exportStructure = {
-      "query": query, //the best representative query
+      "query": query, // The best representative query
       "data": List.generate(
         minLength, // Only generate data up to the shortest list length, either names or displayText
             (i) => {"name": names[i], "displayText": displayText[i]},
       ),
     };
-
     final file = File("lib/bing_api/exported_data.json");
     file.writeAsStringSync(jsonEncode(exportStructure));
 
     print("Data exported successfully to exported_data.json");
+    return jsonEncode(exportStructure);
   } catch (error) {
     print("Error exporting data: $error");
+    return '{"error": "An error occurred during the process."}'; // Return a default error message as JSON
   }
 }
