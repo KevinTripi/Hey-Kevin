@@ -20,7 +20,10 @@ Future<void> main() async {
 
   // Get a specific camera from the list of available cameras.
   // The emulator only has a working cameras.last. If you even try to use cameras.first, emulator crashes.
-  final chosenCamera = cameras.last;
+  // final chosenCamera = cameras.last;
+
+  print("CAMMMMERRRRRRRRRRRRAAAAAAAAA\n");
+  cameras.forEach(print);
 
   int quarterTurns = 0;
 
@@ -33,7 +36,7 @@ Future<void> main() async {
       theme: ThemeData.dark(),
       home: TakePictureScreen(
           // Pass the appropriate camera to the TakePictureScreen widget.
-          camera: chosenCamera,
+          cameras: cameras,
           displayRotation: quarterTurns),
     ),
   );
@@ -43,11 +46,11 @@ Future<void> main() async {
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({
     super.key,
-    required this.camera,
+    required this.cameras,
     this.displayRotation = 0,
   });
 
-  final CameraDescription camera;
+  final List<CameraDescription> cameras;
   final int displayRotation;
 
   @override
@@ -65,7 +68,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     // create a CameraController.
     _controller = CameraController(
       // Get a specific camera from the list of available cameras.
-      widget.camera,
+      widget.cameras[0],
       // Define the resolution to use.
       ResolutionPreset.high,
     );
