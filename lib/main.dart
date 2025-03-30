@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hey_kevin/screens/display_screen.dart';
 import 'package:hey_kevin/widgets/full_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:io' show Platform;
 
 // Base project from https://docs.flutter.dev/cookbook/plugins/picture-using-camera#complete-example
 Future<void> main() async {
@@ -19,15 +20,21 @@ Future<void> main() async {
 
   // Get a specific camera from the list of available cameras.
   // The emulator only has a working cameras.last. If you even try to use cameras.first, emulator crashes.
-  final firstCamera = cameras.last;
+  final chosenCamera = cameras.last;
+
+  int quarterTurns = 0;
+
+  if (Platform.isAndroid) {
+    quarterTurns = -1;
+  }
 
   runApp(
     MaterialApp(
       theme: ThemeData.dark(),
       home: TakePictureScreen(
-        // Pass the appropriate camera to the TakePictureScreen widget.
-        camera: firstCamera,
-      ),
+          // Pass the appropriate camera to the TakePictureScreen widget.
+          camera: chosenCamera,
+          displayRotation: quarterTurns),
     ),
   );
 }
@@ -37,9 +44,11 @@ class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({
     super.key,
     required this.camera,
+    this.displayRotation = 0,
   });
 
   final CameraDescription camera;
+  final int displayRotation;
 
   @override
   TakePictureScreenState createState() => TakePictureScreenState();
@@ -85,7 +94,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 return RotatedBox(
-                  quarterTurns: 1,
+                  quarterTurns: widget.displayRotation,
                   child: CameraPreview(_controller),
                 );
               } else {
