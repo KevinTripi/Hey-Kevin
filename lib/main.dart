@@ -25,33 +25,21 @@ Future<void> main() async {
   print("CAMMMMERRRRRRRRRRRRAAAAAAAAA\n");
   cameras.forEach(print);
 
-  int quarterTurns = 0;
-
-  if (Platform.isAndroid) {
-    quarterTurns = 1;
-  }
-
   runApp(
     MaterialApp(
       theme: ThemeData.dark(),
       home: TakePictureScreen(
           // Pass the appropriate camera to the TakePictureScreen widget.
-          cameras: cameras,
-          displayRotation: quarterTurns),
+          cameras: cameras),
     ),
   );
 }
 
 // A screen that allows users to take a picture using a given camera.
 class TakePictureScreen extends StatefulWidget {
-  const TakePictureScreen({
-    super.key,
-    required this.cameras,
-    this.displayRotation = 0,
-  });
+  const TakePictureScreen({super.key, required this.cameras});
 
   final List<CameraDescription> cameras;
-  final int displayRotation;
 
   @override
   TakePictureScreenState createState() => TakePictureScreenState();
@@ -76,7 +64,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
     // Next, initialize the controller. This returns a Future.
     _initializeControllerFuture = _controller.initialize();
-    print("Controller description: ${_controller.description}");
   }
 
   @override
@@ -99,7 +86,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 return RotatedBox(
-                  quarterTurns: widget.displayRotation,
+                  quarterTurns: (_controller.description.sensorOrientation /
+                          90) // From: https://pub.dev/documentation/flutter_better_camera/latest/camera/CameraDescription-class.html
+                      .round(), // From: https://stackoverflow.com/a/20788335
                   child: CameraPreview(_controller),
                 );
               } else {
