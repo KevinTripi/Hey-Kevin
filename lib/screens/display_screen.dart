@@ -24,9 +24,6 @@ class DisplayPictureScreen extends StatelessWidget {
       drawerFraction: 1,
     );
 
-    String apiKey = dotenv.env['x-api-key'] ?? 'failed to load api key';
-    print("Get key!!!!!!!!!!! $apiKey");
-
     final testJson = jsonEncode({
       "name": "Rubik's Cube",
       "description":
@@ -92,23 +89,15 @@ class DisplayPictureScreen extends StatelessWidget {
           body: Center(
             child: Container(
               color: Colors.red,
-              child: Stack(children: [
-                Center(
-                    // Can't figure out how to keep the full image on screen and have the CustomPaint match it's dimensions.
-                    child: Image.file(
-                  width: double.infinity,
-                  height: double.infinity,
+              // Simplified from: https://medium.com/flutter-community/a-deep-dive-into-custompaint-in-flutter-47ab44e3f216
+              child: CustomPaint(
+                foregroundPainter:
+                    TextboxPointer([200, 400], [200, 200], "Testing"),
+                child: Image.file(
                   File(imagePath),
                   fit: BoxFit.cover,
-                )),
-                SizedBox(
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: CustomPaint(
-                    painter: TextboxPointer([200, 400], [200, 200], "Testing"),
-                  ),
-                )
-              ]),
+                ),
+              ),
             ),
           ),
         ));
