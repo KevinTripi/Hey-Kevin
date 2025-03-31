@@ -49,6 +49,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   int whichCamera = 0;
+  int displayRotations = 0;
 
   @override
   void initState() {
@@ -100,7 +101,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               if (snapshot.connectionState == ConnectionState.done) {
                 return RotatedBox(
                   quarterTurns: (_controller.description.sensorOrientation /
-                          90) // From: https://pub.dev/documentation/flutter_better_camera/latest/camera/CameraDescription-class.html
+                              90 +
+                          displayRotations) // From: https://pub.dev/documentation/flutter_better_camera/latest/camera/CameraDescription-class.html
                       .round(), // From: https://stackoverflow.com/a/20788335
                   child: CameraPreview(_controller),
                 );
@@ -169,12 +171,24 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                     color: Colors.red,
                   ),
                 ),
-                FloatingActionButton(
-                  onPressed: null,
-                  heroTag: null,
-                  child: Icon(
-                    Icons.rotate_90_degrees_cw,
-                    size: 40,
+                GestureDetector(
+                  onLongPress: () {
+                    // Long pressing returns the screen rotation to default.
+                    displayRotations = 0;
+                    initCamera();
+                  },
+                  onTap: () {
+                    // Tapping rotates screen 90 degress clockwise.
+                    displayRotations = (displayRotations + 1) % 4;
+                    initCamera();
+                  },
+                  child: FloatingActionButton(
+                    onPressed: null,
+                    heroTag: null,
+                    child: Icon(
+                      Icons.rotate_90_degrees_cw,
+                      size: 40,
+                    ),
                   ),
                 ),
               ],
