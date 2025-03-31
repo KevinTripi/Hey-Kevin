@@ -53,17 +53,30 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   @override
   void initState() {
     super.initState();
-    // To display the current output from the Camera,
-    // create a CameraController.
-    _controller = CameraController(
-      // Get a specific camera from the list of available cameras.
-      widget.cameras[whichCamera],
-      // Define the resolution to use.
-      ResolutionPreset.high,
-    );
+    initCamera();
+  }
 
-    // Next, initialize the controller. This returns a Future.
-    _initializeControllerFuture = _controller.initialize();
+  void initCamera() {
+    // try {
+    //   _controller.dispose();
+    // } catch (e) {
+    //   print("Tried to dispose _controller:\n$e");
+    // }
+
+    setState(() {
+      // To display the current output from the Camera,
+      // create a CameraController.
+      _controller = CameraController(
+        // Get a specific camera from the list of available cameras.
+        widget.cameras[whichCamera %
+            widget.cameras.length], // using modulus ensure that index < length.
+        // Define the resolution to use.
+        ResolutionPreset.high,
+      );
+
+      // Next, initialize the controller. This returns a Future.
+      _initializeControllerFuture = _controller.initialize();
+    });
   }
 
   @override
@@ -111,7 +124,11 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 FloatingActionButton(
-                    onPressed: null,
+                    onPressed: () {
+                      whichCamera++;
+                      print("whichCamera: $whichCamera");
+                      initCamera();
+                    },
                     heroTag: null,
                     child: Icon(
                       Icons.flip_camera_ios_sharp,
