@@ -28,7 +28,7 @@ Future<void> main() async {
   int quarterTurns = 0;
 
   if (Platform.isAndroid) {
-    quarterTurns = -1;
+    quarterTurns = 1;
   }
 
   runApp(
@@ -60,6 +60,7 @@ class TakePictureScreen extends StatefulWidget {
 class TakePictureScreenState extends State<TakePictureScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
+  int whichCamera = 0;
 
   @override
   void initState() {
@@ -68,13 +69,14 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     // create a CameraController.
     _controller = CameraController(
       // Get a specific camera from the list of available cameras.
-      widget.cameras[0],
+      widget.cameras[whichCamera],
       // Define the resolution to use.
       ResolutionPreset.high,
     );
 
     // Next, initialize the controller. This returns a Future.
     _initializeControllerFuture = _controller.initialize();
+    print("Controller description: ${_controller.description}");
   }
 
   @override
@@ -123,7 +125,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                     onPressed: null,
                     heroTag: null,
                     child: Icon(
-                      Icons.image,
+                      Icons.flip_camera_ios_sharp,
                       size: 40,
                     )),
                 IconButton(
@@ -165,7 +167,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                   onPressed: null,
                   heroTag: null,
                   child: Icon(
-                    Icons.multitrack_audio,
+                    Icons.rotate_90_degrees_cw,
                     size: 40,
                   ),
                 ),
