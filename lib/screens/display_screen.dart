@@ -5,14 +5,37 @@ import 'package:flutter/material.dart';
 import 'package:hey_kevin/widgets/kev_info_card.dart';
 import 'package:hey_kevin/widgets/full_screen.dart';
 import 'package:sliding_drawer/sliding_drawer.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../widgets/textbox_pointer.dart';
+import '../util/bill_api_call.dart';
 
-class DisplayPictureScreen extends StatelessWidget {
+class DisplayPictureScreen extends StatefulWidget {
   final String imagePath;
 
   const DisplayPictureScreen({super.key, required this.imagePath});
+
+  @override
+  State<DisplayPictureScreen> createState() => _DisplayPictureScreenState();
+}
+
+class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    var imgData = sendImageToSegment(widget.imagePath);
+    print(imgData);
+
+    // Ensures all async calls are finished before trying to display the data.
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +127,7 @@ class DisplayPictureScreen extends StatelessWidget {
                   ],
                 ]),
                 child: Image.file(
-                  File(imagePath),
+                  File(widget.imagePath),
                   fit: BoxFit.cover,
                 ),
               ),
