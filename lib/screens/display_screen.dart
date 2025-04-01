@@ -91,8 +91,18 @@ class DisplayPictureScreen extends StatelessWidget {
               color: Colors.red,
               // Simplified from: https://medium.com/flutter-community/a-deep-dive-into-custompaint-in-flutter-47ab44e3f216
               child: CustomPaint(
-                foregroundPainter:
-                    TextboxPointer([200, 400], [200, 200], "Testing"),
+                foregroundPainter: TextboxPointer([
+                  [
+                    [200, 400],
+                    [200, 200],
+                    "Testing"
+                  ],
+                  [
+                    [150, 450],
+                    [100, 600],
+                    "Testing2"
+                  ],
+                ]),
                 child: Image.file(
                   File(imagePath),
                   fit: BoxFit.cover,
