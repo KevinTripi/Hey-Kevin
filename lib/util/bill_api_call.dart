@@ -29,7 +29,7 @@ Future<String?> sendImageToSegment(String imagePath) async {
     var response = await request.send();
     var responseBody = await response.stream.bytesToString();
 
-    print("Raw API Response: $responseBody");
+    // print("Raw API Response: $responseBody");
     print("Status Code: ${response.statusCode}");
 
     if (response.statusCode == 200) {

@@ -1,10 +1,12 @@
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:hey_kevin/widgets/kev_info_card.dart';
 import 'package:hey_kevin/widgets/full_screen.dart';
 import 'package:sliding_drawer/sliding_drawer.dart';
+import 'dart:ui' as ui;
 
 import '../widgets/textbox_pointer.dart';
 import '../util/bill_api_call.dart';
@@ -19,6 +21,7 @@ class DisplayPictureScreen extends StatefulWidget {
 }
 
 class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
+  late var maskJson;
   bool isLoading = true;
 
   @override
@@ -28,8 +31,10 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   Future<void> fetchData() async {
-    var imgData = sendImageToSegment(widget.imagePath);
-    print(imgData);
+    // Unwrap Future<>: https://stackoverflow.com/a/60438653
+    // Make nonnullable: https://stackoverflow.com/a/67968917
+    maskJson = jsonDecode(await sendImageToSegment(widget.imagePath) ?? "");
+    print("maskData: ${maskJson}");
 
     // Ensures all async calls are finished before trying to display the data.
     setState(() {
@@ -56,27 +61,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
           "Twist, turn, repeat!—because nothing screams fun like scrambling a puzzle you already couldn't solve.",
       "gpt_free":
           "A cube designed to make you question both your intelligence and your eyesight as you swear that yellow and white are the same color."
-    });
-
-    // in the form of numpy json array. if any pixel is [0, 0, 0], the mask isn't there.
-    final imgMaskJson = jsonEncode({
-      "image": [
-        [
-          [255, 0, 0],
-          [0, 255, 0],
-          [0, 0, 255]
-        ],
-        [
-          [255, 255, 0],
-          [0, 255, 255],
-          [255, 0, 255]
-        ],
-        [
-          [128, 128, 128],
-          [64, 64, 64],
-          [0, 0, 0]
-        ]
-      ]
     });
 
     final gptJson = jsonDecode(testJson);
@@ -112,25 +96,70 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
           body: Center(
             child: Container(
               color: Colors.red,
-              // Simplified from: https://medium.com/flutter-community/a-deep-dive-into-custompaint-in-flutter-47ab44e3f216
-              child: CustomPaint(
-                foregroundPainter: TextboxPointer([
-                  [
-                    [200, 400],
-                    [200, 200],
-                    "Testing"
-                  ],
-                  [
-                    [150, 450],
-                    [100, 600],
-                    "Testing2"
-                  ],
-                ]),
-                child: Image.file(
-                  File(widget.imagePath),
-                  fit: BoxFit.cover,
-                ),
-              ),
+              // Reason I'm not using a FutureBuilder is to use the constraints argument from LayoutBuilder.
+              // Otherwise I'm using it similarly. Works since setState rebuilds widgets.
+              child: LayoutBuilder(builder: (context, constraints) {
+                if (isLoading) {
+                  return Image.file(
+                    File(widget.imagePath),
+                    fit: BoxFit.cover,
+                  );
+                } else {
+                  // Bill returns the picture with the mask.
+
+                  // From: https://flutterfixes.com/flutter-get-widget-size-image-file/
+                  print(
+                      "Constraints: ${constraints.maxWidth}, ${constraints.maxHeight}");
+                  List<int> p1 = [],
+                      p2 = [],
+                      p3 = [],
+                      pMaskStart = [],
+                      pMaskEnd = [],
+                      center = [
+                        (constraints.maxWidth / 2).round(),
+                        (constraints.maxHeight / 2).round()
+                      ];
+
+                  List<dynamic> maskArr =
+                      jsonDecode(maskJson['mask'])['nums'][0];
+
+                  print("maskArr.length: ${maskArr.length}");
+                  print("maskArr[0].length: ${maskArr[0].length}");
+
+                  // TODO: The mask size (1920 x 1080 in my case) doesn't match the actual display size (411.4 x 731.4)
+                  for (var i = 0; i < constraints.maxHeight; i++) {
+                    for (var j = 0; j < constraints.maxWidth; j++) {
+                      if (maskArr[i][j]) {}
+                    }
+                  }
+
+                  // while (p1.isEmpty && p2.isEmpty && p3.isEmpty) {
+                  //   List<int> tryPoint = [Random().nextInt(), ];
+                  //   if ()
+                  // }
+
+                  // Simplified from: https://medium.com/flutter-community/a-deep-dive-into-custompaint-in-flutter-47ab44e3f216
+                  // Error prevented by ensuring image is loaded (by isLoading) before calling CustomPaint.
+                  return CustomPaint(
+                    foregroundPainter: TextboxPointer([
+                      [
+                        [200, 400],
+                        [200, 200],
+                        "Testing"
+                      ],
+                      [
+                        [150, 450],
+                        [100, 600],
+                        "Testing2"
+                      ],
+                    ]),
+                    child: Image.file(
+                      File(widget.imagePath),
+                      fit: BoxFit.cover,
+                    ),
+                  );
+                }
+              }),
             ),
           ),
         ));
