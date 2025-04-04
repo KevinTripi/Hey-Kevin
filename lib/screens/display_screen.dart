@@ -3,13 +3,14 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:hey_kevin/widgets/kev_info_card.dart';
-import 'package:hey_kevin/widgets/full_screen.dart';
 import 'package:sliding_drawer/sliding_drawer.dart';
 import 'dart:ui' as ui;
 
+import 'package:hey_kevin/widgets/kev_info_card.dart';
+import 'package:hey_kevin/widgets/full_screen.dart';
 import '../widgets/textbox_pointer.dart';
 import '../util/bill_api_call.dart';
+import '../util/ammar_api_call.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
   final String imagePath;
@@ -21,8 +22,12 @@ class DisplayPictureScreen extends StatefulWidget {
 }
 
 class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
-  late var maskJson;
-  bool isLoading = true;
+  late var kevGooseJson;
+  late var gptJson;
+  late var commentJson;
+  bool isKevGooseLoading = true;
+  bool isChatGptLoading = true;
+  int intervalTime = 5;
 
   @override
   void initState() {
@@ -33,12 +38,35 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   Future<void> fetchData() async {
     // Unwrap Future<>: https://stackoverflow.com/a/60438653
     // Make nonnullable: https://stackoverflow.com/a/67968917
-    maskJson = jsonDecode(await sendImageToSegment(widget.imagePath) ?? "");
-    print("maskData: ${maskJson}");
+    kevGooseJson = jsonDecode(await sendImageToSegment(widget.imagePath) ?? "");
+    // print("maskData: ${maskJson}");
 
-    // Ensures all async calls are finished before trying to display the data.
+    // from https://stackoverflow.com/a/68390020
+    kevGooseJson.forEach((key, value) {
+      print("maskJson[$key]: $value");
+    });
+
     setState(() {
-      isLoading = false;
+      isKevGooseLoading = false;
+    });
+
+    gptJson = await fetchGptResponse(kevGooseJson['session_id']);
+    // print("Commentjson original return: ${commentJson!}");
+
+    while (gptJson == null) {
+      print("gptJson didn't return. Trying again in $intervalTime sec.");
+      sleep(Duration(seconds: intervalTime));
+      gptJson = await fetchGptResponse(kevGooseJson['session_id']);
+    }
+
+    print("gptJson returned 200.\ngptJson: $gptJson");
+    gptJson =
+        jsonDecode(await fetchGptResponse(kevGooseJson['session_id']) ?? "");
+
+    commentJson = gptJson['comments'];
+
+    setState(() {
+      isChatGptLoading = false;
     });
   }
 
@@ -52,19 +80,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       drawerFraction: 1,
     );
 
-    final testJson = jsonEncode({
-      "name": "Rubik's Cube",
-      "description":
-          "A multicolored 3D puzzle where players must align all six faces by rotating different sections.",
-      "gpt_color": "Rubik's Cube—six colors, infinite regret.",
-      "gpt_review":
-          "Twist, turn, repeat!—because nothing screams fun like scrambling a puzzle you already couldn't solve.",
-      "gpt_free":
-          "A cube designed to make you question both your intelligence and your eyesight as you swear that yellow and white are the same color."
-    });
-
-    final gptJson = jsonDecode(testJson);
-
     return Scaffold(
         appBar: AppBar(title: const Text('Display the Picture')),
         // The image is stored as a file on the device. Use the `Image.file`
@@ -76,23 +91,27 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
           axisDirection: AxisDirection.up,
 
           // The drawer holds the ListView where our results will sit.
-          drawer: ListView(
-            physics:
-                NeverScrollableScrollPhysics(), // From https://stackoverflow.com/a/51367188
-            shrinkWrap:
-                true, // From https://www.flutterbeads.com/listview-inside-column-in-flutter/
-            children: [
-              // Title Tile
-              KevInfoCard(title: gptJson['name'], body: gptJson['description']),
-              // Fact #1 Tile
-              KevInfoCard(
-                  title: 'Colorful Insult:', body: gptJson['gpt_color']),
-              // Fact #2 Tile
-              KevInfoCard(title: 'Real Review:', body: gptJson['gpt_review']),
-              // Fact #3 Tile
-              KevInfoCard(title: 'Miscellaneous:', body: gptJson['gpt_free']),
-            ],
-          ),
+          drawer: isChatGptLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : ListView(
+                  physics:
+                      NeverScrollableScrollPhysics(), // From https://stackoverflow.com/a/51367188
+                  shrinkWrap:
+                      true, // From https://www.flutterbeads.com/listview-inside-column-in-flutter/
+                  children: [
+                    // Title Tile
+                    KevInfoCard(title: gptJson['label'], body: ""),
+                    // Fact #1 Tile
+                    KevInfoCard(
+                        title: 'sarcastic:', body: commentJson['sarcastic']),
+                    // Fact #2 Tile
+                    KevInfoCard(title: 'witty:', body: commentJson['witty']),
+                    // Fact #3 Tile
+                    KevInfoCard(title: 'funny:', body: commentJson['funny']),
+                  ],
+                ),
           body: Center(
             child: Container(
               color: Colors.red,
@@ -104,7 +123,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   fit: BoxFit.cover,
                 );
 
-                if (isLoading) {
+                if (isKevGooseLoading) {
                   return displayImage;
                 } else {
                   // Bill returns the picture with the mask.
@@ -123,7 +142,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                       ];
 
                   List<dynamic> maskArr =
-                      jsonDecode(maskJson['mask'])['nums'][0];
+                      jsonDecode(kevGooseJson['mask'])['nums'][0];
 
                   print("maskArr.length: ${maskArr.length}");
                   print("maskArr[0].length: ${maskArr[0].length}");
@@ -131,11 +150,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   // TODO: The mask size (1920 x 1080 in my case) doesn't match the actual display size (411.4 x 731.4)
                   // Removing Box.fit doesn't work. Both are the same ratio though...
                   // 731.4 / 1920 = 0.3809375, could I multiply the index by this to map it to the screen?
-                  for (var i = 0; i < constraints.maxHeight; i++) {
-                    for (var j = 0; j < constraints.maxWidth; j++) {
-                      if (maskArr[i][j]) {}
-                    }
-                  }
+                  // for (var i = 0; i < constraints.maxHeight; i++) {
+                  //   for (var j = 0; j < constraints.maxWidth; j++) {
+                  //     if (maskArr[i][j]) {}
+                  //   }
+                  // }
 
                   // while (p1.isEmpty && p2.isEmpty && p3.isEmpty) {
                   //   List<int> tryPoint = [Random().nextInt(), ];

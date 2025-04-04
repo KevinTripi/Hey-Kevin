@@ -43,3 +43,26 @@ Future<String?> sendImageToSegment(String imagePath) async {
   }
   return null;
 }
+
+// Slightly changed from ammar_api_call.dart
+Future<String?> fetchSegmentedImage(String sessionId) async {
+  var baseUrl = dotenv.env['API_BASE_URL'] ?? "http://localhost:8000";
+  var uri = Uri.parse("$baseUrl/status/$sessionId");
+  String apiKey = dotenv.env['x-api-key'] ?? '';
+
+  final headers = {
+    "x-api-key": apiKey,
+    "Content-Type": "application/json",
+  };
+
+  print("Sending GET request to ${uri.toString()}");
+  // Get response
+  final response = await http.get(uri, headers: headers);
+  print("return statusCode: ${response.statusCode}");
+
+  if (response.statusCode == 200) {
+    return response.body;
+  } else {
+    return null;
+  }
+}
