@@ -99,11 +99,13 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
               // Reason I'm not using a FutureBuilder is to use the constraints argument from LayoutBuilder.
               // Otherwise I'm using it similarly. Works since setState rebuilds widgets.
               child: LayoutBuilder(builder: (context, constraints) {
+                Image displayImage = Image.file(
+                  File(widget.imagePath),
+                  fit: BoxFit.cover,
+                );
+
                 if (isLoading) {
-                  return Image.file(
-                    File(widget.imagePath),
-                    fit: BoxFit.cover,
-                  );
+                  return displayImage;
                 } else {
                   // Bill returns the picture with the mask.
 
@@ -127,6 +129,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   print("maskArr[0].length: ${maskArr[0].length}");
 
                   // TODO: The mask size (1920 x 1080 in my case) doesn't match the actual display size (411.4 x 731.4)
+                  // Removing Box.fit doesn't work. Both are the same ratio though...
+                  // 731.4 / 1920 = 0.3809375, could I multiply the index by this to map it to the screen?
                   for (var i = 0; i < constraints.maxHeight; i++) {
                     for (var j = 0; j < constraints.maxWidth; j++) {
                       if (maskArr[i][j]) {}
@@ -141,23 +145,19 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   // Simplified from: https://medium.com/flutter-community/a-deep-dive-into-custompaint-in-flutter-47ab44e3f216
                   // Error prevented by ensuring image is loaded (by isLoading) before calling CustomPaint.
                   return CustomPaint(
-                    foregroundPainter: TextboxPointer([
-                      [
-                        [200, 400],
-                        [200, 200],
-                        "Testing"
-                      ],
-                      [
-                        [150, 450],
-                        [100, 600],
-                        "Testing2"
-                      ],
-                    ]),
-                    child: Image.file(
-                      File(widget.imagePath),
-                      fit: BoxFit.cover,
-                    ),
-                  );
+                      foregroundPainter: TextboxPointer([
+                        [
+                          [200, 400],
+                          [200, 200],
+                          "Testing"
+                        ],
+                        [
+                          [150, 450],
+                          [100, 600],
+                          "Testing2"
+                        ],
+                      ]),
+                      child: displayImage);
                 }
               }),
             ),
