@@ -25,7 +25,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   late var kevGooseJson;
   late var gptJson;
   late var commentJson;
-  bool isKevGooseLoading = true;
+  bool isSegmentLoading = true;
   bool isChatGptLoading = true;
   int intervalTime = 5;
 
@@ -39,16 +39,19 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     // Unwrap Future<>: https://stackoverflow.com/a/60438653
     // Make nonnullable: https://stackoverflow.com/a/67968917
     kevGooseJson = jsonDecode(await sendImageToSegment(widget.imagePath) ?? "");
-    // print("maskData: ${maskJson}");
+    // print("maskData: ${kevGooseJson}");
 
     // from https://stackoverflow.com/a/68390020
     kevGooseJson.forEach((key, value) {
-      print("maskJson[$key]: $value");
+      print("kevGooseJson[$key]: $value");
     });
 
     setState(() {
-      isKevGooseLoading = false;
+      isSegmentLoading = false;
     });
+
+    //
+    //
 
     gptJson = await fetchGptResponse(kevGooseJson['session_id']);
     // print("Commentjson original return: ${commentJson!}");
@@ -123,11 +126,25 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   fit: BoxFit.cover,
                 );
 
-                if (isKevGooseLoading) {
-                  return displayImage;
+                if (isSegmentLoading) {
+                  return Stack(children: [
+                    displayImage,
+                    Center(child: CircularProgressIndicator())
+                  ]);
                 } else {
-                  // Bill returns the picture with the mask.
-
+                  // try {
+                  //   // Bill returns the picture with the mask.
+                  //   print(
+                  //       "Fetching image from path: https://www.kevinthegoose.com/images/${kevGooseJson['session_id']!}");
+                  //   displayImage = Image.network(
+                  //     "https://www.kevinthegoose.com/images/${kevGooseJson['session_id']!}",
+                  //     // key: ValueKey(
+                  //     //     kevGooseJson['segmented_image_path']), // Force refresh
+                  //     // width: constraints.maxWidth,
+                  //   );
+                  // } catch (e) {
+                  //   print("Image failed to be returned.");
+                  // }
                   // From: https://flutterfixes.com/flutter-get-widget-size-image-file/
                   print(
                       "Constraints: ${constraints.maxWidth}, ${constraints.maxHeight}");
@@ -163,20 +180,21 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
                   // Simplified from: https://medium.com/flutter-community/a-deep-dive-into-custompaint-in-flutter-47ab44e3f216
                   // Error prevented by ensuring image is loaded (by isLoading) before calling CustomPaint.
-                  return CustomPaint(
-                      foregroundPainter: TextboxPointer([
-                        [
-                          [200, 400],
-                          [200, 200],
-                          "Testing"
-                        ],
-                        [
-                          [150, 450],
-                          [100, 600],
-                          "Testing2"
-                        ],
-                      ]),
-                      child: displayImage);
+                  // return CustomPaint(
+                  //     foregroundPainter: TextboxPointer([
+                  //       [
+                  //         [200, 400],
+                  //         [200, 200],
+                  //         "Testing"
+                  //       ],
+                  //       [
+                  //         [150, 450],
+                  //         [100, 600],
+                  //         "Testing2"
+                  //       ],
+                  //     ]),
+                  //     child: displayImage);
+                  return displayImage;
                 }
               }),
             ),
