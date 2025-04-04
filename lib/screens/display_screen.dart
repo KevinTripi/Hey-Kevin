@@ -28,6 +28,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   bool isSegmentLoading = true;
   bool isChatGptLoading = true;
   int intervalTime = 5;
+  String segImgPath = "";
 
   @override
   void initState() {
@@ -53,13 +54,24 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     //
     //
 
+    segImgPath =
+        "https://www.kevinthegoose.com/images/${kevGooseJson['session_id']!}.jpg";
+
+    //
+    //
+
     gptJson = await fetchGptResponse(kevGooseJson['session_id']);
     // print("Commentjson original return: ${commentJson!}");
+    var startTime = DateTime.now();
 
     while (gptJson == null) {
       print("gptJson didn't return. Trying again in $intervalTime sec.");
       sleep(Duration(seconds: intervalTime));
       gptJson = await fetchGptResponse(kevGooseJson['session_id']);
+      if (DateTime.now().difference(startTime).inMilliseconds / 1000 > 30) {
+        print("gpjJson took too long. Returning.");
+        return;
+      }
     }
 
     print("gptJson returned 200.\ngptJson: $gptJson");
@@ -96,7 +108,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
           // The drawer holds the ListView where our results will sit.
           drawer: isChatGptLoading
               ? Center(
-                  child: CircularProgressIndicator(),
+                  child: Center(child: Text("Generating funny comments...")),
                 )
               : ListView(
                   physics:
@@ -132,19 +144,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     Center(child: CircularProgressIndicator())
                   ]);
                 } else {
-                  // try {
-                  //   // Bill returns the picture with the mask.
-                  //   print(
-                  //       "Fetching image from path: https://www.kevinthegoose.com/images/${kevGooseJson['session_id']!}");
-                  //   displayImage = Image.network(
-                  //     "https://www.kevinthegoose.com/images/${kevGooseJson['session_id']!}",
-                  //     // key: ValueKey(
-                  //     //     kevGooseJson['segmented_image_path']), // Force refresh
-                  //     // width: constraints.maxWidth,
-                  //   );
-                  // } catch (e) {
-                  //   print("Image failed to be returned.");
-                  // }
+                  // Bill returns the picture with the mask.
+                  print("Fetching image from path: $segImgPath");
+                  // From https://github.com/KevinTripi/Hey-Kevin/blob/bill-api-test/lib/screens/object_detection_screen.dart
+                  displayImage = Image.network(segImgPath);
+
                   // From: https://flutterfixes.com/flutter-get-widget-size-image-file/
                   print(
                       "Constraints: ${constraints.maxWidth}, ${constraints.maxHeight}");
