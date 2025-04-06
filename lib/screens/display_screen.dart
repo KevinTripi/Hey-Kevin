@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:sliding_drawer/sliding_drawer.dart';
 import 'dart:ui' as ui;
+import 'package:gal/gal.dart';
 
 import 'package:hey_kevin/widgets/kev_info_card.dart';
 import 'package:hey_kevin/widgets/full_screen.dart';
@@ -47,9 +48,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       print("kevGooseJson[$key]: $value");
     });
 
-    setState(() {
-      isSegmentLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isSegmentLoading = false;
+      });
+    }
 
     //
     //
@@ -80,9 +83,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
     commentJson = gptJson['comments'];
 
-    setState(() {
-      isChatGptLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isChatGptLoading = false;
+      });
+    }
   }
 
   @override
@@ -139,10 +144,12 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 );
 
                 if (isSegmentLoading) {
-                  return Stack(children: [
-                    displayImage,
-                    Center(child: CircularProgressIndicator())
-                  ]);
+                  return SafeArea(
+                    child: Stack(children: [
+                      displayImage,
+                      Center(child: CircularProgressIndicator())
+                    ]),
+                  );
                 } else {
                   // Bill returns the picture with the mask.
                   print("Fetching image from path: $segImgPath");
@@ -156,6 +163,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   List<dynamic> maskArr =
                       jsonDecode(kevGooseJson['mask'])['nums'][0];
 
+                  // Gal.putImage(widget.imagePath);
+
                   print("maskArr.length: ${maskArr.length}");
                   print("maskArr[0].length: ${maskArr[0].length}");
 
@@ -164,7 +173,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                       p3 = (-1, -1),
                       pMaskStart = (-1, -1),
                       pMaskEnd = (-1, -1),
-                      center = (
+                      painterCenter = (
                         (constraints.maxWidth / 2).round(),
                         (constraints.maxHeight / 2).round()
                       );
@@ -176,38 +185,58 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   // TODO: The mask size (1920 x 1080 in my case) doesn't match the actual display size (411.4 x 731.4)
                   // Removing Box.fit doesn't work. Both are the same ratio though...
                   // 731.4 / 1920 = 0.3809375, could I multiply the index by this to map it to the screen?
-                  for (var i = 0; i < maskArr.length; i++) {
-                    for (var j = 0; j < maskArr[i].length; j++) {
-                      if (maskArr[i][j]) {
-                        print("pMaskStart original points: ($i, $j)");
-                        pMaskStart = (
-                          (j * imgRatioWidth).round(),
-                          (i * imgRatioHeight).round()
-                        );
-                        break;
-                      }
-                    }
-                    if (pMaskStart != (-1, -1)) {
+                  int curX = (maskArr[0].length / 2).round(),
+                      curY = (maskArr.length / 2).round();
+                  int maskSearchAmount = 5;
+
+                  print(widget.imagePath);
+                  while (curX >= 0 && curY >= 0) {
+                    if (!maskArr[curY][curX]) {
+                      print("pMaskStart original point (x, y): ($curX, $curY)");
+                      pMaskStart = (
+                        (curX * imgRatioHeight).round(),
+                        (curY * imgRatioWidth).round(),
+                        // (curX * imgRatioWidth).round(),
+                        // (curY * imgRatioHeight).round(),
+                      );
                       break;
+                    } else {
+                      curX -=
+                          (curX - maskSearchAmount < 0) ? 0 : maskSearchAmount;
+                      curY -=
+                          (curY - maskSearchAmount < 0) ? 0 : maskSearchAmount;
                     }
                   }
                   print("pMaskStart: $pMaskStart");
 
-                  for (var i = (maskArr.length - 1).round(); i >= 0; i--) {
-                    for (var j = (maskArr[i].length - 1).round(); j >= 0; j--) {
-                      if (maskArr[i][j]) {
-                        print("pMaskEnd original points: ($i, $j)");
-                        pMaskEnd = (
-                          (j * imgRatioWidth).round(),
-                          (i * imgRatioHeight).round()
-                        );
-                        break;
-                      }
-                    }
-                    if (pMaskEnd != (-1, -1)) {
+                  curX = (maskArr[0].length / 2).round();
+                  curY = (maskArr.length / 2).round();
+
+                  while (curX < maskArr[0].length && curY < maskArr.length) {
+                    if (!maskArr[curY][curX]) {
+                      print("pMaskEnd original point (x, y): ($curX, $curY)");
+                      pMaskEnd = (
+                        (curX * imgRatioHeight).round(),
+                        (curY * imgRatioWidth).round(),
+                        // (curX * imgRatioWidth).round(),
+                        // (curY * imgRatioHeight).round(),
+                      );
                       break;
+                    } else {
+                      curX += (curX + maskSearchAmount >= maskArr[0].length)
+                          ? 0
+                          : maskSearchAmount;
+                      curY += (curY + maskSearchAmount >= maskArr.length)
+                          ? 0
+                          : maskSearchAmount;
+                      // print("($curX, $curY): ${maskArr[curY][curX]}");
                     }
                   }
+
+                  // pMaskEnd = (
+                  //   (curX * imgRatioWidth).round(),
+                  //   (curY * imgRatioHeight).round()
+                  // );
                   print("pMaskEnd: $pMaskEnd");
 
                   // while (p1.isEmpty && p2.isEmpty && p3.isEmpty) {
@@ -217,20 +246,24 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
                   // Simplified from: https://medium.com/flutter-community/a-deep-dive-into-custompaint-in-flutter-47ab44e3f216
                   // Error prevented by ensuring image is loaded (by isLoading) before calling CustomPaint.
-                  return CustomPaint(
-                      foregroundPainter: TextboxPointer([
-                        [
-                          [pMaskStart.$1, pMaskStart.$2],
-                          [constraints.maxWidth, 0],
-                          "start"
-                        ],
-                        [
-                          [pMaskEnd.$1, pMaskEnd.$2],
-                          [0, constraints.maxHeight],
-                          "end"
-                        ],
-                      ]),
-                      child: displayImage);
+                  return SafeArea(
+                    child: Center(
+                      child: CustomPaint(
+                          foregroundPainter: TextboxPointer([
+                            [
+                              [pMaskStart.$1, pMaskStart.$2],
+                              [constraints.maxWidth, 0],
+                              "start"
+                            ],
+                            [
+                              [pMaskEnd.$1, pMaskEnd.$2],
+                              [0, constraints.maxHeight],
+                              "end"
+                            ],
+                          ]),
+                          child: displayImage),
+                    ),
+                  );
                   // return displayImage;
                 }
               }),
