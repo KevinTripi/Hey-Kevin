@@ -27,7 +27,8 @@ class TextboxPointer extends CustomPainter {
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0
-      ..color = Colors.yellow;
+      ..color = Colors.yellow
+      ..style = PaintingStyle.fill;
 
     for (int i = 0; i < textboxPointList.length; i++) {
       paintPoint(
@@ -53,7 +54,7 @@ class TextboxPointer extends CustomPainter {
     circOffset = offsetOnscreen(circOffset, Size.zero);
     textOffset = offsetOnscreen(textOffset, Size.zero);
 
-    myCanvas.drawCircle(circOffset, 10, paint); // Draws circle
+    myCanvas.drawCircle(circOffset, 7, paint); // Draws circle
     // Draws textbox, updates textOffset (incase it was moved within the method), instantiates textboxSize.
     (textOffset, (textboxWidth, textboxHeight)) =
         customTextPaint(textOffset, text, paint);
@@ -82,7 +83,7 @@ class TextboxPointer extends CustomPainter {
         text: TextSpan(
             text: text,
             style: TextStyle(
-              color: paint.color,
+              color: Colors.black,
               fontSize: 35,
             )),
         textDirection: TextDirection.ltr);
