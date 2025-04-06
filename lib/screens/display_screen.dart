@@ -152,15 +152,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   // From: https://flutterfixes.com/flutter-get-widget-size-image-file/
                   print(
                       "Constraints: ${constraints.maxWidth}, ${constraints.maxHeight}");
-                  List<int> p1 = [],
-                      p2 = [],
-                      p3 = [],
-                      pMaskStart = [],
-                      pMaskEnd = [],
-                      center = [
-                        (constraints.maxWidth / 2).round(),
-                        (constraints.maxHeight / 2).round()
-                      ];
 
                   List<dynamic> maskArr =
                       jsonDecode(kevGooseJson['mask'])['nums'][0];
@@ -168,14 +159,56 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   print("maskArr.length: ${maskArr.length}");
                   print("maskArr[0].length: ${maskArr[0].length}");
 
+                  (int, int) p1 = (-1, -1),
+                      p2 = (-1, -1),
+                      p3 = (-1, -1),
+                      pMaskStart = (-1, -1),
+                      pMaskEnd = (-1, -1),
+                      center = (
+                        (constraints.maxWidth / 2).round(),
+                        (constraints.maxHeight / 2).round()
+                      );
+
+                  double imgRatioHeight =
+                      constraints.maxHeight / maskArr.length;
+                  double imgRatioWidth =
+                      constraints.maxWidth / maskArr[0].length;
                   // TODO: The mask size (1920 x 1080 in my case) doesn't match the actual display size (411.4 x 731.4)
                   // Removing Box.fit doesn't work. Both are the same ratio though...
                   // 731.4 / 1920 = 0.3809375, could I multiply the index by this to map it to the screen?
-                  // for (var i = 0; i < constraints.maxHeight; i++) {
-                  //   for (var j = 0; j < constraints.maxWidth; j++) {
-                  //     if (maskArr[i][j]) {}
-                  //   }
-                  // }
+                  for (var i = 0; i < maskArr.length; i++) {
+                    for (var j = 0; j < maskArr[i].length; j++) {
+                      if (maskArr[i][j]) {
+                        print("pMaskStart original points: ($i, $j)");
+                        pMaskStart = (
+                          (j * imgRatioWidth).round(),
+                          (i * imgRatioHeight).round()
+                        );
+                        break;
+                      }
+                    }
+                    if (pMaskStart != (-1, -1)) {
+                      break;
+                    }
+                  }
+                  print("pMaskStart: $pMaskStart");
+
+                  for (var i = (maskArr.length - 1).round(); i >= 0; i--) {
+                    for (var j = (maskArr[i].length - 1).round(); j >= 0; j--) {
+                      if (maskArr[i][j]) {
+                        print("pMaskEnd original points: ($i, $j)");
+                        pMaskEnd = (
+                          (j * imgRatioWidth).round(),
+                          (i * imgRatioHeight).round()
+                        );
+                        break;
+                      }
+                    }
+                    if (pMaskEnd != (-1, -1)) {
+                      break;
+                    }
+                  }
+                  print("pMaskEnd: $pMaskEnd");
 
                   // while (p1.isEmpty && p2.isEmpty && p3.isEmpty) {
                   //   List<int> tryPoint = [Random().nextInt(), ];
@@ -184,21 +217,21 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
                   // Simplified from: https://medium.com/flutter-community/a-deep-dive-into-custompaint-in-flutter-47ab44e3f216
                   // Error prevented by ensuring image is loaded (by isLoading) before calling CustomPaint.
-                  // return CustomPaint(
-                  //     foregroundPainter: TextboxPointer([
-                  //       [
-                  //         [200, 400],
-                  //         [200, 200],
-                  //         "Testing"
-                  //       ],
-                  //       [
-                  //         [150, 450],
-                  //         [100, 600],
-                  //         "Testing2"
-                  //       ],
-                  //     ]),
-                  //     child: displayImage);
-                  return displayImage;
+                  return CustomPaint(
+                      foregroundPainter: TextboxPointer([
+                        [
+                          [pMaskStart.$1, pMaskStart.$2],
+                          [constraints.maxWidth, 0],
+                          "start"
+                        ],
+                        [
+                          [pMaskEnd.$1, pMaskEnd.$2],
+                          [0, constraints.maxHeight],
+                          "end"
+                        ],
+                      ]),
+                      child: displayImage);
+                  // return displayImage;
                 }
               }),
             ),

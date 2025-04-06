@@ -47,10 +47,11 @@ class TextboxPointer extends CustomPainter {
     double textboxHeight;
 
     // Ensures that the points actually appear on the screen.
-    circOffset = Offset(circOffset.dx % myCanvasSize.width,
-        circOffset.dy % myCanvasSize.height);
-    textOffset = Offset(textOffset.dx % myCanvasSize.width,
-        textOffset.dy % myCanvasSize.height);
+    circOffset = Offset(circOffset.dx, circOffset.dy);
+    textOffset = Offset(textOffset.dx, textOffset.dy);
+
+    circOffset = offsetOnscreen(circOffset, Size.zero);
+    textOffset = offsetOnscreen(textOffset, Size.zero);
 
     myCanvas.drawCircle(circOffset, 10, paint); // Draws circle
     // Draws textbox, updates textOffset (incase it was moved within the method), instantiates textboxSize.
