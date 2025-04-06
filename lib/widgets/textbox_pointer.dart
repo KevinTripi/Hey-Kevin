@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 
 // From https://codewithandrea.com/videos/flutter-custom-painting-do-not-fear-canvas/
+// TextboxPointer([
+//                  [
+//                    [23, 40], // Pointer start
+//                    [100, 12], // Textbox start
+//                    "hello" // text
+//                  ],
+//                  ...
+//                ]);
 class TextboxPointer extends CustomPainter {
-  // In the format of TextboxPointer([
-  //                    [
-  //                      [23, 40], // Pointer start
-  //                      [100, 12], // Textbox start
-  //                      "hello" // text
-  //                    ],
-  //                    ...
-  //                  ]);
   List<List<dynamic>> textboxPointList;
   late Canvas myCanvas;
   late Size myCanvasSize;
 
   TextboxPointer(this.textboxPointList);
+
+  final pointerCircleRadius = 7.0;
+  final textboxFontSize = 31.0;
 
   // Where all the paint stuff goes
   @override
@@ -54,7 +57,7 @@ class TextboxPointer extends CustomPainter {
     circOffset = offsetOnscreen(circOffset, Size.zero);
     textOffset = offsetOnscreen(textOffset, Size.zero);
 
-    myCanvas.drawCircle(circOffset, 7, paint); // Draws circle
+    myCanvas.drawCircle(circOffset, pointerCircleRadius, paint); // Draws circle
     // Draws textbox, updates textOffset (incase it was moved within the method), instantiates textboxSize.
     (textOffset, (textboxWidth, textboxHeight)) =
         customTextPaint(textOffset, text, paint);
@@ -84,7 +87,7 @@ class TextboxPointer extends CustomPainter {
             text: text,
             style: TextStyle(
               color: Colors.black,
-              fontSize: 35,
+              fontSize: textboxFontSize,
             )),
         textDirection: TextDirection.ltr);
     painter.layout();
