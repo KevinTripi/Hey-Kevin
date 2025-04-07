@@ -5,9 +5,9 @@ import re
 # BING API VARIABLES + IMAGE
 # Will need to update imagePath and filePath according to app structure
 BASE_URI = 'https://api.bing.microsoft.com/v7.0/images/visualsearch'
-SUBSCRIPTION_KEY = ''
-imagePath = "lib/bing_api/dasani-water-217886-64_600.jpg"
-filePath = "lib/bing_api/result.json"
+SUBSCRIPTION_KEY = '6d13f8da3ef4414ba962942fcade96fd'
+imagePath = "Hey-Kevin/lib/bing_api/dasani.jpg"
+filePath = "Hey-Kevin/lib/bing_api/result.json"
 
 HEADERS = {'Ocp-Apim-Subscription-Key': SUBSCRIPTION_KEY}
 
@@ -110,7 +110,7 @@ def export_data(names, displayText, query):
             ]
         }
 
-        with open("lib/bing_api/exported_data.json", "w") as f:
+        with open("Hey-Kevin/lib/bing_api/exported_data.json", "w") as f:
             json.dump(exportStructure, f, indent=2)
 
         print("Data exported successfully to exported_data.json")
