@@ -1,4 +1,7 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:touchable/touchable.dart';
 
 // From https://codewithandrea.com/videos/flutter-custom-painting-do-not-fear-canvas/
 // TextboxPointer([
@@ -11,10 +14,12 @@ import 'package:flutter/material.dart';
 //                ]);
 class TextboxPointer extends CustomPainter {
   List<List<dynamic>> textboxPointList;
-  late Canvas myCanvas;
+  final BuildContext context;
+
+  late TouchyCanvas myCanvas;
   late Size myCanvasSize;
 
-  TextboxPointer(this.textboxPointList);
+  TextboxPointer(this.context, this.textboxPointList);
 
   final pointerCircleRadius = 7.0;
   final textboxFontSize = 31.0;
@@ -24,7 +29,7 @@ class TextboxPointer extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     print("Paint size: x: ${size.width} y: ${size.height}");
 
-    myCanvas = canvas;
+    myCanvas = TouchyCanvas(context, canvas);
     myCanvasSize = size;
 
     final paint = Paint()
@@ -57,7 +62,11 @@ class TextboxPointer extends CustomPainter {
     circOffset = offsetOnscreen(circOffset, Size.zero);
     textOffset = offsetOnscreen(textOffset, Size.zero);
 
-    myCanvas.drawCircle(circOffset, pointerCircleRadius, paint); // Draws circle
+    myCanvas.drawCircle(
+      circOffset,
+      pointerCircleRadius,
+      paint,
+    ); // Draws circle
     // Draws textbox, updates textOffset (incase it was moved within the method), instantiates textboxSize.
     (textOffset, (textboxWidth, textboxHeight)) =
         customTextPaint(textOffset, text, paint);
@@ -82,30 +91,54 @@ class TextboxPointer extends CustomPainter {
   // Draws the text arg then a border around it. Returns the Offset it started painting at and the size of the box.
   (Offset, (double, double)) customTextPaint(
       Offset offset, String text, Paint paint) {
-    var painter = TextPainter(
-        text: TextSpan(
-            text: text,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: textboxFontSize,
-            )),
-        textDirection: TextDirection.ltr);
-    painter.layout();
+    // 1. Create the Paragraph
+    final paragraphStyle = ui.ParagraphStyle(
+      textDirection: TextDirection.ltr,
+      fontSize: textboxFontSize,
+    );
 
-    Offset newOffset =
-        offsetOnscreen(offset, Size(painter.width + 10, painter.height + 10));
+    final textStyle = ui.TextStyle(
+      color: Colors.black,
+      fontSize: textboxFontSize,
+    );
 
+    final paragraphBuilder = ui.ParagraphBuilder(paragraphStyle)
+      ..pushStyle(textStyle)
+      ..addText(text);
+
+    final paragraph = paragraphBuilder.build();
+
+    // 2. Layout with constraints
+    paragraph.layout(ui.ParagraphConstraints(width: double.infinity));
+
+    // 3. Compute size with padding
+    final double padding = 5.0;
+    final Size textSize = Size(paragraph.maxIntrinsicWidth, paragraph.height);
+    final Size paddedSize =
+        Size(textSize.width + padding * 2, textSize.height + padding * 2);
+
+    // 4. Compute onscreen offset (custom logic)
+    final Offset newOffset = offsetOnscreen(offset, paddedSize);
+
+    // 5. Draw background rect
+    final Rect backgroundRect = Rect.fromLTWH(
+      newOffset.dx - padding,
+      newOffset.dy - padding,
+      textSize.width + padding * 2,
+      textSize.height + padding * 2,
+    );
     myCanvas.drawRect(
-        Rect.fromLTWH(
-          newOffset.dx - 5,
-          newOffset.dy - 5,
-          painter.size.width + 10,
-          painter.size.height + 10,
-        ),
-        paint);
-    painter.paint(myCanvas, newOffset);
+      backgroundRect,
+      paint,
+      onTapDown: (details) {
+        print("tapped rectangle.");
+      },
+    ); // `paint` should be your background Paint
 
-    return (newOffset, (painter.width, painter.height));
+    // 6. Draw text on top
+    myCanvas.drawParagraph(paragraph, newOffset);
+
+    return (newOffset, (textSize.width, textSize.height));
   }
 
   Offset offsetOnscreen(Offset offset, Size objSize) {

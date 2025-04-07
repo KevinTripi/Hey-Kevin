@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:sliding_drawer/sliding_drawer.dart';
 import 'dart:ui' as ui;
 import 'package:gal/gal.dart';
+import 'package:touchable/touchable.dart';
 
 import 'package:hey_kevin/widgets/kev_info_card.dart';
 import 'package:hey_kevin/widgets/full_screen.dart';
@@ -248,20 +249,33 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   // Error prevented by ensuring image is loaded (by isLoading) before calling CustomPaint.
                   return SafeArea(
                     child: Center(
-                      child: CustomPaint(
-                          foregroundPainter: TextboxPointer([
-                            [
-                              [pMaskStart.$1, pMaskStart.$2],
-                              [constraints.maxWidth, 0],
-                              "start"
-                            ],
-                            [
-                              [pMaskEnd.$1, pMaskEnd.$2],
-                              [0, constraints.maxHeight],
-                              "end"
-                            ],
-                          ]),
-                          child: displayImage),
+                      // From https://stackoverflow.com/q/57100266, https://pub.dev/packages/touchable
+                      child: CanvasTouchDetector(
+                          gesturesToOverride: [GestureType.onTapDown],
+                          builder: (context) {
+                            return CustomPaint(
+                                foregroundPainter: TextboxPointer(context, [
+                                  [
+                                    [pMaskStart.$1, pMaskStart.$2],
+                                    [constraints.maxWidth, 0],
+                                    "start"
+                                  ],
+                                  [
+                                    [painterCenter.$1, painterCenter.$2],
+                                    [
+                                      constraints.maxWidth,
+                                      constraints.maxHeight / 2
+                                    ],
+                                    "center"
+                                  ],
+                                  [
+                                    [pMaskEnd.$1, pMaskEnd.$2],
+                                    [0, constraints.maxHeight],
+                                    "end"
+                                  ],
+                                ]),
+                                child: displayImage);
+                          }),
                     ),
                   );
                   // return displayImage;

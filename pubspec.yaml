@@ -40,6 +40,7 @@ dependencies:
   gal: ^2.3.1
   flutter_dotenv: ^5.1.0
   sliding_drawer: ^1.0.2
+  touchable: ^1.0.2
 
 dev_dependencies:
   flutter_test:
