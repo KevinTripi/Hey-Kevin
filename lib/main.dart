@@ -72,7 +72,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
         widget.cameras[whichCamera %
             widget.cameras.length], // using modulus ensure that index < length.
         // Define the resolution to use.
-        ResolutionPreset.high,
+        ResolutionPreset.ultraHigh,
       );
 
       // Next, initialize the controller. This returns a Future.
