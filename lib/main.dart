@@ -93,18 +93,26 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       // You must wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner until the
       // controller has finished initializing.
-      body: Stack(children: [
-        FullScreen(
-          child: FutureBuilder<void>(
+      body: FullScreen(
+        child: Stack(children: [
+          FutureBuilder<void>(
             future: _initializeControllerFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                return RotatedBox(
-                  quarterTurns: (_controller.description.sensorOrientation /
-                              90 +
-                          displayRotations) // From: https://pub.dev/documentation/flutter_better_camera/latest/camera/CameraDescription-class.html
-                      .round(), // From: https://stackoverflow.com/a/20788335
-                  child: CameraPreview(_controller),
+                print(
+                    "previewSize: ${_controller.value.previewSize?.toString()}  ${_controller.value.aspectRatio}");
+                return SizedBox(
+                  width: double.infinity,
+                  // mediaquery from https://stackoverflow.com/a/52319524
+                  height: MediaQuery.of(context).size.width *
+                      _controller.value.aspectRatio,
+                  child: RotatedBox(
+                    quarterTurns: (_controller.description.sensorOrientation /
+                                90 +
+                            displayRotations) // From: https://pub.dev/documentation/flutter_better_camera/latest/camera/CameraDescription-class.html
+                        .round(), // From: https://stackoverflow.com/a/20788335
+                    child: CameraPreview(_controller),
+                  ),
                 );
               } else {
                 // Otherwise, display a loading indicator.
@@ -112,90 +120,92 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               }
             },
           ),
-        ),
-        Positioned(
-          bottom: 50,
-          left: 0,
-          right: 0,
-          child: Container(
-            margin: EdgeInsets.all(1),
-            padding: EdgeInsets.all(5),
-            decoration:
-                BoxDecoration(border: Border.all(color: Colors.blue, width: 5)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                FloatingActionButton(
-                    onPressed: () {
-                      whichCamera++;
-                      print("whichCamera: $whichCamera");
-                      initCamera();
-                    },
-                    heroTag: null,
-                    child: Icon(
-                      Icons.flip_camera_ios_sharp,
-                      size: 40,
-                    )),
-                IconButton(
-                  onPressed: () async {
-                    // Take the Picture in a try / catch block. If anything goes wrong,
-                    // catch the error.
-                    try {
-                      // Ensure that the camera is initialized.
-                      await _initializeControllerFuture;
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: SafeArea(
+              child: Container(
+                margin: EdgeInsets.all(1),
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.blue, width: 5)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FloatingActionButton(
+                        onPressed: () {
+                          whichCamera++;
+                          print("whichCamera: $whichCamera");
+                          initCamera();
+                        },
+                        heroTag: null,
+                        child: Icon(
+                          Icons.flip_camera_ios_sharp,
+                          size: 40,
+                        )),
+                    IconButton(
+                      onPressed: () async {
+                        // Take the Picture in a try / catch block. If anything goes wrong,
+                        // catch the error.
+                        try {
+                          // Ensure that the camera is initialized.
+                          await _initializeControllerFuture;
 
-                      // Attempt to take a picture and get the file `image`
-                      // where it was saved.
-                      final image = await _controller.takePicture();
+                          // Attempt to take a picture and get the file `image`
+                          // where it was saved.
+                          final image = await _controller.takePicture();
 
-                      if (!context.mounted) return;
+                          if (!context.mounted) return;
 
-                      // If the picture was taken, display it on a new screen.
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => DisplayPictureScreen(
-                            // Pass the automatically generated path to
-                            // the DisplayPictureScreen widget.
-                            imagePath: image.path,
-                          ),
-                        ),
-                      );
-                    } catch (e) {
-                      // If an error occurs, log the error to the console.
-                      print(e);
-                    }
-                  },
-                  iconSize: 100,
-                  icon: Icon(
-                    Icons.camera,
-                    color: Colors.red,
-                  ),
-                ),
-                GestureDetector(
-                  onLongPress: () {
-                    // Long pressing returns the screen rotation to default.
-                    displayRotations = 0;
-                    initCamera();
-                  },
-                  onTap: () {
-                    // Tapping rotates screen 90 degress clockwise.
-                    displayRotations = (displayRotations + 1) % 4;
-                    initCamera();
-                  },
-                  child: FloatingActionButton(
-                    onPressed: null,
-                    heroTag: null,
-                    child: Icon(
-                      Icons.rotate_90_degrees_cw,
-                      size: 40,
+                          // If the picture was taken, display it on a new screen.
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => DisplayPictureScreen(
+                                // Pass the automatically generated path to
+                                // the DisplayPictureScreen widget.
+                                imagePath: image.path,
+                              ),
+                            ),
+                          );
+                        } catch (e) {
+                          // If an error occurs, log the error to the console.
+                          print(e);
+                        }
+                      },
+                      iconSize: 100,
+                      icon: Icon(
+                        Icons.camera,
+                        color: Colors.red,
+                      ),
                     ),
-                  ),
+                    GestureDetector(
+                      onLongPress: () {
+                        // Long pressing returns the screen rotation to default.
+                        displayRotations = 0;
+                        initCamera();
+                      },
+                      onTap: () {
+                        // Tapping rotates screen 90 degress clockwise.
+                        displayRotations = (displayRotations + 1) % 4;
+                        initCamera();
+                      },
+                      child: FloatingActionButton(
+                        onPressed: null,
+                        heroTag: null,
+                        child: Icon(
+                          Icons.rotate_90_degrees_cw,
+                          size: 40,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 }
