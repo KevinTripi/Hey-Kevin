@@ -259,32 +259,34 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
                   // Simplified from: https://medium.com/flutter-community/a-deep-dive-into-custompaint-in-flutter-47ab44e3f216
                   // Error prevented by ensuring image is loaded (by isLoading) before calling CustomPaint.
-                  return SafeArea(
-                    child: Center(
+                  if (!isChatGptLoading) {
+                    return FullScreen(child: displayImage);
+                  } else {
+                    return FullScreen(
                       // From https://stackoverflow.com/q/57100266, https://pub.dev/packages/touchable
                       child: CanvasTouchDetector(
                           gesturesToOverride: [GestureType.onTapDown],
                           builder: (context) {
                             return CustomPaint(
                                 foregroundPainter: TextboxPointer(context, [
-                                  [
-                                    [pMaskStart.$1, pMaskStart.$2],
-                                    [constraints.maxWidth, 0],
-                                    "start"
-                                  ],
-                                  [
-                                    [painterCenter.$1, painterCenter.$2],
-                                    [
-                                      constraints.maxWidth,
-                                      constraints.maxHeight / 2
-                                    ],
-                                    "center"
-                                  ],
-                                  [
-                                    [pMaskEnd.$1, pMaskEnd.$2],
-                                    [0, constraints.maxHeight],
-                                    "end"
-                                  ],
+                                  // [
+                                  //   [pMaskStart.$1, pMaskStart.$2],
+                                  //   [constraints.maxWidth, 0],
+                                  //   "start"
+                                  // ],
+                                  // [
+                                  //   [painterCenter.$1, painterCenter.$2],
+                                  //   [
+                                  //     constraints.maxWidth,
+                                  //     constraints.maxHeight / 2
+                                  //   ],
+                                  //   "center"
+                                  // ],
+                                  // [
+                                  //   [pMaskEnd.$1, pMaskEnd.$2],
+                                  //   [0, constraints.maxHeight],
+                                  //   "end"
+                                  // ],
                                   [
                                     [p1.$1, p1.$2],
                                     [0, constraints.maxHeight - 400],
@@ -303,9 +305,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                                 ]),
                                 child: displayImage);
                           }),
-                    ),
-                  );
-                  // return displayImage;
+                    );
+                  }
                 }
               }),
             ),
