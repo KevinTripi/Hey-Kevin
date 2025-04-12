@@ -156,7 +156,22 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   // Bill returns the picture with the mask.
                   print("Fetching image from path: $segImgPath");
                   // From https://github.com/KevinTripi/Hey-Kevin/blob/bill-api-test/lib/screens/object_detection_screen.dart
-                  displayImage = Image.network(segImgPath);
+                  displayImage = Image.network(
+                    segImgPath,
+                    fit: BoxFit.contain,
+                    // from https://stackoverflow.com/a/58048926
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                              : null,
+                        ),
+                      );
+                    },
+                  );
 
                   // From: https://flutterfixes.com/flutter-get-widget-size-image-file/
                   print(
@@ -184,67 +199,63 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                       constraints.maxHeight / maskArr.length;
                   double imgRatioWidth =
                       constraints.maxWidth / maskArr[0].length;
-                  // TODO: The mask size (1920 x 1080 in my case) doesn't match the actual display size (411.4 x 731.4)
-                  // Removing Box.fit doesn't work. Both are the same ratio though...
-                  // 731.4 / 1920 = 0.3809375, could I multiply the index by this to map it to the screen?
-                  int curX = (maskArr[0].length / 2).round(),
-                      curY = (maskArr.length / 2).round();
-                  int maskSearchAmount = 5;
 
-                  print(widget.imagePath);
-                  while (curX >= 0 && curY >= 0) {
-                    if (!maskArr[curY][curX]) {
-                      print("pMaskStart original point (x, y): ($curX, $curY)");
-                      pMaskStart = (
-                        (curX * imgRatioHeight).round(),
-                        (curY * imgRatioWidth).round(),
-                        // (curX * imgRatioWidth).round(),
-                        // (curY * imgRatioHeight).round(),
+                  // From "box_size = 700" in https://github.com/EegArlert/hey-kevin-backend/blob/main/image_processing/segmentation.py
+                  // Defines the bounding box SAM limits itself to.
+                  int samBoxPerimHalf = 700;
+
+                  (int, int) samBoxTopLeft = (
+                    ((maskArr[0].length / 2) - samBoxPerimHalf).round(),
+                    ((maskArr.length / 2) - samBoxPerimHalf).round(),
+                  );
+                  (int, int) samBoxBottomRight = (
+                    ((maskArr[0].length / 2) + samBoxPerimHalf).round(),
+                    ((maskArr.length / 2) + samBoxPerimHalf).round(),
+                  );
+
+                  pMaskStart = (
+                    (samBoxTopLeft.$1 * imgRatioWidth).round(),
+                    (samBoxTopLeft.$2 * imgRatioHeight).round(),
+                  );
+
+                  pMaskEnd = (
+                    (samBoxBottomRight.$1 * imgRatioWidth).round(),
+                    (samBoxBottomRight.$2 * imgRatioHeight).round(),
+                  );
+
+                  (int, int) randomPointInMask() {
+                    while (true) {
+                      // format: (x, y), can use samBoxPerimHalf * 2 since it's symmetrical. Same as samBoxBottomRight.$x - samBoxTopLeft.$x
+                      (int, int) tryPoint = (
+                        samBoxTopLeft.$1 +
+                            Random().nextInt(
+                                samBoxBottomRight.$1 - samBoxTopLeft.$1),
+                        samBoxTopLeft.$2 +
+                            Random().nextInt(
+                                samBoxBottomRight.$2 - samBoxTopLeft.$2)
                       );
-                      break;
-                    } else {
-                      curX -=
-                          (curX - maskSearchAmount < 0) ? 0 : maskSearchAmount;
-                      curY -=
-                          (curY - maskSearchAmount < 0) ? 0 : maskSearchAmount;
+                      // print("Trying: $tryPoint");
+                      // Note we have to flip the tuple here since the mask is y indexed.
+                      if (maskArr[tryPoint.$2][tryPoint.$1]) {
+                        print("Random point found: $tryPoint");
+                        return (
+                          // (tryPoint.$1 * imgRatioWidth).round(),
+                          // (tryPoint.$2 * imgRatioHeight).round(),
+                          (tryPoint.$1 * imgRatioWidth).round(),
+                          // doesn't imgRatioHeight work...
+                          (tryPoint.$2 * imgRatioWidth).round(),
+                        );
+                      }
                     }
                   }
-                  print("pMaskStart: $pMaskStart");
 
-                  curX = (maskArr[0].length / 2).round();
-                  curY = (maskArr.length / 2).round();
-
-                  while (curX < maskArr[0].length && curY < maskArr.length) {
-                    if (!maskArr[curY][curX]) {
-                      print("pMaskEnd original point (x, y): ($curX, $curY)");
-                      pMaskEnd = (
-                        (curX * imgRatioHeight).round(),
-                        (curY * imgRatioWidth).round(),
-                        // (curX * imgRatioWidth).round(),
-                        // (curY * imgRatioHeight).round(),
-                      );
-                      break;
-                    } else {
-                      curX += (curX + maskSearchAmount >= maskArr[0].length)
-                          ? 0
-                          : maskSearchAmount;
-                      curY += (curY + maskSearchAmount >= maskArr.length)
-                          ? 0
-                          : maskSearchAmount;
-                      // print("($curX, $curY): ${maskArr[curY][curX]}");
-                    }
+                  try {
+                    p1 = randomPointInMask();
+                    p2 = randomPointInMask();
+                    p3 = randomPointInMask();
+                  } catch (e) {
+                    print("Error finding random point:\n$e");
                   }
-
-                  // pMaskEnd = (
-                  //   (curX * imgRatioWidth).round(),
-                  //   (curY * imgRatioHeight).round()
-                  // );
-                  print("pMaskEnd: $pMaskEnd");
-
-                  // while (p1.isEmpty && p2.isEmpty && p3.isEmpty) {
-                  //   List<int> tryPoint = [Random().nextInt(), ];
-                  //   if ()
-                  // }
 
                   // Simplified from: https://medium.com/flutter-community/a-deep-dive-into-custompaint-in-flutter-47ab44e3f216
                   // Error prevented by ensuring image is loaded (by isLoading) before calling CustomPaint.
@@ -273,6 +284,21 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                                     [pMaskEnd.$1, pMaskEnd.$2],
                                     [0, constraints.maxHeight],
                                     "end"
+                                  ],
+                                  [
+                                    [p1.$1, p1.$2],
+                                    [0, constraints.maxHeight - 400],
+                                    "p1"
+                                  ],
+                                  [
+                                    [p2.$1, p2.$2],
+                                    [0, constraints.maxHeight - 300],
+                                    "p2"
+                                  ],
+                                  [
+                                    [p3.$1, p3.$2],
+                                    [0, constraints.maxHeight - 200],
+                                    "p3"
                                   ],
                                 ]),
                                 child: displayImage);
