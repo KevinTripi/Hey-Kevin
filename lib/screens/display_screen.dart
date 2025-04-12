@@ -72,7 +72,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       print("gptJson didn't return. Trying again in $intervalTime sec.");
       sleep(Duration(seconds: intervalTime));
       gptJson = await fetchGptResponse(kevGooseJson['session_id']);
-      if (DateTime.now().difference(startTime).inMilliseconds / 1000 > 30) {
+      if (DateTime.now().difference(startTime).inMilliseconds / 1000 > 30 ||
+          !mounted) {
         print("gpjJson took too long. Returning.");
         return;
       }

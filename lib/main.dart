@@ -8,6 +8,8 @@ import 'package:hey_kevin/widgets/full_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:io' show Platform;
 
+Color iconColor = Colors.white, buttonBgColor = Colors.orangeAccent;
+
 // Base project from https://docs.flutter.dev/cookbook/plugins/picture-using-camera#complete-example
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
@@ -126,14 +128,19 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             right: 0,
             child: SafeArea(
               child: Container(
-                margin: EdgeInsets.all(1),
-                padding: EdgeInsets.all(5),
+                padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue, width: 5)),
+                  image: DecorationImage(
+                      fit: BoxFit.fitWidth,
+                      image: AssetImage(
+                          "lib/res/pexels-fwstudio-33348-164005.jpg")),
+                  // border: Border.all(color: Colors.blue, width: 5)
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     FloatingActionButton(
+                        backgroundColor: buttonBgColor,
                         onPressed: () {
                           whichCamera++;
                           print("whichCamera: $whichCamera");
@@ -142,9 +149,12 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                         heroTag: null,
                         child: Icon(
                           Icons.flip_camera_ios_sharp,
+                          color: iconColor,
                           size: 40,
                         )),
-                    IconButton(
+                    FloatingActionButton.large(
+                      shape: CircleBorder(),
+                      backgroundColor: buttonBgColor,
                       onPressed: () async {
                         // Take the Picture in a try / catch block. If anything goes wrong,
                         // catch the error.
@@ -173,10 +183,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                           print(e);
                         }
                       },
-                      iconSize: 100,
-                      icon: Icon(
-                        Icons.camera,
-                        color: Colors.red,
+                      child: Icon(
+                        size: 90,
+                        Icons.circle_outlined,
+                        color: iconColor,
                       ),
                     ),
                     GestureDetector(
@@ -191,10 +201,12 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                         initCamera();
                       },
                       child: FloatingActionButton(
+                        backgroundColor: buttonBgColor,
                         onPressed: null,
                         heroTag: null,
                         child: Icon(
                           Icons.rotate_90_degrees_cw,
+                          color: iconColor,
                           size: 40,
                         ),
                       ),
