@@ -6,13 +6,24 @@ import time
 API_KEY = API_KEY
 
 # Explaining chatgpt how to spit out results
-comments_generate_message = """"Give me a JSON output (do not include ANY other sentence. I strictly need JSON output. 
-     do not include any whitespace or newline specifiers.
-     Generate three different styles of quotes (sarcastic, witty, and funny) about an item I give you next.
-     If you struggle to generate the output, you must say "Nobody is home").
-     Format strictly as: {"sarcastic": "text", "witty": "text", "funny": "text"}.
-     Try refraining from using "Oh great," and "Ah, yes" each time.
+comments_generate_message = """Give me a JSON output (do not include ANY other sentence. I strictly need JSON output.
+     Do not include any whitespace or newline specifiers.
+     Generate three different styles of quotes (object features description, goofy use case, and online review) about an item I give you next.
+     If you struggle to generate the output, you must say "Nobody is home" as values to each of the keys of JSON).
+     Format strictly as: {"object_features_description": "Object name: text", "goofy_use_case": "text", "online review": "text"}
+     Make features description sarcastic, use case witty and online review funny. Don't make dad jokes with the them but make sure they are different.
+     Replace "Object name" with the name I give you and capitalize the first letter of the object name here.
+     Try refraining from using "Oh great," "sleek", and "Ah, yes" each time.
      If you get a prompt with no words and numbers no matter the size, don't generate a response and throw an error"""
+
+# Original comments_generate_message
+# comments_generate_message = """"Give me a JSON output (do not include ANY other sentence. I strictly need JSON output.
+#      do not include any whitespace or newline specifiers.
+#      Generate three different styles of quotes (sarcastic, witty, and funny) about an item I give you next.
+#      If you struggle to generate the output, you must say "Nobody is home").
+#      Format strictly as: {"sarcastic": "text", "witty": "text", "funny": "text"}.
+#      Try refraining from using "Oh great," and "Ah, yes" each time.
+#      If you get a prompt with no words and numbers no matter the size, don't generate a response and throw an error"""
 
 # This function returns 3 comments generated from chatgpt. It runs in the background indefinitely, taking prompts after prompts,
 # until you type 'exit'
@@ -49,10 +60,11 @@ def get_gpt_comments():
             # JSON is located in completion.choices[0].message.content
             json_result = completion.choices[0].message.content
 
+
             # Print them out individually, Sarcastic, Witty, Funny, from the JSON that is provided by the API
             parsed_result = json.loads(json_result)
             for i in parsed_result:
-                print("\nGenerated", i, "comment", ":", parsed_result[i])
+                print("\n", i, "-", parsed_result[i])
             print("\n")
 
             #  Testing API response times
@@ -64,7 +76,7 @@ def get_gpt_comments():
             print(e)
             parsed_result = {"sarcastic": "Error 404: Sarcasm not found. Try again later.", "witty": "Critical failure: Wit module has crashed. Rebooting… never.", "funny": "System malfunction: Humor drive corrupted. Attempting emergency joke recovery… failed."}
             for i in parsed_result:
-                print("\nGenerated", i, "comment", ":", parsed_result[i])
+                print("\n", i, "-", parsed_result[i])
             print("\n")
             continue
 
@@ -91,7 +103,7 @@ def single_run_get_gpt_comments(object_title):
             model="gpt-4o-mini",
             messages=messages,
             temperature=1.5,
-            max_tokens=100
+            max_tokens=150
         )
 
         # JSON is located in completion.choices[0].message.content
@@ -100,7 +112,7 @@ def single_run_get_gpt_comments(object_title):
         # Print them out individually, Sarcastic, Witty, Funny, from the JSON that is provided by the API
         parsed_result = json.loads(json_result)
         for i in parsed_result:
-            print("\nGenerated", i, "comment", ":", parsed_result[i])
+            print("\n", i, "-", parsed_result[i])
         print("\n")
 
         #  Testing API response times
@@ -112,7 +124,7 @@ def single_run_get_gpt_comments(object_title):
         print(e)
         parsed_result = {"sarcastic": "Error 404: Sarcasm not found. Try again later.", "witty": "Critical failure: Wit module has crashed. Rebooting… never.", "funny": "System malfunction: Humor drive corrupted. Attempting emergency joke recovery… failed."}
         for i in parsed_result:
-            print("\nGenerated", i, "comment", ":", parsed_result[i])
+            print("\n", i, "-", parsed_result[i])
         print("\n")
     return parsed_result
 
@@ -131,5 +143,5 @@ def single_run_get_gpt_comments(object_title):
 # How I am expecting JSON to show on GUI:
 # The key is what the user will click on
 # The value is what will show when its respective key is clicked
-my_json = single_run_get_gpt_comments("apple")
+my_json = single_run_get_gpt_comments("record player")
 print(my_json)
