@@ -256,48 +256,43 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                           return FullScreen(child: displayImage);
                         } else {
                           return SafeArea(
-                            child: CanvasTouchDetector(
-                                gesturesToOverride: [GestureType.onTapDown],
-                                builder: (context) {
-                                  return CustomPaint(
-                                      foregroundPainter:
-                                          TextboxPointer(context, [
-                                        // [
-                                        //   [pMaskStart.$1, pMaskStart.$2],
-                                        //   [constraints.maxWidth, 0],
-                                        //   "start"
-                                        // ],
-                                        // [
-                                        //   [painterCenter.$1, painterCenter.$2],
-                                        //   [
-                                        //     constraints.maxWidth,
-                                        //     constraints.maxHeight / 2
-                                        //   ],
-                                        //   "center"
-                                        // ],
-                                        // [
-                                        //   [pMaskEnd.$1, pMaskEnd.$2],
-                                        //   [0, constraints.maxHeight],
-                                        //   "end"
-                                        // ],
-                                        [
-                                          [p1.$1, p1.$2],
-                                          [0, constraints.maxHeight - 400],
-                                          "p1"
-                                        ],
-                                        [
-                                          [p2.$1, p2.$2],
-                                          [0, constraints.maxHeight - 300],
-                                          "p2"
-                                        ],
-                                        [
-                                          [p3.$1, p3.$2],
-                                          [0, constraints.maxHeight - 200],
-                                          "p3"
-                                        ],
-                                      ]),
-                                      child: child);
-                                }),
+                            child: CustomPaint(
+                                foregroundPainter: TextboxPointer([
+                                  // [
+                                  //   [pMaskStart.$1, pMaskStart.$2],
+                                  //   [constraints.maxWidth, 0],
+                                  //   "start"
+                                  // ],
+                                  // [
+                                  //   [painterCenter.$1, painterCenter.$2],
+                                  //   [
+                                  //     constraints.maxWidth,
+                                  //     constraints.maxHeight / 2
+                                  //   ],
+                                  //   "center"
+                                  // ],
+                                  // [
+                                  //   [pMaskEnd.$1, pMaskEnd.$2],
+                                  //   [0, constraints.maxHeight],
+                                  //   "end"
+                                  // ],
+                                  [
+                                    [p1.$1, p1.$2],
+                                    [0, constraints.maxHeight - 400],
+                                    "p1"
+                                  ],
+                                  [
+                                    [p2.$1, p2.$2],
+                                    [0, constraints.maxHeight - 300],
+                                    "p2"
+                                  ],
+                                  [
+                                    [p3.$1, p3.$2],
+                                    [0, constraints.maxHeight - 200],
+                                    "p3"
+                                  ],
+                                ]),
+                                child: child),
                           );
                         }
                       }
