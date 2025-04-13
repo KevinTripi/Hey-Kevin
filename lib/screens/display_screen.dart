@@ -88,6 +88,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     if (mounted) {
       setState(() {
         isChatGptLoading = false;
+        print("isChatGptLoading is now false");
       });
     }
   }
@@ -153,26 +154,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     ]),
                   );
                 } else {
-                  // Bill returns the picture with the mask.
-                  print("Fetching image from path: $segImgPath");
-                  // From https://github.com/KevinTripi/Hey-Kevin/blob/bill-api-test/lib/screens/object_detection_screen.dart
-                  displayImage = Image.network(
-                    segImgPath,
-                    fit: BoxFit.contain,
-                    // from https://stackoverflow.com/a/58048926
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
-                        ),
-                      );
-                    },
-                  );
-
                   // From: https://flutterfixes.com/flutter-get-widget-size-image-file/
                   print(
                       "Constraints: ${constraints.maxWidth}, ${constraints.maxHeight}");
@@ -257,56 +238,79 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     print("Error finding random point:\n$e");
                   }
 
-                  // Simplified from: https://medium.com/flutter-community/a-deep-dive-into-custompaint-in-flutter-47ab44e3f216
-                  // Error prevented by ensuring image is loaded (by isLoading) before calling CustomPaint.
-                  if (!isChatGptLoading) {
-                    return FullScreen(child: displayImage);
-                  } else {
-                    return FullScreen(
-                      // From https://stackoverflow.com/q/57100266, https://pub.dev/packages/touchable
-                      child: CanvasTouchDetector(
-                          gesturesToOverride: [GestureType.onTapDown],
-                          builder: (context) {
-                            return CustomPaint(
-                                foregroundPainter: TextboxPointer(context, [
-                                  // [
-                                  //   [pMaskStart.$1, pMaskStart.$2],
-                                  //   [constraints.maxWidth, 0],
-                                  //   "start"
-                                  // ],
-                                  // [
-                                  //   [painterCenter.$1, painterCenter.$2],
-                                  //   [
-                                  //     constraints.maxWidth,
-                                  //     constraints.maxHeight / 2
-                                  //   ],
-                                  //   "center"
-                                  // ],
-                                  // [
-                                  //   [pMaskEnd.$1, pMaskEnd.$2],
-                                  //   [0, constraints.maxHeight],
-                                  //   "end"
-                                  // ],
-                                  [
-                                    [p1.$1, p1.$2],
-                                    [0, constraints.maxHeight - 400],
-                                    "p1"
-                                  ],
-                                  [
-                                    [p2.$1, p2.$2],
-                                    [0, constraints.maxHeight - 300],
-                                    "p2"
-                                  ],
-                                  [
-                                    [p3.$1, p3.$2],
-                                    [0, constraints.maxHeight - 200],
-                                    "p3"
-                                  ],
-                                ]),
-                                child: displayImage);
-                          }),
-                    );
-                  }
+                  // TODO: Fade in segmented from original? https://docs.flutter.dev/cookbook/images/fading-in-images
+                  // Bill returns the picture with the mask.
+                  print("Fetching image from path: $segImgPath");
+                  // From https://github.com/KevinTripi/Hey-Kevin/blob/bill-api-test/lib/screens/object_detection_screen.dart
+                  return Image.network(
+                    segImgPath,
+                    fit: BoxFit.contain,
+                    // from https://stackoverflow.com/a/58048926
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) {
+                        print("isLoadingImg: complete");
+
+                        // Simplified from: https://medium.com/flutter-community/a-deep-dive-into-custompaint-in-flutter-47ab44e3f216
+                        // Error prevented by ensuring image is loaded (by isLoading) before calling CustomPaint.
+                        if (!isChatGptLoading) {
+                          return FullScreen(child: displayImage);
+                        } else {
+                          return SafeArea(
+                            child: CanvasTouchDetector(
+                                gesturesToOverride: [GestureType.onTapDown],
+                                builder: (context) {
+                                  return CustomPaint(
+                                      foregroundPainter:
+                                          TextboxPointer(context, [
+                                        // [
+                                        //   [pMaskStart.$1, pMaskStart.$2],
+                                        //   [constraints.maxWidth, 0],
+                                        //   "start"
+                                        // ],
+                                        // [
+                                        //   [painterCenter.$1, painterCenter.$2],
+                                        //   [
+                                        //     constraints.maxWidth,
+                                        //     constraints.maxHeight / 2
+                                        //   ],
+                                        //   "center"
+                                        // ],
+                                        // [
+                                        //   [pMaskEnd.$1, pMaskEnd.$2],
+                                        //   [0, constraints.maxHeight],
+                                        //   "end"
+                                        // ],
+                                        [
+                                          [p1.$1, p1.$2],
+                                          [0, constraints.maxHeight - 400],
+                                          "p1"
+                                        ],
+                                        [
+                                          [p2.$1, p2.$2],
+                                          [0, constraints.maxHeight - 300],
+                                          "p2"
+                                        ],
+                                        [
+                                          [p3.$1, p3.$2],
+                                          [0, constraints.maxHeight - 200],
+                                          "p3"
+                                        ],
+                                      ]),
+                                      child: child);
+                                }),
+                          );
+                        }
+                      }
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                              : null,
+                        ),
+                      );
+                    },
+                  );
                 }
               }),
             ),
