@@ -13,6 +13,7 @@ import 'package:hey_kevin/widgets/full_screen.dart';
 import '../widgets/textbox_pointer.dart';
 import '../util/bill_api_call.dart';
 import '../util/ammar_api_call.dart';
+import '../widgets/display_textbox.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
   final String imagePath;
@@ -64,6 +65,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     //
     //
 
+    return; // todo: delete this once bill get Bing working again.
     gptJson = await fetchGptResponse(kevGooseJson['session_id']);
     // print("Commentjson original return: ${commentJson!}");
     var startTime = DateTime.now();
@@ -166,11 +168,12 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   print("maskArr.length: ${maskArr.length}");
                   print("maskArr[0].length: ${maskArr[0].length}");
 
-                  (int, int) p1 = (-1, -1),
-                      p2 = (-1, -1),
-                      p3 = (-1, -1),
-                      pMaskStart = (-1, -1),
-                      pMaskEnd = (-1, -1),
+                  (int, int) maskPoint1 = (-1, -1),
+                      maskPoint2 = (-1, -1),
+                      maskPoint3 = (-1, -1),
+                      textboxPoint1 = (-1, -1),
+                      textboxPoint2 = (-1, -1),
+                      textboxPoint3 = (-1, -1),
                       painterCenter = (
                         (constraints.maxWidth / 2).round(),
                         (constraints.maxHeight / 2).round()
@@ -192,16 +195,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   (int, int) samBoxBottomRight = (
                     ((maskArr[0].length / 2) + samBoxPerimHalf).round(),
                     ((maskArr.length / 2) + samBoxPerimHalf).round(),
-                  );
-
-                  pMaskStart = (
-                    (samBoxTopLeft.$1 * imgRatioWidth).round(),
-                    (samBoxTopLeft.$2 * imgRatioHeight).round(),
-                  );
-
-                  pMaskEnd = (
-                    (samBoxBottomRight.$1 * imgRatioWidth).round(),
-                    (samBoxBottomRight.$2 * imgRatioHeight).round(),
                   );
 
                   (int, int) randomPointInMask() {
@@ -231,12 +224,19 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   }
 
                   try {
-                    p1 = randomPointInMask();
-                    p2 = randomPointInMask();
-                    p3 = randomPointInMask();
+                    maskPoint1 = randomPointInMask();
+                    maskPoint2 = randomPointInMask();
+                    maskPoint3 = randomPointInMask();
                   } catch (e) {
-                    print("Error finding random point:\n$e");
+                    print("Error finding mask random point:\n$e");
                   }
+
+                  textboxPoint1 = (30, (constraints.maxHeight - 400).round());
+                  textboxPoint2 = (50, (constraints.maxHeight - 300).round());
+                  textboxPoint3 = (0, (constraints.maxHeight - 200).round());
+
+                  int textboxSizeX = 100;
+                  int textboxSizeY = 30;
 
                   // TODO: Fade in segmented from original? https://docs.flutter.dev/cookbook/images/fading-in-images
                   // Bill returns the picture with the mask.
@@ -256,43 +256,93 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                           return FullScreen(child: displayImage);
                         } else {
                           return SafeArea(
-                            child: CustomPaint(
-                                foregroundPainter: TextboxPointer([
-                                  // [
-                                  //   [pMaskStart.$1, pMaskStart.$2],
-                                  //   [constraints.maxWidth, 0],
-                                  //   "start"
-                                  // ],
-                                  // [
-                                  //   [painterCenter.$1, painterCenter.$2],
-                                  //   [
-                                  //     constraints.maxWidth,
-                                  //     constraints.maxHeight / 2
-                                  //   ],
-                                  //   "center"
-                                  // ],
-                                  // [
-                                  //   [pMaskEnd.$1, pMaskEnd.$2],
-                                  //   [0, constraints.maxHeight],
-                                  //   "end"
-                                  // ],
-                                  [
-                                    [p1.$1, p1.$2],
-                                    [0, constraints.maxHeight - 400],
-                                    "p1"
-                                  ],
-                                  [
-                                    [p2.$1, p2.$2],
-                                    [0, constraints.maxHeight - 300],
-                                    "p2"
-                                  ],
-                                  [
-                                    [p3.$1, p3.$2],
-                                    [0, constraints.maxHeight - 200],
-                                    "p3"
-                                  ],
-                                ]),
-                                child: child),
+                            child: Stack(children: [
+                              CustomPaint(
+                                  foregroundPainter: TextboxPointer([
+                                    // [
+                                    //   [
+                                    //   (samBoxTopLeft.$1 * imgRatioWidth).round(),
+                                    //   (samBoxTopLeft.$2 * imgRatioHeight).round(),],
+                                    //   [constraints.maxWidth, 0],
+                                    //   "start"
+                                    // ],
+                                    // [
+                                    //   [painterCenter.$1, painterCenter.$2],
+                                    //   [
+                                    //     constraints.maxWidth,
+                                    //     constraints.maxHeight / 2
+                                    //   ],
+                                    //   "center"
+                                    // ],
+                                    // [
+                                    //   [
+                                    //   (samBoxBottomRight.$1 * imgRatioWidth).round(),
+                                    //   (samBoxBottomRight.$2 * imgRatioHeight).round(),],
+                                    //   [0, constraints.maxHeight],
+                                    //   "end"
+                                    // ],
+                                    [
+                                      [maskPoint1.$1, maskPoint1.$2],
+                                      [
+                                        textboxPoint1.$1 + (textboxSizeX / 2),
+                                        textboxPoint1.$2 + (textboxSizeY / 2)
+                                      ],
+                                      "p1"
+                                    ],
+                                    [
+                                      [maskPoint2.$1, maskPoint2.$2],
+                                      [
+                                        textboxPoint2.$1 + (textboxSizeX / 2),
+                                        textboxPoint2.$2 + (textboxSizeY / 2)
+                                      ],
+                                      "p2"
+                                    ],
+                                    [
+                                      [maskPoint3.$1, maskPoint3.$2],
+                                      [
+                                        textboxPoint3.$1 + (textboxSizeX / 2),
+                                        textboxPoint3.$2 + (textboxSizeY / 2)
+                                      ],
+                                      "p3"
+                                    ],
+                                  ]),
+                                  child: child),
+                              Positioned(
+                                left: textboxPoint1.$1.toDouble(),
+                                top: textboxPoint1.$2.toDouble(),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    print("test1!");
+                                  },
+                                  child: DisplayTextbox(
+                                      textboxSizeX: textboxSizeX,
+                                      textboxSizeY: textboxSizeY),
+                                ),
+                              ),
+                              Positioned(
+                                left: textboxPoint2.$1.toDouble(),
+                                top: textboxPoint2.$2.toDouble(),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    print("test2!");
+                                  },
+                                  child: DisplayTextbox(
+                                      textboxSizeX: textboxSizeX,
+                                      textboxSizeY: textboxSizeY),
+                                ),
+                              ),
+                              Positioned(
+                                  left: textboxPoint3.$1.toDouble(),
+                                  top: textboxPoint3.$2.toDouble(),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      print("test3!");
+                                    },
+                                    child: DisplayTextbox(
+                                        textboxSizeX: textboxSizeX,
+                                        textboxSizeY: textboxSizeY),
+                                  )),
+                            ]),
                           );
                         }
                       }
