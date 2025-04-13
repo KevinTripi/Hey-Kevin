@@ -168,16 +168,10 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   print("maskArr.length: ${maskArr.length}");
                   print("maskArr[0].length: ${maskArr[0].length}");
 
-                  (int, int) maskPoint1 = (-1, -1),
-                      maskPoint2 = (-1, -1),
-                      maskPoint3 = (-1, -1),
-                      textboxPoint1 = (-1, -1),
-                      textboxPoint2 = (-1, -1),
-                      textboxPoint3 = (-1, -1),
-                      painterCenter = (
-                        (constraints.maxWidth / 2).round(),
-                        (constraints.maxHeight / 2).round()
-                      );
+                  (int, int) painterCenter = (
+                    (constraints.maxWidth / 2).round(),
+                    (constraints.maxHeight / 2).round()
+                  );
 
                   double imgRatioHeight =
                       constraints.maxHeight / maskArr.length;
@@ -197,7 +191,9 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     ((maskArr.length / 2) + samBoxPerimHalf).round(),
                   );
 
-                  (int, int) randomPointInMask() {
+                  List<(int, int)> maskPoints = [];
+
+                  for (var i = 0; i < 3; i++) {
                     while (true) {
                       // format: (x, y), can use samBoxPerimHalf * 2 since it's symmetrical. Same as samBoxBottomRight.$x - samBoxTopLeft.$x
                       (int, int) tryPoint = (
@@ -212,31 +208,23 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                       // Note we have to flip the tuple here since the mask is y indexed.
                       if (maskArr[tryPoint.$2][tryPoint.$1]) {
                         print("Random point found: $tryPoint");
-                        return (
+                        maskPoints.add((
                           // (tryPoint.$1 * imgRatioWidth).round(),
                           // (tryPoint.$2 * imgRatioHeight).round(),
                           (tryPoint.$1 * imgRatioWidth).round(),
                           // doesn't imgRatioHeight work...
                           (tryPoint.$2 * imgRatioWidth).round(),
-                        );
+                        ));
+                        break;
                       }
                     }
                   }
 
-                  try {
-                    maskPoint1 = randomPointInMask();
-                    maskPoint2 = randomPointInMask();
-                    maskPoint3 = randomPointInMask();
-                  } catch (e) {
-                    print("Error finding mask random point:\n$e");
-                  }
-
-                  textboxPoint1 = (30, (constraints.maxHeight - 400).round());
-                  textboxPoint2 = (50, (constraints.maxHeight - 300).round());
-                  textboxPoint3 = (0, (constraints.maxHeight - 200).round());
-
-                  int textboxSizeX = 100;
-                  int textboxSizeY = 30;
+                  List<(int, int)> textboxPoints = [
+                    (100, (100).round()),
+                    (50, (constraints.maxHeight - 300).round()),
+                    (0, (constraints.maxHeight - 200).round())
+                  ];
 
                   // TODO: Fade in segmented from original? https://docs.flutter.dev/cookbook/images/fading-in-images
                   // Bill returns the picture with the mask.
@@ -256,94 +244,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                           return FullScreen(child: displayImage);
                         } else {
                           return SafeArea(
-                            child: Stack(children: [
-                              CustomPaint(
-                                  foregroundPainter: TextboxPointer([
-                                    // [
-                                    //   [
-                                    //   (samBoxTopLeft.$1 * imgRatioWidth).round(),
-                                    //   (samBoxTopLeft.$2 * imgRatioHeight).round(),],
-                                    //   [constraints.maxWidth, 0],
-                                    //   "start"
-                                    // ],
-                                    // [
-                                    //   [painterCenter.$1, painterCenter.$2],
-                                    //   [
-                                    //     constraints.maxWidth,
-                                    //     constraints.maxHeight / 2
-                                    //   ],
-                                    //   "center"
-                                    // ],
-                                    // [
-                                    //   [
-                                    //   (samBoxBottomRight.$1 * imgRatioWidth).round(),
-                                    //   (samBoxBottomRight.$2 * imgRatioHeight).round(),],
-                                    //   [0, constraints.maxHeight],
-                                    //   "end"
-                                    // ],
-                                    [
-                                      [maskPoint1.$1, maskPoint1.$2],
-                                      [
-                                        textboxPoint1.$1 + (textboxSizeX / 2),
-                                        textboxPoint1.$2 + (textboxSizeY / 2)
-                                      ],
-                                      "p1"
-                                    ],
-                                    [
-                                      [maskPoint2.$1, maskPoint2.$2],
-                                      [
-                                        textboxPoint2.$1 + (textboxSizeX / 2),
-                                        textboxPoint2.$2 + (textboxSizeY / 2)
-                                      ],
-                                      "p2"
-                                    ],
-                                    [
-                                      [maskPoint3.$1, maskPoint3.$2],
-                                      [
-                                        textboxPoint3.$1 + (textboxSizeX / 2),
-                                        textboxPoint3.$2 + (textboxSizeY / 2)
-                                      ],
-                                      "p3"
-                                    ],
-                                  ]),
-                                  child: child),
-                              Positioned(
-                                left: textboxPoint1.$1.toDouble(),
-                                top: textboxPoint1.$2.toDouble(),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    print("test1!");
-                                  },
-                                  child: DisplayTextbox(
-                                      textboxSizeX: textboxSizeX,
-                                      textboxSizeY: textboxSizeY),
-                                ),
-                              ),
-                              Positioned(
-                                left: textboxPoint2.$1.toDouble(),
-                                top: textboxPoint2.$2.toDouble(),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    print("test2!");
-                                  },
-                                  child: DisplayTextbox(
-                                      textboxSizeX: textboxSizeX,
-                                      textboxSizeY: textboxSizeY),
-                                ),
-                              ),
-                              Positioned(
-                                  left: textboxPoint3.$1.toDouble(),
-                                  top: textboxPoint3.$2.toDouble(),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      print("test3!");
-                                    },
-                                    child: DisplayTextbox(
-                                        textboxSizeX: textboxSizeX,
-                                        textboxSizeY: textboxSizeY),
-                                  )),
-                            ]),
-                          );
+                              child: DisplayTextboxes(
+                            displayImage: child,
+                            maskPoints: maskPoints,
+                            textboxPoints: textboxPoints,
+                          ));
                         }
                       }
                       return Center(
