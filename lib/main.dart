@@ -103,19 +103,32 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               if (snapshot.connectionState == ConnectionState.done) {
                 print(
                     "previewSize: ${_controller.value.previewSize?.toString()}  ${_controller.value.aspectRatio}");
-                return SizedBox(
-                  width: double.infinity,
-                  // mediaquery from https://stackoverflow.com/a/52319524
-                  height: MediaQuery.of(context).size.width *
-                      _controller.value.aspectRatio,
-                  child: RotatedBox(
-                    quarterTurns: (_controller.description.sensorOrientation /
-                                90 +
-                            displayRotations) // From: https://pub.dev/documentation/flutter_better_camera/latest/camera/CameraDescription-class.html
-                        .round(), // From: https://stackoverflow.com/a/20788335
-                    child: CameraPreview(_controller),
+                return Stack(children: [
+                  SizedBox(
+                    width: double.infinity,
+                    // mediaquery from https://stackoverflow.com/a/52319524
+                    height: MediaQuery.of(context).size.width *
+                        _controller.value.aspectRatio,
+                    child: RotatedBox(
+                      quarterTurns: (_controller.description.sensorOrientation /
+                                  90 +
+                              displayRotations) // From: https://pub.dev/documentation/flutter_better_camera/latest/camera/CameraDescription-class.html
+                          .round(), // From: https://stackoverflow.com/a/20788335
+                      child: CameraPreview(_controller),
+                    ),
                   ),
-                );
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(child: Icon(Icons.circle)),
+                      // Pushes the dot up a bit
+                      Text(
+                        "",
+                        textScaler: TextScaler.linear(3),
+                      )
+                    ],
+                  )
+                ]);
               } else {
                 // Otherwise, display a loading indicator.
                 return const Center(child: CircularProgressIndicator());
