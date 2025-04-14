@@ -12,7 +12,11 @@
 .swiftpm/
 migrate_working_dir/
 .env
+.venv
 *.lock
+lib/bing_api/__pycache__
+lib/bing_api/exports/*
+lib/bing_api/images/*
 
 # IntelliJ related
 *.iml

@@ -71,36 +71,12 @@ def get_title_names(filePath):
                 for item in value_list:
                     name = item.get("name", "")
                     entries.append(name)
-
-    return entries
-
-# gets 'display_text'
-def get_display_text(filePath):
-    entries = []
-
-    # Read the JSON file
-    with open(filePath, "r") as f:
-        data = json.load(f)
-
-    # Navigate through the JSON, tags -> actions -> data -> value
-    tags = data.get("tags", [])
-    for tag in tags:
-        actions = tag.get("actions", [])
-        for action in actions:
-            if action.get("_type") == "ImageRelatedSearchesAction":
-                value_list = action.get("data", {}).get("value", [])
-
-                for item in value_list:
-                    displayText = item.get("displayText", "")
-                    entries.append(displayText)
-
+    
     return entries
 
 # gets best descriptor (query) from JSON
 def bestRepQ(filePath):
     queries = []
-
-    # Read the JSON file
     with open(filePath, "r") as f:
         data = json.load(f)
 
@@ -108,39 +84,54 @@ def bestRepQ(filePath):
         for action in tag.get("actions", []):
             if action.get("actionType") == "BestRepresentativeQuery":
                 queries.append(action.get("displayName"))
-
-    return queries
+    return queries  # Return empty list if no queries
 
 # finds the first value in the unfiltered lists, then filters based on bestrepq
 def name_finder(names, query):
-    if not names or not query:
-        return []
-
-    find = query[0].split()[0]
     found = []
 
-    for name in names:
-        if re.search(r'\b' + re.escape(find) + r'\b', name):
-            found.append(name)
+    if not names:
+        return []
+
+    # Use first word of best query if available
+    if query:
+        find = query[0].split()[0]
+        for name in names:
+            if re.search(r'\b' + re.escape(find) + r'\b', name):
+                found.append(name)
+
+    # Fallback: if no query or no match from query
+    if not found:
+        if names:
+            fallback = names[0].split()[0]
+            for name in names:
+                if re.search(r'\b' + re.escape(fallback) + r'\b', name, re.IGNORECASE):
+                    found.append(name)
+
+    # If still no match, fallback to first 5
+    if not found:
+        found = names[:5]
 
     return found
 
 # writes export json and returns json
-#note: added check for empty returns, though this may already be implemented in server 
-def export_data(names, displayText, query):
+def export_data(names, query):
     try:
-        # Check if both query and data are empty...whoops
-        if not query and not names:
-            return json.dumps({"error": "No query and no data available."})
+        # If no query, insert error message in place
+        query_output = query if query else ["No representative query available"]
 
-        minLength = min(len(names), len(displayText))
+        # Handle potential error output from name_finder
+        if isinstance(names, str):
+            try:
+                parsed_names = json.loads(names)
+                if "error" in parsed_names:
+                    return names  # early return with the error
+            except json.JSONDecodeError:
+                pass  # Not an error JSON string, proceed
 
         exportStructure = {
-            "query": query,  # The best representative query
-            "data": [
-                {"name": names[i], "displayText": displayText[i]}
-                for i in range(minLength)  # Only generate data up to the shortest list length, either names or displayText
-            ]
+            "query": query_output,
+            "names": names
         }
 
         with open("lib/bing_api/exported_data.json", "w") as f:
@@ -153,30 +144,26 @@ def export_data(names, displayText, query):
         print(f"Error exporting data: {error}")
         return json.dumps({"error": str(error)})
 
+
 # Main execution
 def main():
     try:
         
-        compress_img("lib/bing_api/img.jpg", imagePath)
+        compress_img("lib/bing_api/reduced.jpg", imagePath)
         # Send POST request
         get_data()
 
-        # get title names and display text from the JSON
+        # get title names from the JSON
+        
         unfilteredNames = get_title_names(filePath)
-        unfilteredDisText = get_display_text(filePath)
         repQ = bestRepQ(filePath)
 
         # print(repQ)  # TESTING
-
+      
         # filter based on the best representative query
         filteredNames = name_finder(unfilteredNames, repQ)
-        filteredDisText = name_finder(unfilteredDisText, repQ)
-
-        # Testing
-        print(len(unfilteredNames), len(unfilteredDisText), len(filteredNames), len(filteredDisText))
-
         # write export JSON and return the data
-        exportedJson = export_data(filteredNames, filteredDisText, repQ)
+        exportedJson = export_data(filteredNames, repQ)
         #print(exportedJson) #TESTING
         return exportedJson
 
