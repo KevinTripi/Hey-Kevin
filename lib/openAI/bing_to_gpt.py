@@ -1,18 +1,52 @@
+
 from openai import OpenAI
 from key import GPT_API_KEY
 import time
 import json
 
-# look at the names only. Now tell me what the object is. I just want the most matched object name
+# "For comparing query and most matched name"
+# set_up_gpt_message = f"""
+#     I have three tasks for you. Handle them separately at all costs.
+#
+#     {bing_json["names"]}
+#     1. Above is a list of names of objects.
+#     I want you to look at the list and tell me what the most matched object name that appears in more lines.
+#     Only extract the object name. It should be an object at all costs.Do NOT include any explanation or comments.
+#
+#     2. Now compare most matched object name to {bing_json["query"]}. Return the more specific object between them.
+#     If {bing_json["query"]} is not an object, return most matched object name
+#     If most matched object name is not an object, return {bing_json["query"]}
+#
+#     3. Return the response in JSON format:
+#     {{"best_name": "most matched name from task 1", "object_name": "more specific name from task 2"}}
+#     """
+
+# "For figuring out most matched name alone"
+# set_up_gpt_message = f"""
+#     {bing_json["names"]}
+#
+#     Above is a list of names of objects.
+#     I want you to look at the list and tell me what the most matched object name that appears in more lines.
+#     Only extract the name. It should be an object at all costs. Do NOT include any explanation or comments.
+#     Format: {{"object_name": "most matched name"}}
+#     """
 
 def get_object_name(bing_json):
     set_up_gpt_message = f"""
-    Here is a list of names of items. I want you to look at the list and tell me what the most matched name. 
-    Only extract the object name. It should be an object at all costs.
-    Strictly return only a single line JSON. Do NOT include any explanation or comments.
-    Format: {{"best_name": "most matched object name"}}
-    {bing_json["names"]}
-     """
+        I have three tasks for you. Handle them separately at all costs.
+
+        {bing_json["names"]}
+        1. Above is a list of names of objects.
+        I want you to look at the list and tell me what the most matched object name that appears in more lines.
+        Only extract the object name. It should be an object at all costs.Do NOT include any explanation or comments.
+
+        2. Now compare most matched object name to {bing_json["query"]}. Return the more specific object between them.
+        If {bing_json["query"]} is not an object, return most matched object name
+        If most matched object name is not an object, return {bing_json["query"]}
+
+        3. Return the response in JSON format:
+        {{"best_name": "most matched name from task 1", "object_name": "more specific name from task 2"}}
+        """
     try:
         gpt_json = run_gpt(set_up_gpt_message)
         parsed_result = json.loads(gpt_json)
@@ -20,67 +54,39 @@ def get_object_name(bing_json):
     except Exception as e:
         print(e)
         parsed_result = {"error": "Object not found..."}
-
-    compare_gpt_message = f"""
-        I am going to give you 2 items. return the most specific item from them in json format {{"object_name": "specific name"}}
-        Only tell me item name and nothing else. No comments or explanation.
-        {bing_json["query"]}
-        {parsed_result["best_name"]}
-    """
-    try:
-        gpt_specific_name = run_gpt(compare_gpt_message)
-        parsed_result = json.loads(gpt_json)
-    # If there is an exception, we display an error
-    except Exception as e:
-        print(e)
-        parsed_result = {"error": "Object not found..."}
-
+    return parsed_result
 
 
 def run_gpt(gpt_message):
     client = OpenAI(api_key= GPT_API_KEY)
 
     # To catch errors
-    try:
-        start_time = time.time() # for testing API response times
+    start_time = time.time() # for testing API response times
 
-        # Setting up input message
-        messages = [{"role": "user", "content": gpt_message}]
+    # Setting up input message
+    messages = [{"role": "user", "content": gpt_message}]
 
-        # Get response
-        completion = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=messages,
-            max_tokens=50
-        )
+    # Get response
+    completion = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=messages,
+        max_tokens=50
+    )
 
-        gpt_response = completion.choices[0].message.content
+    gpt_response = completion.choices[0].message.content
 
-        #  Testing API response times
-        response_time = time.time() - start_time
-        print("API responded in", round(response_time, 2), "seconds")
+    #  Testing API response times
+    response_time = time.time() - start_time
+    print("API responded in", round(response_time, 2), "seconds")
 
     return(gpt_response)
 
-
-def query_or_name(query, name):
-
-
-
-
 # __main__
-with open('bing_exports/image-13_export.json', 'r') as file:
+with open('bing_exports/image-135_export.json', 'r') as file:
     bing_json = json.loads(file.read())
 
-print(f"query: {bing_json['query']}")
-print("names: ")
-for i in bing_json['names']:
-    print(i)
-print()
-parsed_result = get_object_name(bing_json)
-print(parsed_result)
-print(parsed_result["name"])
+object_name = get_object_name(bing_json)
+print(object_name)
 
-
-
-
+# Good files for testing
+# 13, 103, 106, 107, 108, 110, 115, 120, 126
