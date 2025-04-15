@@ -85,7 +85,7 @@ def run_gpt(gpt_message):
     return(gpt_response)
 
 # __main__
-with open('bing_exports/image-135_export.json', 'r') as file:
+with open('bing_exports/image-110_export.json', 'r') as file:
     bing_json = json.loads(file.read())
 
 object_name = get_object_name(bing_json)
