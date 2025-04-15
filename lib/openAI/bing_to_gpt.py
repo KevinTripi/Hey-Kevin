@@ -31,6 +31,9 @@ import json
 #     Format: {{"object_name": "most matched name"}}
 #     """
 
+# This function takes bing json and compares most matched name from "names" key to "query" key and returns more specific item name
+# The returned json from this function returns two keys and two objects for testing purposes
+# For passing to GPT/Claude, we should use object_name key from returned json
 def get_object_name(bing_json):
     set_up_gpt_message = f"""
         I have three tasks for you. Handle them separately at all costs.
