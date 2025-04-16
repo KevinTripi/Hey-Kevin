@@ -22,7 +22,7 @@ db = FirebaseRestAPI(HEY_KEVIN_URL, ID_TOKEN)
 
 # This function posts an entry to firebase
 # Only to be used after GPT/Claude generates comments
-def test_post():
+def test_post(db):
     json = {"object_name": "1" , "b": "5", "c": "6"}
     posted_name = db.post(json)
     if posted_name:
@@ -32,7 +32,7 @@ def test_post():
 
 # This function shows all entries in firebase
 # For GUI: Reorder keys in order: 2nd key, 3rd key, 1st key
-def show_history():
+def show_history(db):
     get_json = db.get()
     if get_json:
         for entry in get_json:
@@ -42,7 +42,7 @@ def show_history():
 
 
 # This function clears all entries of firebase
-def clear_history():
+def clear_history(db):
     if db.delete_all():
         print(f"Deleted all history")
     else:
@@ -50,7 +50,7 @@ def clear_history():
 
 
 # This function clears last entry in firebase
-def clear_last_entry_in_history():
+def clear_last_entry_in_history(db):
     if db.delete_last_entry():
         print("Deleted latest entry")
     else:
