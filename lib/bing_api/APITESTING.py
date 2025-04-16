@@ -1,3 +1,4 @@
+import string
 import requests
 import json
 import re
@@ -87,30 +88,40 @@ def bestRepQ(filePath):
     return queries  # Return empty list if no queries
 
 # finds the first value in the unfiltered lists, then filters based on bestrepq
+# finds the first value in the unfiltered lists, then filters based on bestrepq
 def name_finder(names, query):
     found = []
 
     if not names:
         return []
 
+    # Filter out names that contain escape characters or non-printable characters
+    clean_names = []
+    for name in names:
+        if all(c in string.printable for c in name) and not re.search(r'(\\u[0-9a-fA-F]{4}|\\x[0-9a-fA-F]{2}|\\0)', name):
+            clean_names.append(name)
+
+    if not clean_names:
+        return []
+
     # Use first word of best query if available
     if query:
         find = query[0].split()[0]
-        for name in names:
+        for name in clean_names:
             if re.search(r'\b' + re.escape(find) + r'\b', name):
                 found.append(name)
 
     # Fallback: if no query or no match from query
     if not found:
-        if names:
-            fallback = names[0].split()[0]
-            for name in names:
+        if clean_names:
+            fallback = clean_names[0].split()[0]
+            for name in clean_names:
                 if re.search(r'\b' + re.escape(fallback) + r'\b', name, re.IGNORECASE):
                     found.append(name)
 
     # If still no match, fallback to first 5
     if not found:
-        found = names[:5]
+        found = clean_names[:5]
 
     return found
 
@@ -149,7 +160,7 @@ def export_data(names, query):
 def main():
     try:
         
-        compress_img("lib/bing_api/reduced.jpg", imagePath)
+        compress_img("lib/bing_api/image-105.jpg", imagePath)
         # Send POST request
         get_data()
 

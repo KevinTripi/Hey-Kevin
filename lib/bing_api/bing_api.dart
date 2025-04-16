@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 //BING API VARIABLES + IMAGE
 //will need to update imagePath and filepath according to app structure
 const String BASE_URI = 'https://api.bing.microsoft.com/v7.0/images/visualsearch';
-const String SUBSCRIPTION_KEY = 'a9227348a29242a7bdeeb5c32d068252';
 const String imagePath = "lib/bing_api/dasani-water-217886-64_600.jpg";
 const String filePath = "lib/bing_api/result.json";
 
