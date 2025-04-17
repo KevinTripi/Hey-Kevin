@@ -14,6 +14,8 @@ migrate_working_dir/
 .env
 .venv
 *.lock
+
+#bing testing related
 lib/bing_api/__pycache__
 lib/bing_api/exports/*
 lib/bing_api/images/*
@@ -49,8 +51,3 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-
-# build files
-linux/flutter/generated_plugin*
-macos/Flutter/GeneratedPlugin*
-windows/flutter/generated_plugin*
