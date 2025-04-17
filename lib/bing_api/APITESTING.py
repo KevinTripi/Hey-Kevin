@@ -8,13 +8,45 @@ import os
 from dotenv import load_dotenv
 
 # BING API VARIABLES + IMAGE
-BASE_URI = 'https://api.bing.microsoft.com/v7.0/images/visualsearch'
+BASE_URI = 'https://api.bing.microsoft.com/v7.0/images/visualsearch?safesearch=Strict'
 load_dotenv()
 SUBSCRIPTION_KEY = os.getenv('SUBSCRIPTION_KEY')
 imagePath = "lib/bing_api/img_resized.jpg"
 filePath = "lib/bing_api/result.json"
 
 HEADERS = {'Ocp-Apim-Subscription-Key': SUBSCRIPTION_KEY}
+
+NSFW_BLACKLIST = {
+    # Sexual content
+    "sex", "sexy", "nude", "nudes", "naked", "nudity", "porn", "porno", "pornography",
+    "xxx", "hardcore", "fetish", "bdsm", "bondage", "erotic", "erotica", "strip", "stripper",
+    "threesome", "orgy", "blowjob", "handjob", "cum", "sperm", "ejaculate", "anal", "buttplug",
+    "dildo", "vibrator", "masturbate", "masturbation", "fap", "genital", "genitals",
+    "boobs", "tits", "nipples", "vagina", "vaginal", "penis", "dick", "cock", "pussy",
+    "milf", "teen", "hentai", "incest", "lesbian", "sexcam", "camgirl",
+    "escort", "onlyfans", "submissive", "dominatrix", "dominant", "nsfw", "deepthroat",
+
+    # Offensive slurs and language
+    "fuck", "fucking", "fucker", "shit", "shitty", "bitch", "asshole", "bastard", "cunt",
+    "slut", "whore", "hoe", "retard", "retarded", "dumbass", "moron", "twat",
+
+    # Violence / gore
+    "kill", "murder", "gore", "blood", "decapitate", "rape", "rapist", "abuse", "torture",
+    "slaughter", "suicide", "homicide", "massacre", "selfharm", "cutting", "violence",
+
+    # Drugs and illegal activity
+    "weed", "marijuana", "cocaine", "meth", "heroin", "lsd", "ecstasy", "shrooms", "acid",
+    "drug", "drugs", "dealer", "narcotic", "overdose", "addict", "high", "stoned",
+
+    # Weapons
+    "gun", "guns", "firearm", "rifle", "pistol", "weapon", "explosive", "bomb", "grenade",
+    "knife", "knives",
+
+    # Sensitive themes
+    "terrorism", "terrorist", "nazism", "nazi", "hitler", "racist", "racism", "homophobia",
+    "transphobia", "genocide", "pedophile", "pedophilia", "childporn", "child abuse",  "anorexia"
+}
+
 
 # Resize and compress image to <= 1MB
 def compress_img(input_path, output_path):
@@ -71,8 +103,12 @@ def get_title_names(filePath):
 
                 for item in value_list:
                     name = item.get("name", "")
-                    entries.append(name)
-    
+                    is_family_friendly = item.get("isFamilyFriendly", False)
+
+                    # MOVE THE IF HERE! inside the for loop!
+                    if is_family_friendly and all(bad not in name.lower() for bad in NSFW_BLACKLIST):
+                        entries.append(name)
+
     return entries
 
 # gets best descriptor (query) from JSON
@@ -84,10 +120,12 @@ def bestRepQ(filePath):
     for tag in data.get("tags", []):
         for action in tag.get("actions", []):
             if action.get("actionType") == "BestRepresentativeQuery":
-                queries.append(action.get("displayName"))
+                query_name = action.get("displayName", "")
+                if all(bad not in query_name.lower() for bad in NSFW_BLACKLIST):
+                    queries.append(query_name)
+
     return queries  # Return empty list if no queries
 
-# finds the first value in the unfiltered lists, then filters based on bestrepq
 # finds the first value in the unfiltered lists, then filters based on bestrepq
 def name_finder(names, query):
     found = []
@@ -95,11 +133,13 @@ def name_finder(names, query):
     if not names:
         return []
 
-    # Filter out names that contain escape characters or non-printable characters
+    # Filter out non-printables and NSFW content
     clean_names = []
     for name in names:
         if all(c in string.printable for c in name) and not re.search(r'(\\u[0-9a-fA-F]{4}|\\x[0-9a-fA-F]{2}|\\0)', name):
-            clean_names.append(name)
+            name_lower = name.lower()
+            if not any(bad_word in name_lower for bad_word in NSFW_BLACKLIST):
+                clean_names.append(name)
 
     if not clean_names:
         return []
@@ -111,38 +151,29 @@ def name_finder(names, query):
             if re.search(r'\b' + re.escape(find) + r'\b', name):
                 found.append(name)
 
-    # Fallback: if no query or no match from query
     if not found:
-        if clean_names:
-            fallback = clean_names[0].split()[0]
-            for name in clean_names:
-                if re.search(r'\b' + re.escape(fallback) + r'\b', name, re.IGNORECASE):
-                    found.append(name)
+        fallback = clean_names[0].split()[0]
+        for name in clean_names:
+            if re.search(r'\b' + re.escape(fallback) + r'\b', name, re.IGNORECASE):
+                found.append(name)
 
-    # If still no match, fallback to first 5
     if not found:
         found = clean_names[:5]
 
     return found
+
 
 # writes export json and returns json
 def export_data(names, query):
     try:
         # If no query, insert error message in place
         query_output = query if query else ["No representative query available"]
+        name_output = names if names else ["No names avaialble"]
 
-        # Handle potential error output from name_finder
-        if isinstance(names, str):
-            try:
-                parsed_names = json.loads(names)
-                if "error" in parsed_names:
-                    return names  # early return with the error
-            except json.JSONDecodeError:
-                pass  # Not an error JSON string, proceed
 
         exportStructure = {
             "query": query_output,
-            "names": names
+            "names": name_output
         }
 
         with open("lib/bing_api/exported_data.json", "w") as f:
@@ -160,7 +191,7 @@ def export_data(names, query):
 def main():
     try:
         
-        compress_img("lib/bing_api/image-105.jpg", imagePath)
+        compress_img("lib/bing_api/IMG_9093.jpg", imagePath)
         # Send POST request
         get_data()
 
