@@ -1,5 +1,5 @@
 from anthropic import Anthropic
-from key import CLAUDE_API_KEY
+from claude_key import CLAUDE_API_KEY
 import time
 import json
 
@@ -69,7 +69,7 @@ def run_claude(gpt_message):
 
 
 # __main__
-with open('bing_exports/image-135_export.json', 'r') as file:
+with open('../bing_exports/image-135_export.json', 'r') as file:
     bing_json = json.loads(file.read())
 
 object_name_json = get_object_name(bing_json)

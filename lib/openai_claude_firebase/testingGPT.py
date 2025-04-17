@@ -1,5 +1,5 @@
 from openai import OpenAI
-from key import GPT_API_KEY
+from gpt_key import GPT_API_KEY
 import json
 import time
 
@@ -10,13 +10,13 @@ set_up_gpt_message = """Give me a JSON output (do not include ANY other sentence
      The visual characteristics should focus on describing the object in a warm manner with minimal but sarcastic humor,
      while the cultural/trendy reference should poke fun in a witty, cultural, and appropriate way.
      Both should be one-liners at all times!!!
-     Format strictly as: {"visual_characteristics": "Object name: Text", "cultural_trendy_reference": "Text"}
+     Format strictly as: {"Visual_characteristics": "Object name: Text", "cultural_trendy_reference": "Text"}
      Replace "Object name" with the name I give you and capitalize the first letter of the object name here.
      Try refraining from using "Oh great," "sleek", "perfect", "because", and "Ah, yes" each time.
      Example:
-     {"visual_characteristics": "Nintendo Switch: A chunky tablet that screams, 'I love gaming but refuse to commit to a console.'",
+     {"Visual_characteristics": "Nintendo Switch: A chunky tablet that screams, 'I love gaming but refuse to commit to a console.'",
       "cultural_trendy_reference": "The only device that makes playing Mario Kart a legitimate excuse to skip adulting."}
-     {"visual_characteristics": "Microwave: A kitchen box that judges your cooking abilities.",
+     {"Visual_characteristics": "Microwave: A kitchen box that judges your cooking abilities.",
       "cultural_trendy_reference": "The appliance that watches you wait impatiently."}
      """
 
@@ -57,7 +57,7 @@ def get_gpt_comments(object_title):
     except Exception as e:
         print(e)
         parsed_result = {"visual_characteristics": "Error: Looks like it borrowed its appearance from static on a dead TV channel.",
-                         "use_case": "Perfect for confusing both humans and machines—truly a team player in obscurity."}
+                         "cultural_trendy_reference": "Perfect for confusing both humans and machines—truly a team player in obscurity."}
         for i in parsed_result:
             print("\n", i, "-", parsed_result[i])
         print("\n")
