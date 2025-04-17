@@ -242,18 +242,9 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                         if (!isChatGptLoading) {
                           return FullScreen(child: displayImage);
                         } else {
-                          try {
-                            ui.Image? retImg =
-                                (((child as Semantics).child as RawImage).image
-                                    as ui.Image);
-                          } catch (e) {
-                            sleep(Duration(milliseconds: 50));
-                          }
-                          ui.Image? retImg =
-                              (((child as Semantics).child as RawImage).image
-                                  as ui.Image);
-
-                          print("Fin img: (${retImg.width}, ${retImg.height})");
+                          // ui.Image? retImg =
+                          //     (((child as Semantics).child as RawImage).image
+                          //         as ui.Image);
 
                           return SafeArea(
                               child: DisplayTextboxes(
@@ -264,10 +255,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                             maskPoints: maskPoints,
                             textboxPoints: [
                               (0, 0),
-                              (
-                                0,
-                                (retImg.height * imgRatioWidth - 140).round()
-                              ),
+                              (0, (constraints.maxHeight - 140 * 1.5).round()),
                             ],
                           ));
                         }
