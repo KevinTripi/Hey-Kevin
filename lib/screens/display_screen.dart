@@ -59,8 +59,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     //
     //
 
-    segImgPath =
-        "https://www.kevinthegoose.com/images/${kevGooseJson['session_id']!}.jpg";
+    segImgPath = kevGooseJson['segmented_image_path'];
 
     //
     //
@@ -193,9 +192,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
                   List<(int, int)> maskPoints = [];
 
-                  for (var i = 0; i < 3; i++) {
+                  for (var i = 0; i < 2; i++) {
                     while (true) {
-                      // format: (x, y), can use samBoxPerimHalf * 2 since it's symmetrical. Same as samBoxBottomRight.$x - samBoxTopLeft.$x
                       (int, int) tryPoint = (
                         samBoxTopLeft.$1 +
                             Random().nextInt(
@@ -220,12 +218,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     }
                   }
 
-                  List<(int, int)> textboxPoints = [
-                    (100, (100).round()),
-                    (50, (constraints.maxHeight - 300).round()),
-                    (0, (constraints.maxHeight - 200).round())
-                  ];
-
                   // TODO: Fade in segmented from original? https://docs.flutter.dev/cookbook/images/fading-in-images
                   // Bill returns the picture with the mask.
                   print("Fetching image from path: $segImgPath");
@@ -243,11 +235,24 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                         if (!isChatGptLoading) {
                           return FullScreen(child: displayImage);
                         } else {
+                          var retImg = (((child as Semantics).child as RawImage)
+                              .image as ui.Image);
+                          print("Fin img: (${retImg.width}, ${retImg.height})");
+
                           return SafeArea(
                               child: DisplayTextboxes(
+                            // textboxSizeX: (constraints.maxWidth - 20).round(),
+                            textboxSizeX: (constraints.maxWidth).round(),
+                            textboxSizeY: 140,
                             displayImage: child,
                             maskPoints: maskPoints,
-                            textboxPoints: textboxPoints,
+                            textboxPoints: [
+                              (0, 0),
+                              (
+                                0,
+                                (retImg.height * imgRatioWidth - 140).round()
+                              ),
+                            ],
                           ));
                         }
                       }

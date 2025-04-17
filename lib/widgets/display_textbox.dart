@@ -5,13 +5,15 @@ import 'package:hey_kevin/widgets/textbox_pointer.dart';
 class DisplayTextboxes extends StatelessWidget {
   const DisplayTextboxes({
     super.key,
+    required this.textboxSizeX,
+    required this.textboxSizeY,
     required this.displayImage,
     required this.maskPoints,
     required this.textboxPoints,
   });
 
-  final int textboxSizeX = 100;
-  final int textboxSizeY = 30;
+  final int textboxSizeX;
+  final int textboxSizeY;
   final Color textColor = Colors.black;
   final Color textboxColor = Colors.yellow;
 
@@ -22,72 +24,78 @@ class DisplayTextboxes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
+    return Stack(alignment: Alignment.center, children: [
       CustomPaint(
           foregroundPainter:
-              TextboxPointer(convertTupleToList(maskPoints, textboxPoints)),
+              TextboxPointer(convertTupleToList(maskPoints, (textboxPoints))),
           child: displayImage),
       Positioned(
-        left: textboxPoints[0].$1.toDouble(),
+        // left: textboxPoints[0].$1.toDouble(),
         top: textboxPoints[0].$2.toDouble(),
-        child: GestureDetector(
-          onTap: () {
-            print("test1!");
-          },
-          child: buildTextbox("Hi!"),
-        ),
-      ),
-      Positioned(
-        left: textboxPoints[1].$1.toDouble(),
-        top: textboxPoints[1].$2.toDouble(),
-        child: GestureDetector(
-          onTap: () {
-            print("test2!");
-          },
-          child: buildTextbox("Hi!"),
-        ),
-      ),
-      Positioned(
-          left: textboxPoints[2].$1.toDouble(),
-          top: textboxPoints[2].$2.toDouble(),
+        child: Center(
           child: GestureDetector(
             onTap: () {
-              print("test3!");
+              print("test1!");
             },
-            child: buildTextbox("Hi!"),
-          )),
+            child: buildTextbox(context,
+                "p1: Ad quo veniam ab cumque porro possimus. Animi ex quae et autem maxime omnis iure architecto. Voluptas doloremque in voluptatibus."),
+          ),
+        ),
+      ),
+      Positioned(
+        // left: textboxPoints[1].$1.toDouble(),
+        bottom: 0,
+        child: SafeArea(
+          child: GestureDetector(
+            onTap: () {
+              print("test2!");
+            },
+            child: buildTextbox(context,
+                "p2: Hic tempora dicta sed minima saepe officiis et. Sed et sit et quidem sit. Aut dolorum asperiores nobis perferendis assumenda consequatur natus ullam."),
+          ),
+        ),
+      ),
+      // Positioned(
+      //     left: textboxPoints[2].$1.toDouble(),
+      //     top: textboxPoints[2].$2.toDouble(),
+      //     child: GestureDetector(
+      //       onTap: () {
+      //         print("test3!");
+      //       },
+      //       child: buildTextbox("Hi!"),
+      //     )),
     ]);
   }
 
-  Container buildTextbox(String displayText) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 3),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [textboxColor, textboxColor]),
-        borderRadius: BorderRadius.all(Radius.circular(100)),
-      ),
-      child: SizedBox(
-        width: textboxSizeX.toDouble(),
-        height: textboxSizeY.toDouble(),
+  Widget buildTextbox(BuildContext context, String displayText) {
+    return SizedBox(
+      width: textboxSizeX.toDouble(),
+      height: textboxSizeY.toDouble(),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [textboxColor, textboxColor]),
+          borderRadius: BorderRadius.all(Radius.circular(25)),
+        ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              displayText,
-              style: TextStyle(fontSize: textboxSizeY - 5, color: textColor),
+            Flexible(
+              // fit: FlexFit.tight,
+              child: Text(
+                displayText,
+                style: TextStyle(color: textColor, fontSize: 18),
+              ),
             ),
-            Icon(
-              Icons.arrow_drop_down,
-              applyTextScaling: true,
-              size: textboxSizeY.toDouble(),
-              color: textColor,
-            )
           ],
         ),
       ),
     );
   }
 
+  // TextboxPointer takes a list of lists as an arugment, but this class is given a list of tuples.
   List<List<dynamic>> convertTupleToList(
       List<(int, int)> listPointer, List<(int, int)> listTextbox) {
     List<List<dynamic>> retList = [];
