@@ -59,7 +59,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     //
 
     segImgPath =
-        "https://www.kevinthegoose.com/images/${kevGooseJson['session_id']!}.jpg";
+        "https://www.kevinthegoose.com/images/${kevGooseJson['session_id']}-segmented.jpg";
 
     //
     //
