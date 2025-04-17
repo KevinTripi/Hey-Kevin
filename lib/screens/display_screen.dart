@@ -1,14 +1,10 @@
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:sliding_drawer/sliding_drawer.dart';
 import 'dart:ui' as ui;
 import 'package:gal/gal.dart';
-import 'package:touchable/touchable.dart';
 
-import 'package:hey_kevin/widgets/kev_info_card.dart';
 import 'package:hey_kevin/widgets/full_screen.dart';
 import '../widgets/textbox_pointer.dart';
 import '../util/bill_api_call.dart';
@@ -96,184 +92,147 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Create a drawer controller.
-    // Also you can set up the drawer width and
-    // the initial state here (optional).
-    final SlidingDrawerController _drawerController = SlidingDrawerController(
-      isOpenOnInitial: false,
-      drawerFraction: 1,
-    );
-
     return Scaffold(
-        appBar: AppBar(title: const Text('Display the Picture')),
-        // The image is stored as a file on the device. Use the `Image.file`
-        // constructor with the given path to display the image.
+      appBar: AppBar(title: const Text('Display the Picture')),
+      // The image is stored as a file on the device. Use the `Image.file`
+      // constructor with the given path to display the image.
 
-        body: SlidingDrawer(
-          // From https://pub.dev/packages/sliding_drawer
-          controller: _drawerController,
-          axisDirection: AxisDirection.up,
+      body: Center(
+        child: Container(
+          color: Colors.red,
+          // Reason I'm not using a FutureBuilder is to use the constraints argument from LayoutBuilder.
+          // Otherwise I'm using it similarly. Works since setState rebuilds widgets.
+          child: LayoutBuilder(builder: (context, constraints) {
+            Image displayImage = Image.file(
+              File(widget.imagePath),
+              fit: BoxFit.cover,
+            );
 
-          // The drawer holds the ListView where our results will sit.
-          drawer: isChatGptLoading
-              ? Center(
-                  child: Center(child: Text("Generating funny comments...")),
-                )
-              : ListView(
-                  physics:
-                      NeverScrollableScrollPhysics(), // From https://stackoverflow.com/a/51367188
-                  shrinkWrap:
-                      true, // From https://www.flutterbeads.com/listview-inside-column-in-flutter/
-                  children: [
-                    // Title Tile
-                    KevInfoCard(title: gptJson['label'], body: ""),
-                    // Fact #1 Tile
-                    KevInfoCard(
-                        title: 'sarcastic:', body: commentJson['sarcastic']),
-                    // Fact #2 Tile
-                    KevInfoCard(title: 'witty:', body: commentJson['witty']),
-                    // Fact #3 Tile
-                    KevInfoCard(title: 'funny:', body: commentJson['funny']),
-                  ],
-                ),
-          body: Center(
-            child: Container(
-              color: Colors.red,
-              // Reason I'm not using a FutureBuilder is to use the constraints argument from LayoutBuilder.
-              // Otherwise I'm using it similarly. Works since setState rebuilds widgets.
-              child: LayoutBuilder(builder: (context, constraints) {
-                Image displayImage = Image.file(
-                  File(widget.imagePath),
-                  fit: BoxFit.cover,
-                );
+            if (isSegmentLoading) {
+              return SafeArea(
+                child: Stack(children: [
+                  displayImage,
+                  Center(child: CircularProgressIndicator())
+                ]),
+              );
+            } else {
+              // From: https://flutterfixes.com/flutter-get-widget-size-image-file/
+              print(
+                  "Constraints: ${constraints.maxWidth}, ${constraints.maxHeight}");
 
-                if (isSegmentLoading) {
-                  return SafeArea(
-                    child: Stack(children: [
-                      displayImage,
-                      Center(child: CircularProgressIndicator())
-                    ]),
+              List<dynamic> maskArr =
+                  jsonDecode(kevGooseJson['mask'])['nums'][0];
+
+              // Gal.putImage(widget.imagePath);
+
+              print("maskArr.length: ${maskArr.length}");
+              print("maskArr[0].length: ${maskArr[0].length}");
+
+              (int, int) painterCenter = (
+                (constraints.maxWidth / 2).round(),
+                (constraints.maxHeight / 2).round()
+              );
+
+              double imgRatioHeight = constraints.maxHeight / maskArr.length;
+              double imgRatioWidth = constraints.maxWidth / maskArr[0].length;
+
+              // From "box_size = 700" in https://github.com/EegArlert/hey-kevin-backend/blob/main/image_processing/segmentation.py
+              // Defines the bounding box SAM limits itself to.
+              int samBoxPerimHalf = 700;
+
+              (int, int) samBoxTopLeft = (
+                ((maskArr[0].length / 2) - samBoxPerimHalf).round(),
+                ((maskArr.length / 2) - samBoxPerimHalf).round(),
+              );
+              (int, int) samBoxBottomRight = (
+                ((maskArr[0].length / 2) + samBoxPerimHalf).round(),
+                ((maskArr.length / 2) + samBoxPerimHalf).round(),
+              );
+
+              List<(int, int)> maskPoints = [];
+
+              for (var i = 0; i < 2; i++) {
+                while (true) {
+                  (int, int) tryPoint = (
+                    samBoxTopLeft.$1 +
+                        Random()
+                            .nextInt(samBoxBottomRight.$1 - samBoxTopLeft.$1),
+                    samBoxTopLeft.$2 +
+                        Random()
+                            .nextInt(samBoxBottomRight.$2 - samBoxTopLeft.$2)
                   );
-                } else {
-                  // From: https://flutterfixes.com/flutter-get-widget-size-image-file/
-                  print(
-                      "Constraints: ${constraints.maxWidth}, ${constraints.maxHeight}");
+                  // print("Trying: $tryPoint");
+                  // Note we have to flip the tuple here since the mask is y indexed.
+                  if (maskArr[tryPoint.$2][tryPoint.$1]) {
+                    print("Random point found: $tryPoint");
+                    maskPoints.add((
+                      // (tryPoint.$1 * imgRatioWidth).round(),
+                      // (tryPoint.$2 * imgRatioHeight).round(),
+                      (tryPoint.$1 * imgRatioWidth).round(),
+                      // doesn't imgRatioHeight work...
+                      (tryPoint.$2 * imgRatioWidth).round(),
+                    ));
+                    break;
+                  }
+                }
+              }
 
-                  List<dynamic> maskArr =
-                      jsonDecode(kevGooseJson['mask'])['nums'][0];
+              // Stops points from crisscrossing
+              if (maskPoints[0].$2 > maskPoints[1].$2) {
+                var temp = maskPoints[0];
+                maskPoints[0] = maskPoints[1];
+                maskPoints[1] = temp;
+              }
 
-                  // Gal.putImage(widget.imagePath);
+              // TODO: Fade in segmented from original? https://docs.flutter.dev/cookbook/images/fading-in-images
+              // Bill returns the picture with the mask.
+              print("Fetching image from path: $segImgPath");
+              // From https://github.com/KevinTripi/Hey-Kevin/blob/bill-api-test/lib/screens/object_detection_screen.dart
+              return Image.network(
+                segImgPath,
+                fit: BoxFit.contain,
+                // from https://stackoverflow.com/a/58048926
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) {
+                    print("isLoadingImg: complete");
 
-                  print("maskArr.length: ${maskArr.length}");
-                  print("maskArr[0].length: ${maskArr[0].length}");
+                    // Simplified from: https://medium.com/flutter-community/a-deep-dive-into-custompaint-in-flutter-47ab44e3f216
+                    // Error prevented by ensuring image is loaded (by isLoading) before calling CustomPaint.
+                    if (!isChatGptLoading) {
+                      return FullScreen(child: displayImage);
+                    } else {
+                      // ui.Image? retImg =
+                      //     (((child as Semantics).child as RawImage).image
+                      //         as ui.Image);
 
-                  (int, int) painterCenter = (
-                    (constraints.maxWidth / 2).round(),
-                    (constraints.maxHeight / 2).round()
-                  );
-
-                  double imgRatioHeight =
-                      constraints.maxHeight / maskArr.length;
-                  double imgRatioWidth =
-                      constraints.maxWidth / maskArr[0].length;
-
-                  // From "box_size = 700" in https://github.com/EegArlert/hey-kevin-backend/blob/main/image_processing/segmentation.py
-                  // Defines the bounding box SAM limits itself to.
-                  int samBoxPerimHalf = 700;
-
-                  (int, int) samBoxTopLeft = (
-                    ((maskArr[0].length / 2) - samBoxPerimHalf).round(),
-                    ((maskArr.length / 2) - samBoxPerimHalf).round(),
-                  );
-                  (int, int) samBoxBottomRight = (
-                    ((maskArr[0].length / 2) + samBoxPerimHalf).round(),
-                    ((maskArr.length / 2) + samBoxPerimHalf).round(),
-                  );
-
-                  List<(int, int)> maskPoints = [];
-
-                  for (var i = 0; i < 2; i++) {
-                    while (true) {
-                      (int, int) tryPoint = (
-                        samBoxTopLeft.$1 +
-                            Random().nextInt(
-                                samBoxBottomRight.$1 - samBoxTopLeft.$1),
-                        samBoxTopLeft.$2 +
-                            Random().nextInt(
-                                samBoxBottomRight.$2 - samBoxTopLeft.$2)
-                      );
-                      // print("Trying: $tryPoint");
-                      // Note we have to flip the tuple here since the mask is y indexed.
-                      if (maskArr[tryPoint.$2][tryPoint.$1]) {
-                        print("Random point found: $tryPoint");
-                        maskPoints.add((
-                          // (tryPoint.$1 * imgRatioWidth).round(),
-                          // (tryPoint.$2 * imgRatioHeight).round(),
-                          (tryPoint.$1 * imgRatioWidth).round(),
-                          // doesn't imgRatioHeight work...
-                          (tryPoint.$2 * imgRatioWidth).round(),
-                        ));
-                        break;
-                      }
+                      return SafeArea(
+                          child: DisplayTextboxes(
+                        // textboxSizeX: (constraints.maxWidth - 20).round(),
+                        textboxSizeX: (constraints.maxWidth).round(),
+                        textboxSizeY: 140,
+                        displayImage: child,
+                        maskPoints: maskPoints,
+                        textboxPoints: [
+                          (0, 0),
+                          (0, (constraints.maxHeight - 140 * 1.5).round()),
+                        ],
+                      ));
                     }
                   }
-
-                  // Stops points from crisscrossing
-                  if (maskPoints[0].$2 > maskPoints[1].$2) {
-                    var temp = maskPoints[0];
-                    maskPoints[0] = maskPoints[1];
-                    maskPoints[1] = temp;
-                  }
-
-                  // TODO: Fade in segmented from original? https://docs.flutter.dev/cookbook/images/fading-in-images
-                  // Bill returns the picture with the mask.
-                  print("Fetching image from path: $segImgPath");
-                  // From https://github.com/KevinTripi/Hey-Kevin/blob/bill-api-test/lib/screens/object_detection_screen.dart
-                  return Image.network(
-                    segImgPath,
-                    fit: BoxFit.contain,
-                    // from https://stackoverflow.com/a/58048926
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) {
-                        print("isLoadingImg: complete");
-
-                        // Simplified from: https://medium.com/flutter-community/a-deep-dive-into-custompaint-in-flutter-47ab44e3f216
-                        // Error prevented by ensuring image is loaded (by isLoading) before calling CustomPaint.
-                        if (!isChatGptLoading) {
-                          return FullScreen(child: displayImage);
-                        } else {
-                          // ui.Image? retImg =
-                          //     (((child as Semantics).child as RawImage).image
-                          //         as ui.Image);
-
-                          return SafeArea(
-                              child: DisplayTextboxes(
-                            // textboxSizeX: (constraints.maxWidth - 20).round(),
-                            textboxSizeX: (constraints.maxWidth).round(),
-                            textboxSizeY: 140,
-                            displayImage: child,
-                            maskPoints: maskPoints,
-                            textboxPoints: [
-                              (0, 0),
-                              (0, (constraints.maxHeight - 140 * 1.5).round()),
-                            ],
-                          ));
-                        }
-                      }
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
-                        ),
-                      );
-                    },
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              loadingProgress.expectedTotalBytes!
+                          : null,
+                    ),
                   );
-                }
-              }),
-            ),
-          ),
-        ));
+                },
+              );
+            }
+          }),
+        ),
+      ),
+    );
   }
 }

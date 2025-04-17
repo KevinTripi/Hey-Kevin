@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:hey_kevin/widgets/textbox_pointer.dart';
 
@@ -78,18 +79,9 @@ class DisplayTextboxes extends StatelessWidget {
           gradient: LinearGradient(colors: [textboxColor, textboxColor]),
           borderRadius: BorderRadius.all(Radius.circular(25)),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Flexible(
-              // fit: FlexFit.tight,
-              child: Text(
-                displayText,
-                style: TextStyle(color: textColor, fontSize: 18),
-              ),
-            ),
-          ],
+        child: AutoSizeText(
+          displayText,
+          style: TextStyle(color: textColor, fontSize: 30),
         ),
       ),
     );
