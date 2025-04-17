@@ -218,6 +218,13 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     }
                   }
 
+                  // Stops points from crisscrossing
+                  if (maskPoints[0].$2 > maskPoints[1].$2) {
+                    var temp = maskPoints[0];
+                    maskPoints[0] = maskPoints[1];
+                    maskPoints[1] = temp;
+                  }
+
                   // TODO: Fade in segmented from original? https://docs.flutter.dev/cookbook/images/fading-in-images
                   // Bill returns the picture with the mask.
                   print("Fetching image from path: $segImgPath");
@@ -235,8 +242,17 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                         if (!isChatGptLoading) {
                           return FullScreen(child: displayImage);
                         } else {
-                          var retImg = (((child as Semantics).child as RawImage)
-                              .image as ui.Image);
+                          try {
+                            ui.Image? retImg =
+                                (((child as Semantics).child as RawImage).image
+                                    as ui.Image);
+                          } catch (e) {
+                            sleep(Duration(milliseconds: 50));
+                          }
+                          ui.Image? retImg =
+                              (((child as Semantics).child as RawImage).image
+                                  as ui.Image);
+
                           print("Fin img: (${retImg.width}, ${retImg.height})");
 
                           return SafeArea(
