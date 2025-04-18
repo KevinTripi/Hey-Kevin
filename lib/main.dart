@@ -8,6 +8,8 @@ import 'package:hey_kevin/widgets/full_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:io' show Platform;
 
+import 'widgets/camera_crosshair.dart';
+
 Color iconColor = Colors.white, buttonBgColor = Colors.orangeAccent;
 
 // Base project from https://docs.flutter.dev/cookbook/plugins/picture-using-camera#complete-example
@@ -96,7 +98,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       // camera preview. Use a FutureBuilder to display a loading spinner until the
       // controller has finished initializing.
       body: FullScreen(
-        child: Stack(children: [
+        child: Stack(clipBehavior: Clip.antiAlias, children: [
           FutureBuilder<void>(
             future: _initializeControllerFuture,
             builder: (context, snapshot) {
@@ -104,30 +106,27 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                 print(
                     "previewSize: ${_controller.value.previewSize?.toString()}  ${_controller.value.aspectRatio}");
                 return Stack(children: [
-                  SizedBox(
-                    width: double.infinity,
-                    // mediaquery from https://stackoverflow.com/a/52319524
-                    height: MediaQuery.of(context).size.width *
-                        _controller.value.aspectRatio,
-                    child: RotatedBox(
-                      quarterTurns: (_controller.description.sensorOrientation /
-                                  90 +
-                              displayRotations) // From: https://pub.dev/documentation/flutter_better_camera/latest/camera/CameraDescription-class.html
-                          .round(), // From: https://stackoverflow.com/a/20788335
-                      child: CameraPreview(_controller),
+                  UnconstrainedBox(
+                    clipBehavior: Clip.antiAlias,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.height /
+                          _controller.value.aspectRatio,
+                      height: MediaQuery.of(context).size.height,
+                      child: RotatedBox(
+                        quarterTurns: (_controller
+                                        .description.sensorOrientation /
+                                    90 +
+                                displayRotations) // From: https://pub.dev/documentation/flutter_better_camera/latest/camera/CameraDescription-class.html
+                            .round(), // From: https://stackoverflow.com/a/20788335
+                        child: CameraPreview(_controller),
+                      ),
                     ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(child: Icon(Icons.circle)),
-                      // Pushes the dot up a bit
-                      Text(
-                        "",
-                        textScaler: TextScaler.linear(3),
-                      )
-                    ],
-                  )
+                  Center(
+                    child: SizedBox.square(
+                        dimension: 300,
+                        child: CameraCrosshair(borderColor: Colors.white)),
+                  ),
                 ]);
               } else {
                 // Otherwise, display a loading indicator.
@@ -136,19 +135,19 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             },
           ),
           Positioned(
-            bottom: 0,
+            bottom: 10,
             left: 0,
             right: 0,
             child: SafeArea(
               child: Container(
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.fitWidth,
-                      image: AssetImage(
-                          "lib/res/pexels-fwstudio-33348-164005.jpg")),
-                  // border: Border.all(color: Colors.blue, width: 5)
-                ),
+                    // image: DecorationImage(
+                    //     fit: BoxFit.fitWidth,
+                    //     image: AssetImage(
+                    //         "lib/res/pexels-fwstudio-33348-164005.jpg")),
+                    // border: Border.all(color: Colors.blue, width: 5)
+                    ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
