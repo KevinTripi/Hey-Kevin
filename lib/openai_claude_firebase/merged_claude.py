@@ -106,7 +106,8 @@ def get_claude_comments(object_title):
             model="claude-3-7-sonnet-latest",
             max_tokens=100,
             top_p=0.9,
-            messages=messages
+            messages=messages,
+            temperature=0.5
         )
 
         # JSON is located in message.content[0].text
@@ -128,7 +129,7 @@ def get_claude_comments(object_title):
     # If there is an exception, we display a fixed prompt
     except Exception as e:
         print(e)
-        parsed_result = {"visual_characteristics": "Error: Looks like it borrowed its appearance from static on a dead TV channel.",
+        parsed_result = {"Visual_characteristics": "Error: Looks like it borrowed its appearance from static on a dead TV channel.",
                          "cultural_trendy_reference": "Perfect for confusing both humans and machines—truly a team player in obscurity."}
         for i in parsed_result:
             print("\n", i, "-", parsed_result[i])
@@ -140,7 +141,7 @@ def get_claude_comments(object_title):
 # 13, 103, 106, 107, 108, 110, 115, 120, 126
 
 # __main__
-with open('../bing_exports/image-105_export.json', 'r') as file:
+with open('../bing_exports/image-130_export.json', 'r') as file:
     bing_json = json.loads(file.read())
 
 db = FirebaseRestAPI(HEY_KEVIN_URL)
