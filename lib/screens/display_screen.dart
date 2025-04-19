@@ -272,7 +272,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                           maskPoints: maskPoints,
                           textboxPoints: [
                             (0, 0),
-                            (0, (constraints.maxHeight * 0.9).round()),
+                            (0, (constraints.maxHeight * 0.8).round()),
                           ],
                           textboxText: commentArr,
                         )),
