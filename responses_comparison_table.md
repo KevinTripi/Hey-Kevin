@@ -1,4 +1,4 @@
-# Comparison Table: GPT 4o mini v/s Claude 3.7 Sonnet (As of 4/14 code on Ammar's branch) 
+# Comparison Table: GPT 4o mini v/s Claude 3.7 Sonnet (Testing phase as of 4/14) 
 
 | Object               | GPT 4o mini -- Visual Characteristics                                                                                     | GPT 4o mini -- Cultural/Trendy Reference                                                                         | Claude 3.7 Sonnet -- Visual Characteristics                                                                                | Claude 3.7 Sonnet -- Cultural/Trendy Reference                                                             |
 |----------------------|---------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
