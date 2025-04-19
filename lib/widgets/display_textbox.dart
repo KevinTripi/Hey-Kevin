@@ -28,30 +28,11 @@ class DisplayTextboxes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Offset dragStartPos = Offset.zero;
-    Offset dragEndPos = Offset.zero;
-
     return Stack(alignment: Alignment.center, children: [
       CustomPaint(
           foregroundPainter:
               TextboxPointer(convertTupleToList(maskPoints, (textboxPoints))),
           child: displayImage),
-      FullScreen(
-        child: GestureDetector(
-          onTap: () {},
-          onHorizontalDragEnd: (details) {},
-          onVerticalDragStart: (details) {
-            dragStartPos = details.globalPosition;
-          },
-          onVerticalDragEnd: (details) {
-            dragEndPos = details.globalPosition;
-            if (dragStartPos.dy < dragEndPos.dy) {
-              // print("start: $dragStartPos, end: $dragEndPos");
-              Navigator.of(context).pop();
-            }
-          },
-        ),
-      ),
       Positioned(
         // left: textboxPoints[0].$1.toDouble(),
         top: textboxPoints[0].$2.toDouble(),

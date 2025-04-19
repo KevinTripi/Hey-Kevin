@@ -195,13 +195,36 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 fit: BoxFit.contain,
                 // from https://stackoverflow.com/a/58048926
                 loadingBuilder: (context, child, loadingProgress) {
+                  Offset dragStartPos = Offset.zero;
+                  Offset dragEndPos = Offset.zero;
+
+                  Widget swipeDownGestureDetector = FullScreen(
+                    child: GestureDetector(
+                      onTap: () {},
+                      onHorizontalDragEnd: (details) {},
+                      onVerticalDragStart: (details) {
+                        dragStartPos = details.globalPosition;
+                      },
+                      onVerticalDragEnd: (details) {
+                        dragEndPos = details.globalPosition;
+                        if (dragStartPos.dy < dragEndPos.dy) {
+                          // print("start: $dragStartPos, end: $dragEndPos");
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    ),
+                  );
+
                   if (loadingProgress == null) {
                     print("isLoadingImg: complete");
 
                     // Simplified from: https://medium.com/flutter-community/a-deep-dive-into-custompaint-in-flutter-47ab44e3f216
                     // Error prevented by ensuring image is loaded (by isLoading) before calling CustomPaint.
                     if (isChatGptLoading) {
-                      return FullScreen(child: displayImage);
+                      return Stack(children: [
+                        FullScreen(child: displayImage),
+                        swipeDownGestureDetector
+                      ]);
                     } else {
                       // ui.Image? retImg =
                       //     (((child as Semantics).child as RawImage).image
@@ -211,19 +234,50 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                         commentArr.add(value.toString());
                       });
 
-                      return SafeArea(
-                          child: DisplayTextboxes(
-                        // textboxSizeX: (constraints.maxWidth - 20).round(),
-                        textboxSizeX: (constraints.maxWidth).round(),
-                        textboxSizeY: 120,
-                        displayImage: child,
-                        maskPoints: maskPoints,
-                        textboxPoints: [
-                          (0, 0),
-                          (0, (constraints.maxHeight * 0.9).round()),
-                        ],
-                        textboxText: commentArr,
-                      ));
+                      if (gptJson['label'] ==
+                          "No representative query available") {
+                        return Stack(children: [
+                          Container(
+                              foregroundDecoration: BoxDecoration(
+                                  gradient: LinearGradient(colors: [
+                                Colors.black.withAlpha(170),
+                                Colors.black.withAlpha(170)
+                              ])),
+                              child: FullScreen(child: child)),
+                          Center(
+                              child: Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 20),
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                border: Border.all(color: Colors.yellow)),
+                            child: Text(
+                              "Comment generation failed.",
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontSize: 15, color: Colors.white),
+                            ),
+                          )),
+                          swipeDownGestureDetector,
+                        ]);
+                      }
+
+                      return Stack(children: [
+                        SafeArea(
+                            child: DisplayTextboxes(
+                          // textboxSizeX: (constraints.maxWidth - 20).round(),
+                          textboxSizeX: (constraints.maxWidth).round(),
+                          textboxSizeY: 120,
+                          displayImage: child,
+                          maskPoints: maskPoints,
+                          textboxPoints: [
+                            (0, 0),
+                            (0, (constraints.maxHeight * 0.9).round()),
+                          ],
+                          textboxText: commentArr,
+                        )),
+                        swipeDownGestureDetector
+                      ]);
                     }
                   }
                   return Center(
