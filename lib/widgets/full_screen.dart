@@ -11,13 +11,11 @@ class FullScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.sizeOf(context).height,
-          width: MediaQuery.sizeOf(context).width,
-          child: child,
-        ),
+    return SafeArea(
+      child: SizedBox(
+        height: MediaQuery.sizeOf(context).height,
+        width: MediaQuery.sizeOf(context).width,
+        child: child,
       ),
     );
   }
