@@ -12,6 +12,7 @@ class DisplayTextboxes extends StatelessWidget {
     required this.displayImage,
     required this.maskPoints,
     required this.textboxPoints,
+    required this.textboxText,
   });
 
   final int textboxSizeX;
@@ -21,6 +22,7 @@ class DisplayTextboxes extends StatelessWidget {
 
   final List<(int, int)> maskPoints;
   final List<(int, int)> textboxPoints;
+  final List<String> textboxText;
 
   final Widget displayImage;
 
@@ -58,8 +60,7 @@ class DisplayTextboxes extends StatelessWidget {
             onTap: () {
               print("test1!");
             },
-            child: buildTextbox(context,
-                "p1: Ad quo veniam ab cumque porro possimus. Animi ex quae et autem maxime omnis iure architecto. Voluptas doloremque in voluptatibus."),
+            child: buildTextbox(context, textboxText[0]),
           ),
         ),
       ),
@@ -71,8 +72,7 @@ class DisplayTextboxes extends StatelessWidget {
             onTap: () {
               print("test2!");
             },
-            child: buildTextbox(context,
-                "p2: Hic tempora dicta sed minima saepe officiis et. Sed et sit et quidem sit. Aut dolorum asperiores nobis perferendis assumenda consequatur natus ullam."),
+            child: buildTextbox(context, textboxText[1]),
           ),
         ),
       ),

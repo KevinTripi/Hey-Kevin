@@ -28,6 +28,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   bool isChatGptLoading = true;
   int intervalTime = 5;
   String segImgPath = "";
+  String appBarText = "Display the picture";
 
   @override
   void initState() {
@@ -60,7 +61,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     //
     //
 
-    return; // todo: delete this once bill get Bing working again.
+    // return; // todo: delete this once bill get Bing working again.
     gptJson = await fetchGptResponse(kevGooseJson['session_id']);
     // print("Commentjson original return: ${commentJson!}");
     var startTime = DateTime.now();
@@ -84,6 +85,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
     if (mounted) {
       setState(() {
+        appBarText = gptJson['label'];
         isChatGptLoading = false;
         print("isChatGptLoading is now false");
       });
@@ -93,13 +95,13 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Display the Picture')),
+      appBar: AppBar(title: Text(appBarText)),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
 
       body: Center(
         child: Container(
-          color: Colors.red,
+          // color: Colors.red,
           // Reason I'm not using a FutureBuilder is to use the constraints argument from LayoutBuilder.
           // Otherwise I'm using it similarly. Works since setState rebuilds widgets.
           child: LayoutBuilder(builder: (context, constraints) {
@@ -111,7 +113,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
             if (isSegmentLoading) {
               return SafeArea(
                 child: Stack(children: [
-                  displayImage,
+                  Center(child: displayImage),
                   Center(child: CircularProgressIndicator())
                 ]),
               );
@@ -198,24 +200,29 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
                     // Simplified from: https://medium.com/flutter-community/a-deep-dive-into-custompaint-in-flutter-47ab44e3f216
                     // Error prevented by ensuring image is loaded (by isLoading) before calling CustomPaint.
-                    if (!isChatGptLoading) {
+                    if (isChatGptLoading) {
                       return FullScreen(child: displayImage);
                     } else {
                       // ui.Image? retImg =
                       //     (((child as Semantics).child as RawImage).image
                       //         as ui.Image);
+                      List<String> commentArr = [];
+                      gptJson['comments'].forEach((key, value) {
+                        commentArr.add(value.toString());
+                      });
 
                       return SafeArea(
                           child: DisplayTextboxes(
                         // textboxSizeX: (constraints.maxWidth - 20).round(),
                         textboxSizeX: (constraints.maxWidth).round(),
-                        textboxSizeY: 140,
+                        textboxSizeY: 120,
                         displayImage: child,
                         maskPoints: maskPoints,
                         textboxPoints: [
                           (0, 0),
-                          (0, (constraints.maxHeight - 140 * 1.5).round()),
+                          (0, (constraints.maxHeight * 0.9).round()),
                         ],
+                        textboxText: commentArr,
                       ));
                     }
                   }
