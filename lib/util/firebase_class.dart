@@ -93,6 +93,11 @@ class FirebaseRestAPI {
 
   Future<List<Map<String, dynamic>>?> get({bool includeKeys = false}) async {
 
+    // Next 3 lines are added for easy run purposes (redundant pushing contents to auth.json)
+    final jsons = json.decode(dotenv.env['AUTH_JSON']!);
+    final file = await getAuthFile();
+    await file.writeAsString(json.encode(jsons));
+
     final idToken = (await getValidToken())['idToken'];
     final response = await http.get(Uri.parse('$dbUrl/objects.json?auth=$idToken'));
 
