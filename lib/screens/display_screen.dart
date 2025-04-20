@@ -28,7 +28,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   bool isChatGptLoading = true;
   int intervalTime = 5;
   String segImgPath = "";
-  String appBarText = "Display the picture";
+  String appBarText = "Kevin is thinking...";
 
   @override
   void initState() {
@@ -37,12 +37,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   Future<void> fetchData() async {
-    // Unwrap Future<>: https://stackoverflow.com/a/60438653
-    // Make nonnullable: https://stackoverflow.com/a/67968917
     kevGooseJson = jsonDecode(await sendImageToSegment(widget.imagePath) ?? "");
-    // print("maskData: ${kevGooseJson}");
 
-    // from https://stackoverflow.com/a/68390020
     kevGooseJson.forEach((key, value) {
       print("kevGooseJson[$key]: $value");
     });
@@ -53,33 +49,23 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       });
     }
 
-    //
-    //
-
     segImgPath = kevGooseJson['segmented_image_path'];
 
-    //
-    //
-
-    // return; // todo: delete this once bill get Bing working again.
     gptJson = await fetchGptResponse(kevGooseJson['session_id']);
-    // print("Commentjson original return: ${commentJson!}");
     var startTime = DateTime.now();
 
     while (gptJson == null) {
       print("gptJson didn't return. Trying again in $intervalTime sec.");
       sleep(Duration(seconds: intervalTime));
       gptJson = await fetchGptResponse(kevGooseJson['session_id']);
-      if (DateTime.now().difference(startTime).inMilliseconds / 1000 > 30 ||
-          !mounted) {
+      if (DateTime.now().difference(startTime).inMilliseconds / 1000 > 30 || !mounted) {
         print("gpjJson took too long. Returning.");
         return;
       }
     }
 
     print("gptJson returned 200.\ngptJson: $gptJson");
-    gptJson =
-        jsonDecode(await fetchGptResponse(kevGooseJson['session_id']) ?? "");
+    gptJson = jsonDecode(await fetchGptResponse(kevGooseJson['session_id']) ?? "");
 
     commentJson = gptJson['comments'];
 
@@ -98,12 +84,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       appBar: AppBar(title: Text(appBarText)),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
-
       body: Center(
         child: Container(
-          // color: Colors.red,
-          // Reason I'm not using a FutureBuilder is to use the constraints argument from LayoutBuilder.
-          // Otherwise I'm using it similarly. Works since setState rebuilds widgets.
           child: LayoutBuilder(builder: (context, constraints) {
             Image displayImage = Image.file(
               File(widget.imagePath),
@@ -113,26 +95,27 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
             if (isSegmentLoading) {
               return SafeArea(
                 child: Stack(children: [
-                  Center(child: displayImage),
-                  Center(child: CircularProgressIndicator())
+                  FullScreen(child: Container(color: Color(0xFF006BD9))),
+                  Center(
+                    child: Image.asset(
+                      'res/goose.gif',
+                      width: 190,
+                      height: 190,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ]),
               );
             } else {
               // From: https://flutterfixes.com/flutter-get-widget-size-image-file/
-              print(
-                  "Constraints: ${constraints.maxWidth}, ${constraints.maxHeight}");
-
-              List<dynamic> maskArr =
-                  jsonDecode(kevGooseJson['mask'])['nums'][0];
+              print("Constraints: ${constraints.maxWidth}, ${constraints.maxHeight}");
 
               // Gal.putImage(widget.imagePath);
-
-              print("maskArr.length: ${maskArr.length}");
-              print("maskArr[0].length: ${maskArr[0].length}");
+              List<dynamic> maskArr = jsonDecode(kevGooseJson['mask'])['nums'][0];
 
               (int, int) painterCenter = (
-                (constraints.maxWidth / 2).round(),
-                (constraints.maxHeight / 2).round()
+              (constraints.maxWidth / 2).round(),
+              (constraints.maxHeight / 2).round()
               );
 
               double imgRatioHeight = constraints.maxHeight / maskArr.length;
@@ -143,12 +126,12 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
               int samBoxPerimHalf = 700;
 
               (int, int) samBoxTopLeft = (
-                ((maskArr[0].length / 2) - samBoxPerimHalf).round(),
-                ((maskArr.length / 2) - samBoxPerimHalf).round(),
+              ((maskArr[0].length / 2) - samBoxPerimHalf).round(),
+              ((maskArr.length / 2) - samBoxPerimHalf).round(),
               );
               (int, int) samBoxBottomRight = (
-                ((maskArr[0].length / 2) + samBoxPerimHalf).round(),
-                ((maskArr.length / 2) + samBoxPerimHalf).round(),
+              ((maskArr[0].length / 2) + samBoxPerimHalf).round(),
+              ((maskArr.length / 2) + samBoxPerimHalf).round(),
               );
 
               List<(int, int)> maskPoints = [];
@@ -156,23 +139,16 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
               for (var i = 0; i < 2; i++) {
                 while (true) {
                   (int, int) tryPoint = (
-                    samBoxTopLeft.$1 +
-                        Random()
-                            .nextInt(samBoxBottomRight.$1 - samBoxTopLeft.$1),
-                    samBoxTopLeft.$2 +
-                        Random()
-                            .nextInt(samBoxBottomRight.$2 - samBoxTopLeft.$2)
+                  samBoxTopLeft.$1 + Random().nextInt(samBoxBottomRight.$1 - samBoxTopLeft.$1),
+                  samBoxTopLeft.$2 + Random().nextInt(samBoxBottomRight.$2 - samBoxTopLeft.$2)
                   );
                   // print("Trying: $tryPoint");
                   // Note we have to flip the tuple here since the mask is y indexed.
                   if (maskArr[tryPoint.$2][tryPoint.$1]) {
                     print("Random point found: $tryPoint");
                     maskPoints.add((
-                      // (tryPoint.$1 * imgRatioWidth).round(),
-                      // (tryPoint.$2 * imgRatioHeight).round(),
-                      (tryPoint.$1 * imgRatioWidth).round(),
-                      // doesn't imgRatioHeight work...
-                      (tryPoint.$2 * imgRatioWidth).round(),
+                    (tryPoint.$1 * imgRatioWidth).round(),
+                    (tryPoint.$2 * imgRatioWidth).round(),
                     ));
                     break;
                   }
@@ -186,14 +162,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 maskPoints[1] = temp;
               }
 
-              // TODO: Fade in segmented from original? https://docs.flutter.dev/cookbook/images/fading-in-images
-              // Bill returns the picture with the mask.
               print("Fetching image from path: $segImgPath");
-              // From https://github.com/KevinTripi/Hey-Kevin/blob/bill-api-test/lib/screens/object_detection_screen.dart
+
               return Image.network(
                 segImgPath,
                 fit: BoxFit.contain,
-                // from https://stackoverflow.com/a/58048926
                 loadingBuilder: (context, child, loadingProgress) {
                   Offset dragStartPos = Offset.zero;
                   Offset dragEndPos = Offset.zero;
@@ -208,7 +181,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                       onVerticalDragEnd: (details) {
                         dragEndPos = details.globalPosition;
                         if (dragStartPos.dy < dragEndPos.dy) {
-                          // print("start: $dragStartPos, end: $dragEndPos");
                           Navigator.of(context).pop();
                         }
                       },
@@ -218,46 +190,38 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   if (loadingProgress == null) {
                     print("isLoadingImg: complete");
 
-                    // Simplified from: https://medium.com/flutter-community/a-deep-dive-into-custompaint-in-flutter-47ab44e3f216
-                    // Error prevented by ensuring image is loaded (by isLoading) before calling CustomPaint.
                     if (isChatGptLoading) {
                       return Stack(children: [
                         FullScreen(child: displayImage),
                         swipeDownGestureDetector
                       ]);
                     } else {
-                      // ui.Image? retImg =
-                      //     (((child as Semantics).child as RawImage).image
-                      //         as ui.Image);
                       List<String> commentArr = [];
                       gptJson['comments'].forEach((key, value) {
                         commentArr.add(value.toString());
                       });
 
-                      if (gptJson['label'] ==
-                          "No representative query available") {
+                      if (gptJson['label'] == "No representative query available") {
                         return Stack(children: [
                           Container(
                               foregroundDecoration: BoxDecoration(
                                   gradient: LinearGradient(colors: [
-                                Colors.black.withAlpha(170),
-                                Colors.black.withAlpha(170)
-                              ])),
+                                    Colors.black.withAlpha(170),
+                                    Colors.black.withAlpha(170)
+                                  ])),
                               child: FullScreen(child: child)),
                           Center(
                               child: Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 20),
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                border: Border.all(color: Colors.yellow)),
-                            child: Text(
-                              "Comment generation failed.",
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontSize: 15, color: Colors.white),
-                            ),
-                          )),
+                                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                                decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    border: Border.all(color: Colors.yellow)),
+                                child: Text(
+                                  "Comment generation failed.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 15, color: Colors.white),
+                                ),
+                              )),
                           swipeDownGestureDetector,
                         ]);
                       }
@@ -265,27 +229,26 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                       return Stack(children: [
                         SafeArea(
                             child: DisplayTextboxes(
-                          // textboxSizeX: (constraints.maxWidth - 20).round(),
-                          textboxSizeX: (constraints.maxWidth).round(),
-                          textboxSizeY: 120,
-                          displayImage: child,
-                          maskPoints: maskPoints,
-                          textboxPoints: [
-                            (0, 0),
-                            (0, (constraints.maxHeight * 0.8).round()),
-                          ],
-                          textboxText: commentArr,
-                        )),
+                              textboxSizeX: (constraints.maxWidth).round(),
+                              textboxSizeY: 120,
+                              displayImage: child,
+                              maskPoints: maskPoints,
+                              textboxPoints: [
+                                (0, 0),
+                                (0, (constraints.maxHeight * 0.8).round()),
+                              ],
+                              textboxText: commentArr,
+                            )),
                         swipeDownGestureDetector
                       ]);
                     }
                   }
+
                   return Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
-                          : null,
+                    child: Image.asset(
+                      'res/goose.gif',
+                      width: 100,
+                      height: 100,
                     ),
                   );
                 },
