@@ -12,6 +12,7 @@ class DisplayTextboxes extends StatelessWidget {
     required this.displayImage,
     required this.maskPoints,
     required this.textboxPoints,
+    required this.textboxText,
   });
 
   final int textboxSizeX;
@@ -21,35 +22,17 @@ class DisplayTextboxes extends StatelessWidget {
 
   final List<(int, int)> maskPoints;
   final List<(int, int)> textboxPoints;
+  final List<String> textboxText;
 
   final Widget displayImage;
 
   @override
   Widget build(BuildContext context) {
-    Offset dragStartPos = Offset.zero;
-    Offset dragEndPos = Offset.zero;
-
     return Stack(alignment: Alignment.center, children: [
       CustomPaint(
           foregroundPainter:
               TextboxPointer(convertTupleToList(maskPoints, (textboxPoints))),
           child: displayImage),
-      FullScreen(
-        child: GestureDetector(
-          onTap: () {},
-          onHorizontalDragEnd: (details) {},
-          onVerticalDragStart: (details) {
-            dragStartPos = details.globalPosition;
-          },
-          onVerticalDragEnd: (details) {
-            dragEndPos = details.globalPosition;
-            if (dragStartPos.dy < dragEndPos.dy) {
-              // print("start: $dragStartPos, end: $dragEndPos");
-              Navigator.of(context).pop();
-            }
-          },
-        ),
-      ),
       Positioned(
         // left: textboxPoints[0].$1.toDouble(),
         top: textboxPoints[0].$2.toDouble(),
@@ -58,8 +41,7 @@ class DisplayTextboxes extends StatelessWidget {
             onTap: () {
               print("test1!");
             },
-            child: buildTextbox(context,
-                "p1: Ad quo veniam ab cumque porro possimus. Animi ex quae et autem maxime omnis iure architecto. Voluptas doloremque in voluptatibus."),
+            child: buildTextbox(context, textboxText[0]),
           ),
         ),
       ),
@@ -71,8 +53,7 @@ class DisplayTextboxes extends StatelessWidget {
             onTap: () {
               print("test2!");
             },
-            child: buildTextbox(context,
-                "p2: Hic tempora dicta sed minima saepe officiis et. Sed et sit et quidem sit. Aut dolorum asperiores nobis perferendis assumenda consequatur natus ullam."),
+            child: buildTextbox(context, textboxText[1]),
           ),
         ),
       ),

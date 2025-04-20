@@ -114,11 +114,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                           _controller.value.aspectRatio,
                       height: MediaQuery.of(context).size.height,
                       child: RotatedBox(
-                        quarterTurns: (_controller
-                                        .description.sensorOrientation /
-                                    90 +
-                                displayRotations) // From: https://pub.dev/documentation/flutter_better_camera/latest/camera/CameraDescription-class.html
-                            .round(), // From: https://stackoverflow.com/a/20788335
+                        quarterTurns:
+                            (displayRotations) // From: https://pub.dev/documentation/flutter_better_camera/latest/camera/CameraDescription-class.html
+                                .round(), // From: https://stackoverflow.com/a/20788335
                         child: CameraPreview(_controller),
                       ),
                     ),
@@ -181,7 +179,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                           size: 40,
                         )),
                     FloatingActionButton.large(
-                      heroTag: null,
                       shape: CircleBorder(),
                       backgroundColor: buttonBgColor,
                       onPressed: () async {
