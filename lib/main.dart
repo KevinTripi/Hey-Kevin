@@ -131,7 +131,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                       right: 10,
                       child: FloatingActionButton(
                         heroTag: null,
-                        // backgroundColor: buttonBgColor,
+                        backgroundColor: buttonBgColor,
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(

@@ -92,6 +92,7 @@ class FirebaseRestAPI {
   }
 
   Future<List<Map<String, dynamic>>?> get({bool includeKeys = false}) async {
+
     final idToken = (await getValidToken())['idToken'];
     final response = await http.get(Uri.parse('$dbUrl/objects.json?auth=$idToken'));
 
