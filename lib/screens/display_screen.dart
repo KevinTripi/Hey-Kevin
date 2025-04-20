@@ -144,6 +144,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   );
                   // print("Trying: $tryPoint");
                   // Note we have to flip the tuple here since the mask is y indexed.
+
                   if (maskArr[tryPoint.$2][tryPoint.$1]) {
                     print("Random point found: $tryPoint");
                     maskPoints.add((
@@ -155,7 +156,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 }
               }
 
-              // Stops points from crisscrossing
               if (maskPoints[0].$2 > maskPoints[1].$2) {
                 var temp = maskPoints[0];
                 maskPoints[0] = maskPoints[1];

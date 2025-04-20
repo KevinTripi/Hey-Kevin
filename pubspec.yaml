@@ -40,7 +40,7 @@ dependencies:
   gal: ^2.3.1
   flutter_dotenv: ^5.1.0
   auto_size_text: ^3.0.0
-
+  flutter_launcher_icons: ^0.13.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -70,6 +70,7 @@ flutter:
     #   - images/a_dot_burr.jpeg
     #   - images/a_dot_ham.jpeg
     - res/goose.gif
+    - res/heykevin.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
@@ -95,3 +96,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_launcher_icons:  # ✅ OUTSIDE the flutter block
+  android: true
+  ios: true
+  image_path: "res/heykevin.png"
+
