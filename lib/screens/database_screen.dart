@@ -1,33 +1,6 @@
 import 'package:flutter/material.dart';
-
-class FirebaseRestAPI {
-  Future<List<Map<String, dynamic>>> get() async {
-    await Future.delayed(const Duration(seconds: 1));
-    return [
-      {
-        "Object_name": "Clouds",
-        "Visual_characteristics":
-        "Clouds: Fluffy sky pillows that drift along, silently mocking your earthbound existence.",
-        "cultural_trendy_reference":
-        "Nature's original social media status - constantly changing yet somehow always worth photographing."
-      },
-      {
-        "Object_name": "Duct Tape",
-        "Visual_characteristics":
-        "Duct Tape: The sticky savior with a metallic sheen that silently whispers, 'Your repair skills are questionable at best.'",
-        "cultural_trendy_reference":
-        "The unofficial sponsor of every DIY project that started with 'How hard could it be?' and ended with tears."
-      },
-      {
-        "Object_name": "Jorts",
-        "Visual_characteristics":
-        "Jorts: Denim shorts that boldly declare, 'I've made a conscious decision to expose my knees to the world.'",
-        "cultural_trendy_reference":
-        "The fashion statement that proves scissors and old jeans create both tragedy and comedy in equal measure."
-      },
-    ];
-  }
-}
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hey_kevin/util/firebase_class.dart';
 
 class GptDatabase extends StatefulWidget {
   const GptDatabase({super.key});
@@ -37,15 +10,25 @@ class GptDatabase extends StatefulWidget {
 }
 
 class _GptDatabaseState extends State<GptDatabase> {
-  final FirebaseRestAPI db = FirebaseRestAPI();
+  late Future<List<Map<String, dynamic>>?> futureData;
+
+  @override
+  void initState() {
+    super.initState();
+    final db = FirebaseRestAPI(dotenv.env['FIREBASE_URL'] ?? '');
+    futureData = db.get().catchError((error) {
+      print('Error fetching data: $error');
+      return null;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(title: const Text("Scanned Objects History")),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: db.get(),
+      body: FutureBuilder<List<Map<String, dynamic>>?>(
+        future: futureData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -70,59 +53,65 @@ class _GptDatabaseState extends State<GptDatabase> {
                     ),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  padding: const EdgeInsets.all(3),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.orangeAccent,
-                      borderRadius: BorderRadius.circular(17),
-                    ),
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: Text(
-                            item['Object_name'] ?? '',
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(3),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.orangeAccent,
+                        borderRadius: BorderRadius.circular(17),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: Text(
+                                toTitleCase(item['Object_name'] ?? ''),
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item['Visual_characteristics'] ?? '',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.orangeAccent,
+                            const SizedBox(height: 6),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item['Visual_characteristics'] ?? '',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.orangeAccent,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      item['cultural_trendy_reference'] ?? '',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.orangeAccent,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                item['cultural_trendy_reference'] ?? '',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontStyle: FontStyle.italic,
-                                  color: Colors.orangeAccent,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
@@ -132,5 +121,14 @@ class _GptDatabaseState extends State<GptDatabase> {
         },
       ),
     );
+  }
+
+  String toTitleCase(String text) {
+    return text
+        .split(' ')
+        .map((word) => word.isNotEmpty
+        ? '${word[0].toUpperCase()}${word.substring(1).toLowerCase()}'
+        : '')
+        .join(' ');
   }
 }
