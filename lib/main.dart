@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:hey_kevin/screens/database_screen.dart';
 import 'package:hey_kevin/screens/display_screen.dart';
 import 'package:hey_kevin/widgets/full_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -125,6 +126,21 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                         dimension: 300,
                         child: CameraCrosshair(borderColor: Colors.white)),
                   ),
+                  Positioned(
+                      top: 10,
+                      right: 10,
+                      child: FloatingActionButton(
+                        heroTag: null,
+                        backgroundColor: buttonBgColor,
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => GptDatabase(),
+                            ),
+                          );
+                        },
+                        child: Icon(Icons.storage),
+                      )),
                 ]);
               } else {
                 // Otherwise, display a loading indicator.
