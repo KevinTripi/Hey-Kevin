@@ -13,11 +13,11 @@
 
 
 <!-- PROJECT LOGO -->
-<!-- <br />
+<br />
 <div align="center">
   <a href="https://github.com/KevinTripi/Hey-Kevin">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a> -->
+    <img src="images/heykevin.png" alt="Logo" width="120" height="120">
+  </a>
 
 <h3 align="center">Hey-Kevin</h3>
 
@@ -45,6 +45,8 @@
       <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
+        <li><a href="#gui">GUI</a></li>
+        <li><a href="#server-workflow">Server Workflow</a></li>
       </ul>
     </li>
     <li>
@@ -66,7 +68,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-<!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
+<!-- [![Product Name Screen Shot][product-screenshot]] -->
 
 **Hey Kevin** is a mobile application that provides an entertaining twist to traditional object detection. The app allows users to capture images of objects, analyze them using **computer vision models**, and receive AI-generated humorous descriptions.
 
@@ -79,14 +81,28 @@ This project explores the integration of **advanced object segmentation, web-bas
 ### Built With
 
 * [![Flutter][Flutter.dev]][Flutter-url]
+* [![Anthropic][Anthropic.com]][Anthropic-url]
+* [![Docker][Docker.com]][Docker-url]
 * [![FastAPI][FastAPI.com]][FastAPI-url]
-* [![OpenAI][OpenAI.com]][OpenAI-url]
-* [![Bing][Bing.com]][Bing-url]
 * [![OpenCV][OpenCV.org]][OpenCV-url]
+* [![Firebase][Firebase.com]][Firebase-url]
+* [![Bing][Bing.com]][Bing-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+### GUI
+<img src="images/screenshot_1.jpg" alt="Screenshot 1" width="400">
+<img src="images/screenshot_2.jpg" alt="Screenshot 2" width="400">
+<img src="images/screenshot_3.jpg" alt="Screenshot 3" width="400">
+<img src="images/screenshot_4.jpg" alt="Screenshot 4" width="400">
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Architecture
+
+![Hey Kevin Architecture Diagram][architecture]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -215,7 +231,18 @@ Project Link: [https://github.com/KevinTripi/Hey-Kevin](https://github.com/Kevin
 [OpenCV-url]: https://opencv.org/
 [OpenAI.com]: https://img.shields.io/badge/OpenAI-%23412991?logo=openai&logoColor=white
 [OpenAI-url]: https://openai.com/
+[Anthropic.com]: https://img.shields.io/badge/Claude-D97757?logo=claude&logoColor=fff
+[Anthropic-url]: https://www.anthropic.com/
 [Bing.com]: https://img.shields.io/badge/Microsoft%20Bing-258FFA?style=for-the-badge&logo=Microsoft%20Bing&logoColor=white
 [Bing-url]: https://www.bing.com/visualsearch
 [FastAPI.com]:https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi
 [FastAPI-url]: https://fastapi.tiangolo.com/
+[Firebase.com]: https://img.shields.io/badge/firebase-ffca28?style=for-the-badge&logo=firebase&logoColor=black
+[Firebase-url]: https://firebase.google.com/
+[Docker.com]: https://img.shields.io/badge/docker-257bd6?style=for-the-badge&logo=docker&logoColor=white
+[Docker-url]: https://www.docker.com/
+[product-screenshot1]: images/screenshot_1.jpg
+[product-screenshot2]: images/screenshot_2.jpg
+[product-screenshot3]: images/screenshot_3.jpg
+[product-screenshot4]: images/screenshot_4.jpg
+[architecture]: images/hey_kevin_architecture_diagram.png
