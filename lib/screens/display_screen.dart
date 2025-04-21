@@ -244,12 +244,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     }
                   }
 
-                  return Center(
-                    child: Image.asset(
-                      'res/goose.gif',
-                      width: 100,
-                      height: 100,
-                    ),
+                  return Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Container(color: Colors.black), // orange was too much of a flashbang
+                    ],
                   );
                 },
               );
