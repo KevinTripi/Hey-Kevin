@@ -29,7 +29,7 @@ class TextboxPointer extends CustomPainter {
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0
-      ..color = Colors.yellow
+      ..color = Colors.orangeAccent
       ..style = PaintingStyle.fill;
 
     for (int i = 0; i < textboxPointList.length; i++) {

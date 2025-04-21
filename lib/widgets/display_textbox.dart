@@ -17,8 +17,8 @@ class DisplayTextboxes extends StatelessWidget {
 
   final int textboxSizeX;
   final int textboxSizeY;
-  final Color textColor = Colors.black;
-  final Color textboxColor = Colors.yellow;
+  final Color textColor = Colors.white;
+  final Color textboxColor = Colors.orangeAccent;
 
   final List<(int, int)> maskPoints;
   final List<(int, int)> textboxPoints;
@@ -74,7 +74,7 @@ class DisplayTextboxes extends StatelessWidget {
       width: textboxSizeX.toDouble(),
       height: textboxSizeY.toDouble(),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        padding: EdgeInsets.all(12),
         margin: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
         decoration: BoxDecoration(
           gradient: LinearGradient(colors: [textboxColor, textboxColor]),

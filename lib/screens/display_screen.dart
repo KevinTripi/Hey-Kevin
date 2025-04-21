@@ -215,7 +215,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                                 decoration: BoxDecoration(
                                     color: Colors.black,
-                                    border: Border.all(color: Colors.yellow)),
+                                    border: Border.all(color: Colors.orangeAccent)),
                                 child: Text(
                                   "Comment generation failed.",
                                   textAlign: TextAlign.center,
