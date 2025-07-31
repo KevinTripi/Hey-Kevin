@@ -24,7 +24,7 @@
   <p align="center">
     A Humorous Object Recognition App
     <br />
-    <a href="https://github.com/KevinTripi/Hey-Kevin"><strong>Explore the docs »</strong></a>
+    <a href="https://drive.google.com/drive/folders/16Zp6c5n6LVZwTteA5Zw7Dv5zaW0CiTs5?usp=sharing"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://drive.google.com/drive/folders/1bquq4kAwfwjlW2fYbMneb8t5RZKvGxfi?usp=sharing">View Demo</a>
