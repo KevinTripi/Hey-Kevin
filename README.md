@@ -27,7 +27,7 @@
     <a href="https://github.com/KevinTripi/Hey-Kevin"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/KevinTripi/Hey-Kevin">View Demo</a>
+    <a href="https://drive.google.com/drive/folders/1bquq4kAwfwjlW2fYbMneb8t5RZKvGxfi?usp=sharing">View Demo</a>
     &middot;
     <a href="https://github.com/KevinTripi/Hey-Kevin/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     &middot;
